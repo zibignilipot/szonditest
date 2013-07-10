@@ -16,6 +16,7 @@ namespace SzondiTestUnitTests
 		private static List<TestProfile> fall24;
 		private static List<TestProfile> fall25;
 		private static List<TestProfile> fall26;
+		private static List<TestProfile> fall27;
 		
 		public static List<TestProfile> Fall16
 		{
@@ -321,6 +322,32 @@ namespace SzondiTestUnitTests
 				}
 				
 				return fall26;
+			}
+		}
+		
+		public static List<TestProfile> Fall27
+		{
+			get
+			{
+				if(fall27==null)
+				{
+					fall27 = new List<TestProfile>()
+					{
+						null,
+						new TestProfile("0,-", "+,-", "-,+", "-,+"),
+						new TestProfile("+,+", "+!,-", "-,0", "-,+"),
+						new TestProfile("-!,0", "+!,-", "0,+!", "-,+"),
+						new TestProfile("0,-", "+,-!", "+!,-", "0,+"),
+						new TestProfile("0,0", "+,-!", "±,+", "-,+"),//5
+						
+						new TestProfile("-,0", "+,-", "+,+", "-,±"),//6
+						new TestProfile("-,-", "+!,-", "±,+", "-,+"),
+						new TestProfile("-,-", "+,-", "+,+", "-,+!"),
+					};
+					BaseSzondiUnitTests.SetSexAndNameForProfiles(Sex.Female, "Fall 27", fall27);
+				}
+				
+				return fall27;
 			}
 		}
 	}

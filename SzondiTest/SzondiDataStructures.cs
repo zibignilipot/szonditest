@@ -117,28 +117,36 @@ namespace SzondiTest
 	
 	public enum InterpretationNotes
 	{
-		// Ich
+		#region Ich
 		ParanoKammSynd, // -s -hy -p -m"
 		ParanoKammSyndU, //-s -hy -p -m
-		GrößenwahnParano,
-		ProjektivParanoMitte,
-		//ProjektivMitte, same as ProjektivParanoideMitte
-		InflativParanoMitte,
-		Alienation,
-		ParanoSpaltungsSynd,
-		KatatonifMitte,
-		KatatonifSperrungsSynd,//p.283
-		HebephreneSyndrom,//p.298 in der projektiven Hypochondrie
-		InflativParanoSyndrom,
-		Ichsperre,//k- p0
-		TotaleInflation,//0+!
-		Introinflation,//++!
-		TotaleProjektion,//0-!
 		FuguesAusreißen,//±-!
 		Dissimulation,//--!
 		DestruktiveVerneinung,//Sch-!,0
+		//Projektiv
+		ProjektivParanoMitte,//ProjektivMitte, same as ProjektivParanoideMitte
+		Alienation,//Sch 0,-(!!!) p.?
+		Entfremdung,// Sch -± p.330
+		ParanoTotalProjektion,//Sch 0,-(!) p.310
+		ParanoSpaltungsSynd,
+		//Katatoni
+		Ichsperrung,//k- p0
+		KatatonifIchsperrung,//k-! p0
+		TotaleKatatonifIchsperrung,//Sch-0, C--
+		KatatonifSperrungsSynd,//p.283
+		KatatonifMitte,
+		//Hebefr
+		HebephreneSyndrom,//p.298 in der projektiven Hypochondrie
+		HebeKonbProjUndSperrung,//-!-(!)
+		//Inflativ
+		InflativParanoMitte,
+		InflativParanoSyndrom,
+		TotaleInflation,//0+!
+		Introinflation,//++!
+		GrößenwahnParano,
+		#endregion
 		
-		// Affekt
+		#region Affekt
 		KonvHyst,
 		KonvHystSukzessionAffekt,
 		KonvHystSukzessionIch,
@@ -159,8 +167,9 @@ namespace SzondiTest
 		MörderE_mitVentil,
 		ReineKain,
 		Kain,
-			
-		// Sexuelle
+		#endregion
+		
+		#region Sexuelle
 		SzondiHomo,
 		Sexualstörungen,
 		Triebzielinversion,
@@ -181,24 +190,21 @@ namespace SzondiTest
 		Analsadismus,
 		Analmasochismus,
 		PolymorphPervers,
-		
-		Ödipussyndrom,
-		
-		MordUndRapeMitte,
-		MordMitte,
-		LustmordMitte,
-		
-		// Schutz
+		#endregion
+					
+		#region Schutz
 		HebephreneMitte,
 		Schuldangst,
 		HypochondrischeMitte,//"das Syndrom der Hypochondrie" p.317
+		PsychotischeHypochondrischeSynd,//p.325
 		// Schutz - neurotischeMitte
 		InhibitedMitte, //gehemmte
 		ObsessiveCompulsiveMitte,// anankastische
 		KlassischeZwangsneurose,
 		Zwangsimpulse,
+		#endregion
 		
-		// Kontakt
+		#region Kontakt
 		TrunksuchtMitte,
 		Sucht,
 		Kontaktstörungen, // -p +d -m
@@ -207,13 +213,20 @@ namespace SzondiTest
 		Akzeptationsdrang,//C0+
 		Kontaktsperre,// C--
 		HypomanischeBenehmen, //C0-
+		#endregion
+		
+		Ödipussyndrom,
+		
+		MordUndRapeMitte,
+		MordMitte,
+		LustmordMitte,
 		
 		//doubles
 		ManiformeParanoide,
 		
 		//
 		IrrealenBlocksSyndrom,//e,hy,k,p,d,m -- -- --
-		PsychotischeHypochondrischeSynd,
+		DepersonalisationMitte,
 	};
 	
 	public enum Existenzformen
@@ -456,10 +469,16 @@ namespace SzondiTest
 					{
 						hypertensionsMatch = this.HasHypertension == compareTo.HasHypertension;
 					}
+					if(((this.positivTendenz >= 5) && (compareTo.positivTendenz >= 5))
+					   || ((this.negativTendenz >= 5) && (compareTo.negativTendenz >= 5)))
+					{
+						// considering equal !! and !!!
+						hypertensionsMatch = true;
+					}
 					if(compareOptions == FactorsComparisonOptions.HypertensionEqualORGreater)
 					{
 						hypertensionsMatch = (this.positivTendenz >= compareTo.positivTendenz)
-							&& (this.negativTendenz >= compareTo.negativTendenz);
+							   && (this.negativTendenz >= compareTo.negativTendenz);
 					}
 					if(compareOptions == FactorsComparisonOptions.Hypertension_sensitive)
 					{

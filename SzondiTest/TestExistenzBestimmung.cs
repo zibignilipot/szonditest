@@ -819,6 +819,19 @@ namespace SzondiTestUnitTests
 		}
 		
 		[Test]
+		public void TestTotaleKatatonifIchsperrung()
+		{
+			{	var profiles = Fälle.Fall22;
+				//p.310
+				var haves = new List<int>() {4,5,7,8,};//3,
+				var haveNots = new List<int>() {};
+				TestNoteHelper(InterpretationNotes.TotaleKatatonifIchsperrung, 
+			                       Syndromatic.DetectKatatoniforme,
+			                       profiles, haves, haveNots);
+			}
+		}
+		
+		[Test]
 		public void TestKatatoniforme()
 		{	{
 				// from Buch3, p.243, Tabelle 33
@@ -837,7 +850,8 @@ namespace SzondiTestUnitTests
 			}
 					
 			{	var profiles = Fälle.Fall22;
-				var haves = new List<int>() {4,9,};//1,2,3,5,6,7,8,10,
+				//p.310
+				var haves = new List<int>() {4,9,};//1,2,3,6,10,5,7,8,
 				var haveNots = new List<int>() {};
 				TestExistenzformHelper(Existenzformen.Katatoniforme, 
 			                       Syndromatic.DetectKatatoniforme,
@@ -1460,7 +1474,7 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestTriebzielinversion()
 		{
-			//TODO add p.320 latente Triebzielinversion
+			//TODO add p.320 c) latente Triebzielinversion
 			
 			{	var profiles = Fälle.Fall16;
 				var haves = new List<int>() {2,10};// Buch 3 p.262 IX.1};
@@ -1590,7 +1604,13 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestHypochondrische()
 		{
-			//TODO add Falle 27, p.317, profile 1,2
+			{	var profiles = Fälle.Fall27;
+				var haves = new List<int>() {1,2,};//p.317. Doubt: 4,6
+				var haveNots = new List<int>() {};//3,10,5,7,8,9,
+				TestExistenzformHelper(Existenzformen.Hypochondrische_Organneurose, 
+			                       Syndromatic.DetectHypochondrischeExistenzformen,
+			                       profiles, haves, haveNots);
+			}
 		}
 	}
 	

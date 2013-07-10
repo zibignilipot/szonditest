@@ -774,8 +774,8 @@ namespace SzondiTest
 			
 			bool detected = false;
 			
-			// p.292, p.460
 			#region Skala row 11a
+			// p.292, p.460
 			if(profile.e.IsAny("0", "±", "+", "+!", "+!!")
 			   && profile.hy.IsEqualTo("-")
 			   // NB.CompareTo k-! only when p0, distinguish from Heboide
@@ -791,6 +791,8 @@ namespace SzondiTest
 			}
 			
 			#endregion
+			
+			#region Skala rows 11b, 11c, 11d
 			// Skala row 11b
 			if(profile.P.IsAny("+,-", "+,-!", "±,-", "0,-")
 			   && profile.Sch.IsAny("-,-", "-,-!"))
@@ -813,6 +815,7 @@ namespace SzondiTest
 			{
 				detected = true;
 			}
+			#endregion
 			
 			if(profile.HasInterpretationNote(InterpretationNotes.Schuldangst) 
 			   && profile.C.EqualsTo("-,+"))
@@ -1425,14 +1428,23 @@ namespace SzondiTest
 			#region Existenzskala rows 5a (Katatoniforme)
 			//Buch 3, pp.243, Tabelle 33
 			//B3 p.284
+			//B3 p.310 "totale katatoniforme Sperrung"
 			{
-				if( profile.Sch.IsAny("-!,0", "-!!,0", "-!!!,0", "-!!,±")
-				   && profile.C.IsAny("-,-", "-,-!"))
+				if(profile.HasInterpretationNote(InterpretationNotes.TotaleKatatonifIchsperrung))
 				{
-					detected = true;
+					if(profile.k.HasHypertension)
+					{
+						detected = true;
+					}
 				}
 			}
 			
+			//B3p.312 
+			if(profile.HasInterpretationNote(InterpretationNotes.KatatonifSperrungsSynd))
+			{
+			   detected = true;
+			}
+		
 			//Buch 3, pp.243, 6. a) b)
 			{
 				// 6. a)
@@ -1751,8 +1763,8 @@ namespace SzondiTest
 			
 			return false;
 		}
-		
-		internal static void FurtherIchNotes(TestProfile profile)
+			
+		internal static void FurtherIchSimpleNotes(TestProfile profile)
 		{
 			DetectParanoideSpaltungsSyndrom(profile);
 			
@@ -1766,11 +1778,6 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.Introinflation);
 			}
 			
-			if(profile.Sch.EqualsTo("0,-!"))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.TotaleProjektion);
-			}
-		
 			if(profile.Sch.EqualsTo("±,-!"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.FuguesAusreißen);
@@ -1788,24 +1795,38 @@ namespace SzondiTest
 			
 			if(profile.Sch.IsAny("0,-", "0,-!", "0,-!!", "0,-!!!"))
 			{
-				var note = InterpretationNotes.Alienation;
-				profile.AddInterpretationNote(note);
+				profile.AddInterpretationNote(InterpretationNotes.Alienation);
+				profile.AddInterpretationNote(InterpretationNotes.ParanoTotalProjektion);
 			}
 			
-			// p.283 VII Ichsperre 
-			if(profile.Sch.IsAny("-,0", "-!,0"))
+			if(profile.Sch.EqualsTo("-,±"))
 			{
-				var note = InterpretationNotes.Ichsperre;
-				profile.AddInterpretationNote(note);
+				profile.AddInterpretationNote(InterpretationNotes.Entfremdung);
 			}
+			
 		}
 		
 		internal static void FurtherNotes(TestProfile profile)
 		{
-			FurtherIchNotes(profile);
+			FurtherIchSimpleNotes(profile);
 			DetectAffektstörungenNotes(profile);
 			DetectKain(profile);
 			DetectTriebzielinversion(profile);
+			
+			#region Katatoni notes
+			// p.283 VII Ichsperre 
+			if(profile.Sch.IsAny("-,0", "-!,0", "-!!,0", "-!!!,0", "-!!,±"))
+			{	
+				// doubt: also -!!,± ? (Skala 5a)
+				profile.AddInterpretationNote(InterpretationNotes.Ichsperrung);
+				
+				if(profile.k.IsAny("-!", "-!!", "-!!!"))
+				{	// if ! (!!) -> katatoniforme Ichsperrung, p.310
+					var note = InterpretationNotes.KatatonifIchsperrung;
+					profile.AddInterpretationNote(note);
+				}
+			}
+			#endregion
 			
 			if((profile.S.EqualsTo("0,+") || profile.S.EqualsTo("-,+"))
 			   && profile.P.EqualsTo("-,±")
@@ -1972,33 +1993,20 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
-			// p.283 VII Kontaktsperre
-			if(profile.C.IsAny("-,-", "-,-!"))//-,-! p.286 I.3
-			{
-				var note = InterpretationNotes.Kontaktsperre;
-				profile.AddInterpretationNote(note);
-			}
-			
 			// p.300 V.1.
 			if(profile.C.IsAny("0,-", "0,-!", "0,-!!"))
 			{
 				var note = InterpretationNotes.HypomanischeBenehmen;
 				profile.AddInterpretationNote(note);
 			}
-				
-			// p.283 VII katatoniforme Sperrungssyndrom
-			// p.306 VII. (s+! + kain + Ichsperre + kontaktsperre)
-			if(profile.HasInterpretationNote(InterpretationNotes.Ichsperre) 
-			   && profile.HasInterpretationNote(InterpretationNotes.Kontaktsperre)
-			   && (profile.HasInterpretationNote(InterpretationNotes.Kain) 
-			       || profile.e.IsEqualTo("-"))// hy (0,±,-) optional; hy ±,- p.286 VII.
-			   && profile.s.IsAny("+!", "+!!", "+!!!") 
-			  )
+			
+			// p.283 VII Kontaktsperre
+			if(profile.C.IsAny("-,-", "-,-!"))//-,-! p.286 I.3
 			{
-				var note = InterpretationNotes.KatatonifSperrungsSynd;
+				var note = InterpretationNotes.Kontaktsperre;
 				profile.AddInterpretationNote(note);
 			}
-			
+				
 			// p.291 IrrealenBlocksSyndrom
 			if(profile.P.IsAny("-,-", "-!,-", "-,-!", "-!,-!", "0,-")//P0- p.301
 			   && profile.Sch.IsAny("-,-", "-!,-", "-,-!", "-!,-!")
@@ -2027,16 +2035,58 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
-		
-			
 			if(profile.HasMitte("0,-", "-,+")
 			   || profile.HasMitte("+,-", "-,+"))
 			{	//p.315
 				var note = InterpretationNotes.Schuldangst;
 				profile.AddInterpretationNote(note);
 			}
+	
+			if(profile.HasMitte("+,-", "-,±")
+			   || profile.HasMitte("+,-!", "-,±")
+			   || profile.HasMitte("0,-", "-,±")
+			   || profile.HasMitte("-,-", "-,±")
+			   || profile.HasMitte("-,-", "-,0")//p.336 V.
+			  )
+			{	//p.329
+				var note = InterpretationNotes.DepersonalisationMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
+			FurtherCompositeNotes(profile);
 		}
-				
+		
+		internal static void FurtherCompositeNotes(TestProfile profile)
+		{
+			if((profile.HasInterpretationNote(InterpretationNotes.Ichsperrung) 
+			   || profile.Sch.EqualsTo("-!!,±"))//doubt, from Skala 5a
+			   &&
+			   profile.HasInterpretationNote(InterpretationNotes.Kontaktsperre))
+			{	
+				//Existenzskala rows 5a (Katatoniforme)
+				//Buch 3, pp.243, Tabelle 33
+				//B3 p.284
+				//B3 p.310 "totale katatoniforme Sperrung"
+			
+				// more doubt: add C0- (with Sukzession condition?)
+				var note = InterpretationNotes.TotaleKatatonifIchsperrung;
+				profile.AddInterpretationNote(note);		
+			}
+			
+			// p.283 VII katatoniforme Sperrungssyndrom
+			// p.306 VII. (s+! + kain + Ichsperre + kontaktsperre)
+			// p..312
+			if(profile.HasInterpretationNote(InterpretationNotes.TotaleKatatonifIchsperrung)
+			   && (profile.HasInterpretationNote(InterpretationNotes.Kain) 
+			       || profile.e.IsEqualTo("-"))// hy (0,±,-) optional; hy ±,- p.286 VII.
+			   && profile.s.IsAny("+!", "+!!", "+!!!") 
+			  )
+			{
+				var note = InterpretationNotes.KatatonifSperrungsSynd;
+				profile.AddInterpretationNote(note);
+			}
+		}
+		
 		#region utils
 		private static bool Faktorenverband(bool[] conditions)
 		{

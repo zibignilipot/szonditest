@@ -179,8 +179,8 @@ namespace SzondiTestUnitTests
 		[Test]//[Ignore]
 		public void CustomTest()
 		{		
-			{	var profiles = Fälle.Fall25;
-				var profile = profiles[3];
+			{	var profiles = Fälle.Fall24;
+				var profile = profiles[2];
 				Syndromatic.BestimmungDerExistenzformen(profile);
 				
 				System.Console.WriteLine("pause");
