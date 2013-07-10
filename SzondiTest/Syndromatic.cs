@@ -56,8 +56,8 @@ namespace SzondiTest
 			DetectParanoideKammSyndrom(profile);			
 			// p.261 n. IX
 			DetectKontaktstörungen(profile);			
-			// p.261 n. X
-			DetectSexualstörungen(profile);
+			// pp.358-9
+			DetectLustprinzip(profile);
 			
 			// Buch 3, p.484 IV b), p.266 XI.2, Skala row 14c			
 			DetectPhobieNote(profile);
@@ -893,29 +893,28 @@ namespace SzondiTest
 		{
 			bool detected = false;
 			
-			#region sadismus (row 9a)
+			#region sadismus (row 9a) (Destruktive Perversion)
 			
-			// p.375 III. Syndrom des Sadismus
-			if(profile.S.HasAnyFactorReaction("+!", "+!!", "+!!!", Factors.s)
-				&& profile.C.HasFactorReaction("+", Factors.d, FactorsComparisonOptions.Hypertension_insensitive))
+			// p.375 III. Syndrom des Sadismus s+!, d+!
+			if(profile.s.IsAny("+!", "+!!", "+!!!")
+				&& profile.d.IsAny("+", "+!", "+!!", "+!!!"))
 			{
 				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Analsadismus);
 			}
 			
 			// p.375 III. Syndrom des Sadismus, mit Lustsyndrom
-			if(profile.S.HasAnyFactorReaction("+!", "+!!", "+!!!", Factors.s)
+			if(profile.s.IsAny("+!", "+!!", "+!!!")
 			   && HasLustprinzipSyndrom(profile)) 
 			{
 				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Sadismus);
 			}
 			
-			// row 9a colums S only
-			// p.375 III. Syndrom des Sadismus s+!, k+!
+			// row 9a colums S only			
 			// p.375 II. Destruktive (entwertende Perversionene)
-			if(profile.S.HasAnyFactorReaction("+!", "+!!", "+!!!", Factors.s)
-				&& profile.Sch.HasAnyFactorReaction("-!", "-!!", "-!!!", Factors.k))
+			if(profile.s.IsAny("+!", "+!!", "+!!!")
+				&& profile.k.IsAny("-!", "-!!", "-!!!"))//k-! Exhibitionismus
 			{
 				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Sadismus);
@@ -923,7 +922,7 @@ namespace SzondiTest
 			
 			#endregion
 			
-			#region Masochismus, Fetischismus, polymorph perversion (row 9b)
+			#region Masochismus (row 9b) (Introjektive Perversion)
 			
 			// Skala row 9b
 			if(profile.S.HasAnyFactorReaction("-!!", "-!!!", Factors.s))
@@ -933,35 +932,22 @@ namespace SzondiTest
 			}
 			
 			// p.374 I. primären Masochismus (=Todestriebes)
-			if(profile.S.HasAnyFactorReaction("-", "-!", "-!!", "-!!!", Factors.s)
-			   && profile.C.EqualsTo("-,+")
+			if(profile.s.IsAny("-", "-!", "-!!", "-!!!")
+			   && profile.HasInterpretationNote(InterpretationNotes.InzestuösesAnhangen)
 			   && (profile.Sch.EqualsTo("-,+") || profile.Sch.EqualsTo("-,0")))
 			{
 				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Masochismus);
 			}
 			
-			// p.375 I I. sekundären Masochismus 
-			if(profile.S.HasAnyFactorReaction("-", "-!", "-!!", "-!!!", Factors.s)
-			   && (profile.C.HasFactorReaction("-", Factors.d) 
-			       || profile.C.HasFactorReaction("0", Factors.d))
-			   && (profile.C.HasFactorReaction("±", Factors.m) 
-			       || profile.C.HasFactorReaction("0", Factors.m))
+			// p.375 II. sekundären Masochismus 
+			if(profile.s.IsAny("-", "-!", "-!!", "-!!!")
+			   && profile.d.IsAny("-", "0")
+			   && profile.m.IsAny("±", "0")
 			   && (profile.Sch.EqualsTo("+,-")))
 			{
 				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Masochismus);
-			}
-			
-			// p.372, Fetischismus, I.
-			// p.376 Tabelle 40, IV., V.
-			if((profile.Sch.HasAnyFactorReaction("+!", "+!!", "+!!!", Factors.k)
-			    || profile.Sch.EqualsTo("+,+!", // row 9b
-			                            FactorsComparisonOptions.HypertensionEqualORGreater))
-			   && profile.S.HasAnyFactorReaction("-!", "-!!", "-!!!", Factors.s))
-			{
-				detected = true;
-				profile.AddInterpretationNote(InterpretationNotes.Fetischismus);
 			}
 			
 			// p.376 Tabelle 40, Masochismus, V.
@@ -992,6 +978,44 @@ namespace SzondiTest
 			
 			#endregion
 			
+			#region Fetischismus (row 9b) (Introjektive Perversion)
+			// p.369
+			if(profile.HasInterpretationNote(InterpretationNotes.Lustprinzip)
+			   && profile.k.IsAny("+!", "+!!", "+!!!", "±")
+			   && profile.p.IsAny("+", "±", "0"))
+			{
+				detected = true;
+				profile.AddInterpretationNote(InterpretationNotes.Fetischismus);
+			}
+			
+			// p.372, Fetischismus, I. 
+			// p.375
+			// p.376 Tabelle 40, IV., V.
+			if(/*(*/profile.k.IsAny("+!", "+!!", "+!!!")
+			    //|| profile.Sch.EqualsTo("+,+!", // row 9b
+			    //                        FactorsComparisonOptions.HypertensionEqualORGreater))
+			   && profile.s.IsAny("-!", "-!!", "-!!!"))
+			{
+				detected = true;
+				profile.AddInterpretationNote(InterpretationNotes.Fetischismus);
+			}
+			
+			// p.372 I.
+			if(profile.k.IsAny("+!", "+!!", "+!!!")
+			   && profile.p.IsAny("+", "±", "0")
+			   && profile.s.IsAny("-!", "-!!", "-!!!")
+			   && profile.hy.IsAny("-!", "-!!", "-!!!", "0", "+", "±"))
+			{	detected = true;
+				profile.AddInterpretationNote(InterpretationNotes.Fetischismus);
+			}
+			
+			// p.372 II.
+			if(profile.HasInterpretationNote(InterpretationNotes.Lustprinzip))
+			{	detected = true;
+			}
+			
+			#endregion
+			
 			#region polymorph perversion (row 9c)
 			// p.380 
 			if(profile.S.HasFactorReaction("±", Factors.s)
@@ -1001,7 +1025,7 @@ namespace SzondiTest
 			}
 			#endregion
 			
-			#region Perverses Lustsyndrom (rows 9abc)
+			#region Perverses Lustsyndrom, PolymorphPervers (rows 9abc)
 			// p.377 (Column 3, section VII.C.), 389 
 			// TODO delete? dubious, weak sources
 			// p.502, IV (profiles 6, 8 from p.501)	
@@ -1013,6 +1037,8 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.PolymorphPervers);
 			}
 			#endregion
+			
+			//TODO row 9d
 			
 			if(detected)
 			{
@@ -1088,18 +1114,87 @@ namespace SzondiTest
 			#endregion
 		}
 				
-		internal static void DetectSexualstörungen(TestProfile profile)
+		internal static void DetectLustprinzip(TestProfile profile)
 		{
-			/* TODO: delete. replaced by Triebzielinversion. Male only. No kontaktstörungen
-			// Sexualstörungen pp.261 X., example p.262
-			if((profile.S.IsAny("+,-", "+!,-", "+!!,-", "+!!!,-") 
-			    || profile.S.IsAny("+,±", "+!,±"))//p.262 IX.2.
-			   && profile.hy.IsAny("-", "-!")//-! p.262 IX.2.
-			   && profile.p.IsAny("-", "-!", "+")
-			   && profile.d.IsAny("+", "+!"))
+			//p.358: Lustprinzip ist oft gleichzeitig auch das Syndrom der Polymorphen Perversion
+			
+			// Buch 3 p.359, p.367
+			if(// also p+ per p.389
+				profile.p.IsAny("+", "+!", "+!!", "+!!!", "±", "0") // +, ±. p0 seltener
+				&& (profile.d.IsAny("+", "+!", "+!!", "+!!!", "±", "0")// +, ± // d0 seltener
+				    || profile.d.IsAny("-", "-!", "-!!", "-!!!"))//d- Skala 8
+				&& profile.m.IsAny("+", "+!", "+!!", "+!!!", "±", "0")) // +, ± // m0 seltener
 			{
-				profile.AddInterpretationNote(InterpretationNotes.Sexualstörungen);
-			}*/
+				profile.AddInterpretationNote(InterpretationNotes.Lustprinzip);
+				
+				// more detailed notes:
+				
+				#region Buch 3, p.359
+				if(profile.P.HasFactorReaction("0", Factors.e)
+				  && profile.Sch.HasFactorReaction("-", Factors.k)
+				  && profile.Sch.HasFactorReaction("+", Factors.p))
+				{
+					// TODO improve/verify if hypertension or ambivalence allowed
+					// Kleptomanie, Buch 3, p.359, 2. b)
+					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_Kleptomanie);
+				}
+				
+				if(profile.C.HasFactorReaction("0", Factors.d))
+				{
+					// Buch 3, p.359, 2. c) or d)
+					// c) inability of accumulating the acquisition urge
+					// therefore, the immediate satisfaction d=0
+					// d) lack of a value scale in the acquisition of things of the world
+					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_AcquisitionUrge);
+				}
+				
+				if(profile.Sch.HasFactorReaction("+", Factors.p)
+				   && profile.C.HasFactorReaction("+", Factors.d))
+				{
+				 	// Buch 3, p.359, 2. e)
+				 	profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_ConstRivalWPartner);
+				}
+				
+				if((profile.C.HasFactorReaction("+", Factors.m)
+				    && profile.S.HasFactorReaction("+", Factors.s))
+				    ||
+				    (profile.C.HasFactorReaction("0", Factors.m)
+				     && profile.S.HasFactorReaction("0", Factors.s)))
+				{
+				   	// Buch 3, p.359, 3. c)
+					// Oralsadismus (m+, s+, oder m0, s0)
+					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_Oralsadismus);
+				}
+				
+				if(profile.k.IsAny("-!", "-!!", "-!!!"))
+				{
+				   	// Buch 3, p.359, 4.
+					// Negation of the ideals, or depreciation of all ideals
+					// self-devaluation, ...
+					// p.375 Lustsyndrom oder Perversionssyndrom
+					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_IdealsNegation);
+				}
+				#endregion
+				
+				// p.367 Syndrom des (perversen) Lustprinzip
+				if(profile.p.IsAny("+!", "+!!", "+!!!", "0", "±")
+				   && profile.d.IsAny("+", "0", "±")
+				   && profile.m.IsAny("+", "0", "±")
+				   && profile.h.IsAny("+", "0", "±")
+				   && profile.s.IsAny("+", "0", "-")
+				  )
+				{
+					profile.AddInterpretationNote(InterpretationNotes.PerverseLustprinzip);
+				}
+				
+				// p.433
+				if(profile.Sch.HasFactorReaction("+", Factors.p)
+					&& profile.C.HasFactorReaction("0", Factors.d)
+					&& profile.C.HasFactorReaction("0", Factors.m))
+				{
+					profile.AddInterpretationNote(InterpretationNotes.GrößenwahnLustprinzip);
+				}
+			}
 		}
 		
 		internal static void DetectTriebzielinversion(TestProfile profile)
@@ -1725,89 +1820,23 @@ namespace SzondiTest
 		}
 		
 		internal static bool HasLustprinzipSyndrom(TestProfile profile)
-		{
-			// Buch 3 p.359
-			if((// also p+ per p.389
-				profile.Sch.ContainsFactorReaction("+", Factors.p) // +, ±
-			   || profile.Sch.HasFactorReaction("0", Factors.p)) // seltener
-			   &&
-			   (profile.C.ContainsFactorReaction("+", Factors.d) // +, ±
-			   || profile.C.HasFactorReaction("0", Factors.d)) // seltener
-			   &&
-			   (profile.C.ContainsFactorReaction("+", Factors.m) // +, ±
-			   || profile.C.HasFactorReaction("0", Factors.m))) // seltener
+		{	
+			InterpretationNotes[] LustprinzipNotes = 
 			{
-				// detected
-				profile.AddInterpretationNote(InterpretationNotes.Lustprinzip);
-				
-				// more detailed notes:
-				
-				#region Buch 3, p.359
-				if(profile.P.HasFactorReaction("0", Factors.e)
-				  && profile.Sch.HasFactorReaction("-", Factors.k)
-				  && profile.Sch.HasFactorReaction("+", Factors.p))
+				InterpretationNotes.Lustprinzip,
+				InterpretationNotes.Lustprinzip_Kleptomanie,
+				InterpretationNotes.Lustprinzip_AcquisitionUrge,
+				InterpretationNotes.Lustprinzip_ConstRivalWPartner,
+				InterpretationNotes.Lustprinzip_IdealsNegation,
+				InterpretationNotes.Lustprinzip_Oralsadismus,
+			};
+			
+			foreach(var note in LustprinzipNotes)
+			{
+				if(profile.HasInterpretationNote(note))
 				{
-					// TODO improve/verify if hypertension or ambivalence allowed
-					// Kleptomanie, Buch 3, p.359, 2. b)
-					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_Kleptomanie);
+					return true;
 				}
-				
-				if(profile.C.HasFactorReaction("0", Factors.d))
-				{
-					// Buch 3, p.359, 2. c) or d)
-					// c) inability of accumulating the acquisition urge
-					// therefore, the immediate satisfaction d=0
-					// d) lack of a value scale in the acquisition of things of the world
-					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_AcquisitionUrge);
-				}
-				
-				if(profile.Sch.HasFactorReaction("+", Factors.p)
-				   && profile.C.HasFactorReaction("+", Factors.d))
-				{
-				 	// Buch 3, p.359, 2. e)
-				 	profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_ConstRivaligWPartner);
-				}
-				
-				if((profile.C.HasFactorReaction("+", Factors.m)
-				    && profile.S.HasFactorReaction("+", Factors.s))
-				    ||
-				    (profile.C.HasFactorReaction("0", Factors.m)
-				     && profile.S.HasFactorReaction("0", Factors.s)))
-				{
-				   	// Buch 3, p.359, 3. c)
-					// Oralsadismus (m+, s+, oder m0, s0)
-					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_Oralsadismus);
-				}
-				
-				if(profile.Sch.HasFactorReaction("-!", Factors.k))
-				{
-				   	// Buch 3, p.359, 4.
-					// Negation of the ideals, or depreciation of all ideals
-					// self-devaluation, ...
-					profile.AddInterpretationNote(InterpretationNotes.Lustprinzip_NegationOfTIdeals);
-				}
-				#endregion
-				
-				// p.367 Syndrom des (perversen) Lustprinzip
-				if(profile.Sch.HasAnyFactorReaction("+!", "+!!", "+!!!", "0", "±", Factors.p)
-				   && profile.C.HasAnyFactorReaction("+", "0", "±", Factors.d)
-				   && profile.C.HasAnyFactorReaction("+", "0", "±", Factors.m)
-				   && profile.S.HasAnyFactorReaction("+", "0", "±", Factors.h)
-				   && profile.S.HasAnyFactorReaction("+", "0", "-", Factors.s)
-				  )
-				{
-					profile.AddInterpretationNote(InterpretationNotes.PerverseLustprinzip);
-				}
-				
-				// p.433
-				if(profile.Sch.HasFactorReaction("+", Factors.p)
-					&& profile.C.HasFactorReaction("0", Factors.d)
-					&& profile.C.HasFactorReaction("0", Factors.m))
-				{
-					profile.AddInterpretationNote(InterpretationNotes.GrößenwahnLustprinzip);
-				}
-				
-				return true;
 			}
 			
 			return false;
@@ -1876,6 +1905,20 @@ namespace SzondiTest
 				}
 			}
 			
+			// p.282 I.1
+			// Skata row 5d and 5b
+			if((profile.P.IsAny("-,0", "-!,0", "0,-", "-,±", "0,±"/*or 0+? p.283 VI.*/)
+			    && profile.Sch.IsAny("-,0", "-!,0",  "-!!,0", "-!,±")) 
+			    || 
+			    //p.286 VI.1. hypochondrisch katatonische Mitte
+			    profile.HasMitte("0,-","-,+")) 
+			{
+				//Nb hy±: präkatatonische Mitte (p.286 VI.2.)
+				
+				var note = InterpretationNotes.KatatonifMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
 			// p.291 IrrealenBlocksSyndrom
 			if(profile.hy.IsAny("-", "-!")
 			   && profile.Sch.IsAny("-,-", "-!,-", "-,-!", "-!,-!")
@@ -1901,6 +1944,7 @@ namespace SzondiTest
 			
 			#region Mord
 			// Buch 3, p.361, Tabelle 39 Variationen der Mitter bei Psychopathen
+			//p.377 VI
 			if(profile.HasMitte("0,-", "-,±")
 			   || profile.HasMitte("0,-", "0,-") 
 			   || profile.HasMitte("0,-", "0,+") 
@@ -2010,7 +2054,9 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			#endregion
-				
+			
+			#region Affekt notes
+			
 			// p.274 II.7
 			if(profile.P.EqualsTo("0,0"))
 			{
@@ -2024,6 +2070,8 @@ namespace SzondiTest
 				var note = InterpretationNotes.Lamentation;
 				profile.AddInterpretationNote(note);
 			}
+			
+			#endregion
 			
 			// p.280 VII.
 			if(profile.HasMitte("+,0", "0,+", FactorsComparisonOptions.Hypertension_insensitive))
@@ -2039,20 +2087,7 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
-			// p.282 I.1
-			// Skata row 5d and 5b
-			if((profile.P.IsAny("-,0", "-!,0", "0,-", "-,±", "0,±"/*or 0+? p.283 VI.*/)
-			    && profile.Sch.IsAny("-,0", "-!,0",  "-!!,0", "-!,±")) 
-			    || 
-			    //p.286 VI.1. hypochondrisch katatonische Mitte
-			    profile.HasMitte("0,-","-,+")) 
-			{
-				//Nb hy±: präkatatonische Mitte (p.286 VI.2.)
-				
-				var note = InterpretationNotes.KatatonifMitte;
-				profile.AddInterpretationNote(note);
-			}
-			
+			#region Kontakt notes
 			// p.300 V.1.
 			if(profile.C.IsAny("0,-", "0,-!", "0,-!!"))
 			{
@@ -2065,7 +2100,43 @@ namespace SzondiTest
 			{
 				var note = InterpretationNotes.Kontaktsperre;
 				profile.AddInterpretationNote(note);
-			}				
+			}
+
+			if(profile.C.EqualsTo("-,+"))//p.374
+			{
+				var note = InterpretationNotes.InzestuösesAnhangen;
+				profile.AddInterpretationNote(note);			
+			}
+
+			#region Melancholische und manische Mitte
+			//B3 p.349
+			if(profile.HasMitte("-,+", "+!,-")
+			   || profile.HasMitte("0,0", "+!,-")
+			   || profile.HasMitte("0,+", "+,-")
+			   || profile.HasMitte("0,+", "+,0")
+			   || profile.HasMitte("-!,+", "+,-")//p.350 VI.
+			   || profile.HasMitte("-,+", "+,0")//p.350 VI.
+			   || profile.HasMitte("-!,0", "+!!,0")//p.350 VI.
+			   || profile.HasMitte("0,0", "+,-")//p.350 VI.
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.MelancholischeMitte);
+			}
+			
+			//B3 p.349
+			if(profile.HasMitte("0,0", "-!,-")
+			   || profile.HasMitte("0,+", "-!,-")
+			   || profile.HasMitte("+,-", "-!,-")
+			   || profile.HasMitte("±,0", "-!,-")
+			   || profile.HasMitte("0,0", "-!,±")//.353 V. 1.
+			   || profile.HasMitte("0,+", "-,-")//.353 V. 4.
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.ManischeMitte);
+			}
+			#endregion
+							
+			#endregion
 			
 			// p.293
 			if(profile.HasMitte("0,-!", "-!,-")
@@ -2115,32 +2186,54 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.TrunksuchtMitte);
 			}
 			
-			#region Melancholische und manische Mitte
-			//B3 p.349
-			if(profile.HasMitte("-,+", "+!,-")
-			   || profile.HasMitte("0,0", "+!,-")
-			   || profile.HasMitte("0,+", "+,-")
-			   || profile.HasMitte("0,+", "+,0")
-			   || profile.HasMitte("-!,+", "+,-")//p.350 VI.
-			   || profile.HasMitte("-,+", "+,0")//p.350 VI.
-			   || profile.HasMitte("-!,0", "+!!,0")//p.350 VI.
-			   || profile.HasMitte("0,0", "+,-")//p.350 VI.
+			#region sex notes
+			// pp.376-7
+			if(profile.HasMitte("+,-", "+,0")
+			   || profile.HasMitte("+,±", "+,0")
+			   || profile.HasMitte("+,0", "+,0")
+			   || profile.HasMitte("+,0", "+,±")
+			   || profile.HasMitte("+,+", "+,0")
 			  )
 			{
-				profile.AddInterpretationNote(InterpretationNotes.MelancholischeMitte);
+				profile.AddInterpretationNote(InterpretationNotes.FetischMitte);
 			}
 			
-			//B3 p.349
-			if(profile.HasMitte("0,0", "-!,-")
-			   || profile.HasMitte("0,+", "-!,-")
-			   || profile.HasMitte("+,-", "-!,-")
-			   || profile.HasMitte("±,0", "-!,-")
-			   || profile.HasMitte("0,0", "-!,±")//.353 V. 1.
-			   || profile.HasMitte("0,+", "-,-")//.353 V. 4.
+			if(profile.HasMitte("+,-", "+,-")
+			   || profile.HasMitte("+,-", "0,+")
+			   || profile.HasMitte("+,-", "+,+")
+			   || profile.HasMitte("0,-", "+,-")
+			   || profile.HasMitte("0,-", "0,+")
+			   || profile.HasMitte("0,-", "+,+")
+			   || profile.HasMitte("+,-", "0,0"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.MasochistMitte);
+			}
+			
+			if((profile.P.IsAny("-,+", "-,±") && profile.Sch.IsAny("-,+", "-,±"))
+			   || (profile.P.EqualsTo("-,0") && profile.Sch.IsAny("-!,+", "-!,±", "0,-!"))
+			   || (profile.P.EqualsTo("0,-") && profile.Sch.IsAny("-,+", "-,±", "-,0"))
+			   || (profile.P.EqualsTo("0,0") && profile.Sch.IsAny("0,±", "0,+", "-,-"))
 			  )
 			{
-				profile.AddInterpretationNote(InterpretationNotes.ManischeMitte);
+				profile.AddInterpretationNote(InterpretationNotes.SadistMitte);
 			}
+			
+			if(profile.HasMitte("±,-", "-,-")
+			   || profile.HasMitte("+,-", "-,-")
+			   || profile.HasMitte("+,±", "-!,-")
+			   || profile.HasMitte("-,-", "-,-"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.NegativeMitte);
+			}
+			
+			if(profile.HasMitte("0,-", "-,±")
+			   || profile.HasMitte("0,0", "-,±")
+			   || profile.HasMitte("-,-", "-,±")
+			   || profile.HasMitte("0,-", "-,0"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.ExhibitionistMitte);
+			}
+			
 			#endregion
 			
 			FurtherCompositeNotes(profile);

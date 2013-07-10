@@ -65,7 +65,13 @@ namespace SzondiTest
 		
 		public override string ToString()
 		{
-			return vector.ToString() + factor.ToString() 
+			string factorDescr = string.Empty;
+			if(factor != Factors.undefined)
+			{
+				factorDescr = factor.ToString();
+			}
+			
+			return vector.ToString() + factorDescr
 				+ GetDescription(direction);
 		}
 		
@@ -177,15 +183,15 @@ namespace SzondiTest
 		Sexualstörungen,
 		Triebzielinversion,
 		// Sexuelle - Lustprinzip
-		Lustprinzip,
+		Lustprinzip,//p.358 ist oft gleichzeitig auch das Syndrom der Polymorphen Perversion
 		Lustprinzip_Kleptomanie,
 		Lustprinzip_AcquisitionUrge,
-		Lustprinzip_ConstRivaligWPartner,
-		Lustprinzip_NegationOfTIdeals,
+		Lustprinzip_ConstRivalWPartner,
+		Lustprinzip_IdealsNegation,
 		Lustprinzip_Oralsadismus,
-		// Sexuelle perversions
 		PerverseLustprinzip,
 		GrößenwahnLustprinzip, //
+		// Sexuelle perversions
 		Fetischismus,
 		Masochismus,
 		Sadomasochismus,
@@ -193,6 +199,12 @@ namespace SzondiTest
 		Analsadismus,
 		Analmasochismus,
 		PolymorphPervers,
+		// 
+		FetischMitte,
+		MasochistMitte,
+		SadistMitte,
+		NegativeMitte,
+		ExhibitionistMitte,
 		#endregion
 					
 		#region Schutz
@@ -218,6 +230,7 @@ namespace SzondiTest
 		Akzeptationsdrang,//C0+
 		Kontaktsperre,// C--
 		HypomanischeBenehmen, //C0-
+		InzestuösesAnhangen,//C-+, p.374
 		#endregion
 		
 		Ödipussyndrom,
@@ -1163,7 +1176,7 @@ namespace SzondiTest
 					return this.name;
 				}
 				else
-				{	return "<profiles>";
+				{	return "[profiles]";
 				}
 			}
 		}
@@ -1195,7 +1208,7 @@ namespace SzondiTest
 				return;
 			}
 			
-			if(this.vorergrundprofile.Count
+			if(vorergrundprofile.Count
 			   != empirischekomplementprofile.Count)
 			{
 				throw new ArgumentException("Empirischekomplementprofile.Count differs.");

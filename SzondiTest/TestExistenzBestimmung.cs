@@ -191,6 +191,13 @@ namespace SzondiTestUnitTests
 		}	
 		
 		internal static void SetSexAndNameForProfiles(Sex sexToSet, string name,
+			List<TestProfile> exampleProfiles, List<TestProfile> expComplementarProfiles)
+		{
+			TestSeries testSerie = new TestSeries(sexToSet, exampleProfiles, 
+			                                      expComplementarProfiles, name);
+		}
+		
+		internal static void SetSexAndNameForProfiles(Sex sexToSet, string name,
 			List<TestProfile> exampleProfiles)
 		{
 			TestSeries testSerie = new TestSeries(sexToSet, exampleProfiles, name);
@@ -1590,6 +1597,11 @@ namespace SzondiTestUnitTests
 		[Test][Ignore]
 		public void TestSexualstörungen()
 		{
+			/* TODO: DetectSexualstörungen deleted. replaced by Triebzielinversion. Male only. 
+			// No kontaktstörungen
+			// Sexualstörungen pp.261 X., example p.262, //p.262 IX.2.
+			*/
+			
 			{	var profiles = Fälle.Fall16;
 				var haves = new List<int>() 
 				{	2, 10,	// Buch 3 p.262 IX.1, profiles 2, 10 p.263
@@ -1598,22 +1610,16 @@ namespace SzondiTestUnitTests
 				var haveNots = new List<int>() {1, 3, };
 				
 				var noteSex = InterpretationNotes.Sexualstörungen;
-				TestNoteHelper(noteSex, Syndromatic.DetectSexualstörungen, 
+				TestNoteHelper(noteSex, Syndromatic.DetectIntepretationNotes, 
 				                     profiles, haves, haveNots);		
 			}
 			
-			{
-				var profiles = Fälle.Fall17;
-				
-				var haves = new List<int>() 
-				{	// Buch 3 p.264 X.3,
-					3, 4, 5, 8, 9, 10
-				};//TODO 1,2,6,7
-				var haveNots = new List<int>() 
-				{};
+			{	var profiles = Fälle.Fall17;
+				var haves = new List<int>() {3, 4, 5, 8, 9, 10};// Buch 3 p.264 X.3,//TODO 1,2,6,7
+				var haveNots = new List<int>() {};
 				
 				var noteSex = InterpretationNotes.Sexualstörungen;
-				TestNoteHelper(noteSex, Syndromatic.DetectSexualstörungen, 
+				TestNoteHelper(noteSex, Syndromatic.DetectIntepretationNotes, 
 				                     profiles, haves, haveNots);		
 			}
 		}
@@ -1676,6 +1682,39 @@ namespace SzondiTestUnitTests
 			                         femaleProfiles, 
 			                         Syndromatic.DetectInversion);
 		}
+	
+		[Test]
+		public static void TestHasLustprinzipSyndrom()
+		{
+			{	var profiles = Fälle.Fall32;
+				var haves = new List<int>() {1,2,4,5,6};//p.380
+				var haveNots = new List<int>() {};//TODO review 3,
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);		
+			}
+			
+			//TODO p.375: add Fall 33 (p.384) for Lustprinzip_Perversionssyndrom
+			
+			{	var profiles = Fälle.Fall34;
+				var haves = new List<int>() {9,10};//p.389// perversen Lustsyndroms
+				var haveNots = new List<int>() {1,2,3,4,5,6,7,8,};
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);		
+			}
+			
+			{	var profiles = Fälle.Fall12;
+				var haves = new List<int>() {1};//p.210
+				var haveNots = new List<int>() {};
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);		
+			}				
+		}	
 	}
 	
 	[TestFixture]
@@ -1716,13 +1755,10 @@ namespace SzondiTestUnitTests
 	[TestFixture]
 	public class TestExistenzBestimmung : BaseSzondiUnitTests
 	{				
-		[Test]//[Ignore]
+		[Test][Ignore]
 		public static void TestParseAndSyndromaticProfiles()
 		{
 			string inputFilename = "profiles.txt";
-			string outputFilename = "detectedExistenzformen (" 
-				+ DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ").txt";;
-			
 			
 			TestSeries profilesSeries;
 			string EKPprofilesHeadingMarker = "PCE";
@@ -1781,7 +1817,8 @@ namespace SzondiTestUnitTests
 	            	#endregion
 	            }
 	            
-	            profilesSeries = new TestSeries(testTakerSex, foregroundProfiles, EKPprofiles);
+	            profilesSeries 
+	            	= new TestSeries(testTakerSex, foregroundProfiles, EKPprofiles, "Fall 34");
 	        }
 	        catch (Exception e)
 	        {
@@ -1797,11 +1834,25 @@ namespace SzondiTestUnitTests
 	        #endregion
 	        
 	        #region write to file
+	        WriteToFile(profilesSeries);
+	        
+	        var serieFall31 = Fälle.Fall31[1].partOf;
+	        serieFall31.Interpret();
+	        WriteToFile(serieFall31);
+	        #endregion
+		}
+
+		private static void WriteToFile(TestSeries profilesSeries)
+		{
+			string dateTimeStamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+			string outputFilename = "detectedExistenzformen " 
+	        	+ " (" + dateTimeStamp + ") "
+				+ profilesSeries.Name
+				+ ".txt";
 	        try
 	        {
 	            using (var sw = new System.IO.StreamWriter(outputFilename))
 	            {
-	            	
 	            	string line = string.Empty;
 	            	foreach(var profile in profilesSeries.vorergrundprofile)
 	            	{
@@ -1836,34 +1887,6 @@ namespace SzondiTestUnitTests
 	            Console.WriteLine(e.Message);
 	            Assert.Fail(e.Message);
 	        }
-	        #endregion
-		}		
-								
-		[Test]
-		public static void TestHasLustprinzipSyndrom()
-		{
-			var exampleProfiles = new System.Collections.Generic.List<TestProfile>()
-			{
-				// pp.379-80, Fall 32
-				new TestProfile("+,-!!!", "+,±", "+,0", "0,+"),
-				new TestProfile("+,-!!", "+,±", "+,0", "0,+"),//II
-				new TestProfile("+,-!", "±,±", "+,0", "0,+"),//IV
-				new TestProfile("+!,-!!!", "+,±", "+,0", "0,+"),
-				new TestProfile("+!,-!!", "±,±", "+,0", "0,+"),
-					
-				// Buch 3 p.389 Profil IX, X (from p.387) 
-				// perversen Lustsyndroms
-				new TestProfile("±,±", "-,0", "0,+!", "0,+"),
-				new TestProfile("±,-", "+,-", "+,+!", "0,±"),
-					
-				//p.210
-				new TestProfile("-,-!", "+,0", "+,+", "±,0"),
-			};
-			
-			foreach(var profile in exampleProfiles)
-			{
-				Assert.IsTrue(Syndromatic.HasLustprinzipSyndrom(profile));
-			}
-		}		
+		}
 	}
 }
