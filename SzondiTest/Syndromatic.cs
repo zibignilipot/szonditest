@@ -412,19 +412,41 @@ namespace SzondiTest
 			}
 		}
 		
-		internal static void DetectKain(TestProfile profile)
+		internal static void DetectKainUndAbel(TestProfile profile)
 		{
 			// Buch 3, p.279 I.1, p.280 I.
-			if(profile.P.IsAny("-,+", "-,+!", "-,0"))//-0 pp.305 XI., 306 VII
+			if(profile.P.IsAny("-,+", "-,+!", "-!,+", "-,0"))
+			//-0 pp.305 XI., 306 VII
+			// -!+ p.350 IV. 4.
 			//  doubt -±, -0 p.305 XI.
 			{
 				var note = InterpretationNotes.Kain;
+				profile.AddInterpretationNote(note);
+			}
+			
+			// B3 p.345 5.
+			if(profile.P.EqualsTo("+,-"))//doubt 0- from Skala 7c, specular of kain
+			{
+				var note = InterpretationNotes.Abel;
+				profile.AddInterpretationNote(note);
+			}
+			
+			if((profile.HasInterpretationNote(InterpretationNotes.Kain)
+			   || profile.HasInterpretationNote(InterpretationNotes.Abel))
+			   && 
+			   profile.InSukzession("+,-", "-,+", Vectors.P))
+			{
+				//p.349 X.I. Syndromatik der Manie
+				var note = InterpretationNotes.KainAbelWechsel;
 				profile.AddInterpretationNote(note);
 			}
 		}
 		#endregion
 		
 		#region KontankExistenzFormen (6-8)
+		
+		//TODO pp.350 Mischformen: 1. paranoide Melancholie, 2. depressive Paranoid,
+		// 3. stuporöse Manie, 4. agitierende Katatonie.
 		
 		internal static void DetectKontaktPsychopathische(TestProfile profile)
 		{
@@ -491,23 +513,37 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.Sucht);
 			}
 			
-			// Buch 3, p.362, Tabelle 39 Variationen der Mitter bei Psychopathen
-			if(profile.HasMitte("0,0", "0,0")
-			   || profile.HasMitte("0,0", "0,+") // Paranoide Trunksucht; Kleptomanie
-			   || profile.HasMitte("+,0", "0,0") // Trunksucht
-			   || profile.HasMitte("0,-", "0,0") // Trunksucht; Sadomasochismus
-			   || profile.HasMitte("+,0", "0,±") // Trunksucht
-			   || profile.HasMitte("+,0", "0,-") // Exhibitionismus; Trunksucht
-			  )
-			{
-				profile.AddInterpretationNote(InterpretationNotes.TrunksuchtMitte);
-			}
-			
 			if(detected)
 			{
 				profile.AddHasExistenzform(Existenzformen.KontaktPsychopathische);
 			}
 		}
+		
+		internal static void DetectKontaktstörungen(TestProfile profile)
+		{
+			// Kontaktstörungen pp.261-2
+			if(profile.p.IsAny("-", "-!", "-!!", "-!!!")
+			   && profile.d.IsAny("+", "+!", "+!!", "+!!!"))
+				// Suchen nach dem Vervolger 
+			{
+				if(profile.m.IsAny("-", "-!", "-!!", "-!!!"))
+					// Abtrennung von der realen Welt
+				{
+					profile.AddInterpretationNote(InterpretationNotes.Kontaktstörungen);
+				}
+				else
+				{
+					// p.264 IX
+					profile.AddInterpretationNote(InterpretationNotes.SuchenNachVerfolger);
+				}
+			}
+		
+			// p.280 IX.3
+			if(profile.C.IsAny("0,+", "0,+!", "0,+!!", "0,+!!!"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Akzeptationsdrang);
+			}
+		}	
 		
 		internal static void DetectDepressive_Melancholische(TestProfile profile)
 		{
@@ -517,14 +553,33 @@ namespace SzondiTest
 			//Buch 3, pp.243-4, Tabelle 34
 			//Buch 3, p.272 I.4, p.274 II.6 (depressive Faktorenverband
 			{
-				if( profile.k.IsAny("+", "+!")
+				if( profile.k.IsAny("+", "+!", "+!!", "±")//k± p.350 VII
 				   && profile.d.IsAny("+", "+!", "+!!")
 				   && profile.s.IsAny("-", "-!", "0"))
+				// p.341 m±, h+ optional (omitted) in Skala
 				{
 					detected = true;
 				}
 			}
 			#endregion
+			
+			#region Existenzskala row 6c
+			if(profile.d.IsAny("+!!", "+!!!"))
+			{
+				detected = true;
+			}
+			#endregion
+			
+			#region Existenzskala row 6d
+			if(profile.s.IsAny("+!", "0")
+			   && profile.Sch.IsAny("-!,-", "-!,+", "-!,±")
+			   && profile.C.IsAny("+,-", "0,0"))
+			{
+				detected = true;
+			}
+			#endregion
+			
+			#region p.243
 			
 			//Buch 3, p.243, II. 1. a)
 			{
@@ -556,6 +611,7 @@ namespace SzondiTest
 					detected = true;
 				}
 			}
+			#endregion
 			
 			if(detected)
 			{
@@ -563,33 +619,7 @@ namespace SzondiTest
 				profile.AddHasExistenzform(exForm);
 			}
 		}
-		
-		internal static void DetectKontaktstörungen(TestProfile profile)
-		{
-			// Kontaktstörungen pp.261-2
-			if(profile.p.IsAny("-", "-!", "-!!", "-!!!")
-			   && profile.d.IsAny("+", "+!", "+!!", "+!!!"))
-				// Suchen nach dem Vervolger 
-			{
-				if(profile.m.IsAny("-", "-!", "-!!", "-!!!"))
-					// Abtrennung von der realen Welt
-				{
-					profile.AddInterpretationNote(InterpretationNotes.Kontaktstörungen);
-				}
-				else
-				{
-					// p.264 IX
-					profile.AddInterpretationNote(InterpretationNotes.SuchenNachVerfolger);
-				}
-			}
-		
-			// p.280 IX.3
-			if(profile.C.IsAny("0,+", "0,+!", "0,+!!", "0,+!!!"))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.Akzeptationsdrang);
-			}
-		}
-		
+				
 		internal static void DetectHypomanische_Manische(TestProfile profile)
 		{
 			bool detected = false;
@@ -597,7 +627,7 @@ namespace SzondiTest
 			#region Existenzskala rows 7abc (Hypomanische_Manische)
 			//Buch 3, pp.243-4, Tabelle 35
 			{
-				if( profile.C.Contains("0,-")
+				if( profile.C.IsAny("0,-", "0,-!", "0,-!!")
 				   && profile.Sch.Contains("-,-")
 				   && profile.S.Contains("+,+!"))
 				{
@@ -610,6 +640,7 @@ namespace SzondiTest
 			{
 				if(profile.C.IsAny("0,-", "0,-!", "0,-!!", "0,-!!!"))
 				{
+					// doubt: more stringent condition for 0- ? note only?
 					detected = true;
 				}
 				
@@ -631,6 +662,14 @@ namespace SzondiTest
 				{
 					detected = true;
 				}
+				
+				// doubt, per p.345 and Skala 7b, just k-! and m- enough?
+				if(profile.k.IsAny("-!", "-!!", "-!!!")
+				   && profile.m.IsAny("-", "-!", "-!!", "-!!!"))//doubt: hypertension?
+				{
+					detected = true;
+				}
+				
 			}
 			#endregion
 			
@@ -645,6 +684,16 @@ namespace SzondiTest
 				}
 			}
 			#endregion
+			
+			// p.344 Faktorenverband
+			if(profile.C.EqualsTo("0,-") 
+			   && profile.k.IsAny("-!", "-!!")
+			   && profile.s.IsAny("+!", "+!!"))
+			// e+, hy- seem optional
+			// p-, h+, seem very optional (not even mentioned at p.345)
+			{
+				detected = true;
+			}
 			
 			if(detected)
 			{
@@ -1308,13 +1357,13 @@ namespace SzondiTest
 		{
 			if(DetectParanoideSpaltungsSyndromHelper(profile, true))
 			{
-				// Form a) +-
+				// Form a) +- +- 0- +-
 				// Buch 3 p.260 I.
 				profile.AddInterpretationNote(InterpretationNotes.ParanoSpaltungsSynd);
 			}
 			else if(DetectParanoideSpaltungsSyndromHelper(profile, false))
 			{
-				// Form b) -+
+				// Form b) -+ -+ 0+ -+
 				// Buch 3 p.278 I., p.279 I.
 				profile.AddInterpretationNote(InterpretationNotes.ParanoSpaltungsSynd);
 			}
@@ -1810,7 +1859,7 @@ namespace SzondiTest
 		{
 			FurtherIchSimpleNotes(profile);
 			DetectAffektstörungenNotes(profile);
-			DetectKain(profile);
+			DetectKainUndAbel(profile);
 			DetectTriebzielinversion(profile);
 			
 			#region Katatoni notes
@@ -2052,6 +2101,44 @@ namespace SzondiTest
 				var note = InterpretationNotes.DepersonalisationMitte;
 				profile.AddInterpretationNote(note);
 			}
+			
+			// Buch 3, p.362, Tabelle 39 Variationen der Mitter bei Psychopathen
+			if(profile.HasMitte("0,0", "0,0")
+			   || profile.HasMitte("0,0", "0,+") // Paranoide Trunksucht; Kleptomanie
+			   || profile.HasMitte("+,0", "0,0") // Trunksucht
+			   || profile.HasMitte("0,-", "0,0") // Trunksucht; Sadomasochismus
+			   || profile.HasMitte("+,0", "0,±") // Trunksucht
+			   || profile.HasMitte("+,0", "0,-") // Exhibitionismus; Trunksucht
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.TrunksuchtMitte);
+			}
+			
+			#region Melancholische und manische Mitte
+			//B3 p.349
+			if(profile.HasMitte("-,+", "+!,-")
+			   || profile.HasMitte("0,0", "+!,-")
+			   || profile.HasMitte("0,+", "+,-")
+			   || profile.HasMitte("0,+", "+,0")
+			   || profile.HasMitte("-!,+", "+,-")//p.350 VI.
+			   || profile.HasMitte("-,+", "+,0")//p.350 VI.
+			   || profile.HasMitte("-!,0", "+!!,0")//p.350 VI.
+			   || profile.HasMitte("0,0", "+,-")//p.350 VI.
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.MelancholischeMitte);
+			}
+			
+			//B3 p.349
+			if(profile.HasMitte("0,0", "-!,-")
+			   || profile.HasMitte("0,+", "-!,-")
+			   || profile.HasMitte("+,-", "-!,-")
+			   || profile.HasMitte("±,0", "-!,-")
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.ManischeMitte);
+			}
+			#endregion
 			
 			FurtherCompositeNotes(profile);
 		}

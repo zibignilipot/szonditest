@@ -166,7 +166,9 @@ namespace SzondiTest
 		MörderE,
 		MörderE_mitVentil,
 		ReineKain,
-		Kain,
+		Kain,//-+
+		Abel,//+-
+		KainAbelWechsel,//p.349 XI.
 		#endregion
 		
 		#region Sexuelle
@@ -206,6 +208,8 @@ namespace SzondiTest
 		
 		#region Kontakt
 		TrunksuchtMitte,
+		MelancholischeMitte,
+		ManischeMitte,
 		Sucht,
 		Kontaktstörungen, // -p +d -m
 		SuchenNachVerfolger,
@@ -291,17 +295,17 @@ namespace SzondiTest
 			{
 				case "0":
 				case "Ø":
-					{
-						positivTendenz = 0;
-						negativTendenz = 0;
-					} break;
+				{
+					positivTendenz = 0;
+					negativTendenz = 0;
+				} break;
 				case "+": positivTendenz = 2; break;
 				case "-": negativTendenz = 2; break;
 				case "±":
-					{
-						positivTendenz = 2;
-						negativTendenz = 2;
-					} break;
+				{
+					positivTendenz = 2;
+					negativTendenz = 2;
+				} break;
 				case "+!": positivTendenz = 4; break;
 				case "+!!": positivTendenz = 5; break;
 				case "+!!!": positivTendenz = 6; break;
@@ -309,21 +313,21 @@ namespace SzondiTest
 				case "-!!": negativTendenz = 5; break;
 				case "-!!!": negativTendenz = 6; break;
 				case "!±" :
-					{
-						// convention: ! at the left refers to positivTendenz +
-						positivTendenz = 4;
-						negativTendenz = 2;
-					} break;
+				{
+					// convention: ! at the left refers to positivTendenz +
+					positivTendenz = 4;
+					negativTendenz = 2;
+				} break;
 				case "±!":
-					{
-						positivTendenz = 2;
-						negativTendenz = 4;
-					} break;
+				{
+					positivTendenz = 2;
+					negativTendenz = 4;
+				} break;
 				default:
-					{
-						string errorMessage = "Invalid factor reaction description: " + description;
-						throw new ArgumentException(errorMessage);
-					}
+				{
+					string errorMessage = "Invalid factor reaction description: " + description;
+					throw new ArgumentException(errorMessage);
+				}
 			}
 		}
 		

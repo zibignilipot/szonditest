@@ -282,7 +282,15 @@ namespace SzondiTestUnitTests
 				var haves = new List<int>() {12,13};
 				var haveNots = new List<int>() {};//?
 				var note = InterpretationNotes.Kain;
-				TestNoteHelper(note, Syndromatic.DetectKain, profiles, haves, haveNots);	
+				TestNoteHelper(note, Syndromatic.DetectKainUndAbel, profiles, haves, haveNots);	
+			}
+			
+			// Buch 3 p.350
+			{	var profiles = Fälle.Fall30;
+				var haves = new List<int>() {1,4,5};
+				var haveNots = new List<int>() {2,3,6,7,8,9,10};
+				var note = InterpretationNotes.Kain;
+				TestNoteHelper(note, Syndromatic.DetectKainUndAbel, profiles, haves, haveNots);	
 			}
 		}
 		
@@ -1049,6 +1057,14 @@ namespace SzondiTestUnitTests
 				TestNoteHelper(note, Syndromatic.DetectParanoideSpaltungsSyndrom, 
 				                     profiles, haves, haveNots);
 			}
+			
+			{	 // Buch 3 p.350 I.
+				var profiles = Fälle.Fall30;
+				var haves = new List<int>() {7};////TODO revise: 1,
+				var haveNots = new List<int>() {2,3,4,5,9,};////TODO revise: 6,8,10
+				TestNoteHelper(note, Syndromatic.DetectParanoideSpaltungsSyndrom,
+				                     profiles, haves, haveNots);
+			}
 		}
 		
 		[Test]
@@ -1241,12 +1257,21 @@ namespace SzondiTestUnitTests
 			// from Buch3, p.274 II.6
 			{	var profiles = Fälle.Fall19;
 				var haves = new List<int>{2,5,7};
-				var haveNots = new List<int>{1,3,4,6,8,9,10};
+				var haveNots = new List<int>{3,4,6,8,9,10};//1,
 
 				TestExistenzformHelper(Existenzformen.Depressive_Melancholische, 
 				                       Syndromatic.DetectDepressive_Melancholische,
 				                       profiles, haves, haveNots);
+			}
 			
+			// from Buch3, p.352 VII.
+			{	var profiles = Fälle.Fall30;
+				var haves = new List<int>{4,7,1,6,2,9,10};//
+				var haveNots = new List<int>{3,5,};//8,simply C0-
+
+				TestExistenzformHelper(Existenzformen.Depressive_Melancholische, 
+				                       Syndromatic.DetectDepressive_Melancholische,
+				                       profiles, haves, haveNots);
 			}
 		}		
 	
@@ -1383,6 +1408,19 @@ namespace SzondiTestUnitTests
 				var noteSex = InterpretationNotes.HypomanischeBenehmen;
 				TestNoteHelper(noteSex, Syndromatic.FurtherNotes, 
 				                     profiles, haves, haveNots);		
+			}
+		}
+	
+		[Test]
+		public void TestMelancholische()
+		{		
+			// Buch 3 p.350
+			{	var profiles = Fälle.Fall30;
+				var haves = new List<int>() {1,4,2,6};
+				var haveNots = new List<int>() {3,5,7,8,9,10};
+				var note = InterpretationNotes.MelancholischeMitte;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				               profiles, haves, haveNots);
 			}
 		}
 	}
