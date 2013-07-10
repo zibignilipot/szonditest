@@ -1875,6 +1875,17 @@ namespace SzondiTest
 					profile.AddInterpretationNote(note);
 				}
 			}
+			
+			// p.291 IrrealenBlocksSyndrom
+			if(profile.hy.IsAny("-", "-!")
+			   && profile.Sch.IsAny("-,-", "-!,-", "-,-!", "-!,-!")
+			   && profile.C.IsAny("-,-", "-!,-", "-,-!", "-!,-!")
+			  )
+			// e ("-", "-!", "0") optional per p.301, p.353 
+			{
+				var note = InterpretationNotes.IrrealenBlocksSyndrom;
+				profile.AddInterpretationNote(note);
+			}
 			#endregion
 			
 			if((profile.S.EqualsTo("0,+") || profile.S.EqualsTo("-,+"))
@@ -2054,17 +2065,7 @@ namespace SzondiTest
 			{
 				var note = InterpretationNotes.Kontaktsperre;
 				profile.AddInterpretationNote(note);
-			}
-				
-			// p.291 IrrealenBlocksSyndrom
-			if(profile.P.IsAny("-,-", "-!,-", "-,-!", "-!,-!", "0,-")//P0- p.301
-			   && profile.Sch.IsAny("-,-", "-!,-", "-,-!", "-!,-!")
-			   && profile.C.IsAny("-,-", "-!,-", "-,-!", "-!,-!")
-			  )
-			{
-				var note = InterpretationNotes.IrrealenBlocksSyndrom;
-				profile.AddInterpretationNote(note);
-			}
+			}				
 			
 			// p.293
 			if(profile.HasMitte("0,-!", "-!,-")
@@ -2134,6 +2135,8 @@ namespace SzondiTest
 			   || profile.HasMitte("0,+", "-!,-")
 			   || profile.HasMitte("+,-", "-!,-")
 			   || profile.HasMitte("±,0", "-!,-")
+			   || profile.HasMitte("0,0", "-!,±")//.353 V. 1.
+			   || profile.HasMitte("0,+", "-,-")//.353 V. 4.
 			  )
 			{
 				profile.AddInterpretationNote(InterpretationNotes.ManischeMitte);

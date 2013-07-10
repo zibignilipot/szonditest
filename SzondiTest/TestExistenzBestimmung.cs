@@ -658,6 +658,8 @@ namespace SzondiTestUnitTests
 	[TestFixture]
 	public class TestIchExistenzFormen : BaseSzondiUnitTests
 	{
+		#region ProjektivParanoiden
+		
 		[Test]
 		public void TestProjektivParanoiden()
 		{
@@ -791,6 +793,42 @@ namespace SzondiTestUnitTests
 		}
 		
 		[Test]
+		public void TestProjektivParanoideMitte()
+		{
+			var notePM = InterpretationNotes.ProjektivParanoMitte;
+			
+			{	var profiles = Fälle.Fall16;
+				var haves = new List<int>() 
+				{
+					// Buch 3 p.262 V. 1., profiles p.263 2, 4-5, 7, 9
+					2, 4, 5, 7, 9,
+					
+					// Buch 3 p.262 V. 1., profiles p.263 1
+					1,
+					
+					// Buch 3 p.262 V. 2., profiles 6, 8, 10 p.263 
+					6, 8, 10
+				};
+				var haveNots = new List<int>() {3};
+				
+				TestNoteHelper(notePM, Syndromatic.DetectProjektivParanoideMitte, 
+				                     profiles, haves, haveNots);	
+			}
+			{
+				var profiles = Fälle.Fall17;
+				var haves = new List<int>() 
+				{
+					// Buch 3 p.264 VI., profiles p.265
+					3, 4, 5, 8, 9,
+				};
+				var haveNots = new List<int>() {1,2,6,7,10};
+				
+				TestNoteHelper(notePM, Syndromatic.DetectProjektivParanoideMitte, 
+				                     profiles, haves, haveNots);
+			}
+		}
+		
+		[Test]
 		public void TestProjektivParanoidenSubtypes()
 		{
 			//Maniforme Paranoid
@@ -825,6 +863,10 @@ namespace SzondiTestUnitTests
 				SeriesContainsDiagnostic(serie, exForm, detector);
 			}
 		}
+		
+		#endregion
+		
+		#region Katatoni
 		
 		[Test]
 		public void TestTotaleKatatonifIchsperrung()
@@ -901,6 +943,36 @@ namespace SzondiTestUnitTests
 			}
 		}
 		
+		[Test]
+		public static void TestIrrealenBlocksSyndrom()
+		{
+			// Buch 3 p.291 VII
+			{	var profiles = Fälle.Fall23;
+				var haves = new List<int>() {8};
+				var haveNots = new List<int>() {1,2,3,4,5,6,7,9,10};
+				var note = InterpretationNotes.IrrealenBlocksSyndrom;
+				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
+			}
+			
+			// Buch 3 p.301 IV d)
+			{	var profiles = Fälle.Fall26;
+				var haves = new List<int>() {10};
+				var haveNots = new List<int>() {1,2,3,4,5,6,7,8,9,};
+				var note = InterpretationNotes.IrrealenBlocksSyndrom;
+				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
+			}
+			
+			// Buch 3 p.353 XI
+			{	var profiles = Fälle.Fall31;
+				var haves = new List<int>() {9};
+				var haveNots = new List<int>() {1,2,3,4,5,6,7,8,10};
+				var note = InterpretationNotes.IrrealenBlocksSyndrom;
+				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
+			}
+		}
+		#endregion
+		
+		#region InflaivParanoiden
 		[Test]
 		public void TestInflaivParanoiden()
 		{
@@ -983,41 +1055,7 @@ namespace SzondiTestUnitTests
 			}
 		}
 		
-		[Test]
-		public void TestProjektivParanoideMitte()
-		{
-			var notePM = InterpretationNotes.ProjektivParanoMitte;
-			
-			{	var profiles = Fälle.Fall16;
-				var haves = new List<int>() 
-				{
-					// Buch 3 p.262 V. 1., profiles p.263 2, 4-5, 7, 9
-					2, 4, 5, 7, 9,
-					
-					// Buch 3 p.262 V. 1., profiles p.263 1
-					1,
-					
-					// Buch 3 p.262 V. 2., profiles 6, 8, 10 p.263 
-					6, 8, 10
-				};
-				var haveNots = new List<int>() {3};
-				
-				TestNoteHelper(notePM, Syndromatic.DetectProjektivParanoideMitte, 
-				                     profiles, haves, haveNots);	
-			}
-			{
-				var profiles = Fälle.Fall17;
-				var haves = new List<int>() 
-				{
-					// Buch 3 p.264 VI., profiles p.265
-					3, 4, 5, 8, 9,
-				};
-				var haveNots = new List<int>() {1,2,6,7,10};
-				
-				TestNoteHelper(notePM, Syndromatic.DetectProjektivParanoideMitte, 
-				                     profiles, haves, haveNots);
-			}
-		}
+		#endregion
 		
 		[Test]
 		public void TestParanoideSpaltungsSyndrom()
@@ -1212,6 +1250,16 @@ namespace SzondiTestUnitTests
 				var haveNots = new List<int>() {11, 12,13,14,15,17,16,19,20};//?
 				var exForm = Existenzformen.Hypomanische_Manische;
 				TestExistenzformHelper(exForm, Syndromatic.DetectHypomanische_Manische,
+				                       profiles, haves, haveNots);
+			}
+			
+			// from Buch3, p.353 VI.
+			{	var profiles = Fälle.Fall31;
+				var haves = new List<int>{6,8,1,5,7};
+				var haveNots = new List<int>{2,3,9,};//10,4,
+
+				TestExistenzformHelper(Existenzformen.Hypomanische_Manische, 
+				                       Syndromatic.DetectHypomanische_Manische,
 				                       profiles, haves, haveNots);
 			}
 		}
@@ -1412,13 +1460,26 @@ namespace SzondiTestUnitTests
 		}
 	
 		[Test]
-		public void TestMelancholische()
+		public void TestMelancholischeMitte()
 		{		
 			// Buch 3 p.350
 			{	var profiles = Fälle.Fall30;
 				var haves = new List<int>() {1,4,2,6};
 				var haveNots = new List<int>() {3,5,7,8,9,10};
 				var note = InterpretationNotes.MelancholischeMitte;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				               profiles, haves, haveNots);
+			}
+		}
+		
+		[Test]
+		public void TestManischeMitte()
+		{		
+			// Buch 3 p.353 V.
+			{	var profiles = Fälle.Fall31;
+				var haves = new List<int>() {4,8,6,3,7};
+				var haveNots = new List<int>() {1,2,5,9,10};
+				var note = InterpretationNotes.ManischeMitte;
 				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
 				               profiles, haves, haveNots);
 			}
@@ -1803,26 +1864,6 @@ namespace SzondiTestUnitTests
 			{
 				Assert.IsTrue(Syndromatic.HasLustprinzipSyndrom(profile));
 			}
-		}
-	
-		[Test]
-		public static void TestIrrealenBlocksSyndrom()
-		{
-			// Buch 3 p.291 VII
-			{	var profiles = Fälle.Fall23;
-				var haves = new List<int>() {8};
-				var haveNots = new List<int>() {1,2,3,4,5,6,7,9,10};
-				var note = InterpretationNotes.IrrealenBlocksSyndrom;
-				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
-			}
-			
-			// Buch 3 p.301 VII
-			{	var profiles = Fälle.Fall26;
-				var haves = new List<int>() {10};
-				var haveNots = new List<int>() {1,2,3,4,5,6,7,8,9,};
-				var note = InterpretationNotes.IrrealenBlocksSyndrom;
-				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
-			}
-		}
+		}		
 	}
 }

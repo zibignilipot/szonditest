@@ -135,6 +135,7 @@ namespace SzondiTest
 		TotaleKatatonifIchsperrung,//Sch-0, C--
 		KatatonifSperrungsSynd,//p.283
 		KatatonifMitte,
+		IrrealenBlocksSyndrom,//e,hy,k,p,d,m -- -- --
 		//Hebefr
 		HebephreneSyndrom,//p.298 in der projektiven Hypochondrie
 		HebeKonbProjUndSperrung,//-!-(!)
@@ -229,7 +230,6 @@ namespace SzondiTest
 		ManiformeParanoide,
 		
 		//
-		IrrealenBlocksSyndrom,//e,hy,k,p,d,m -- -- --
 		DepersonalisationMitte,
 	};
 	
