@@ -775,24 +775,56 @@ namespace SzondiTest
 			bool detected = false;
 			
 			// p.292, p.460
-			// Skala row 11a
+			#region Skala row 11a
 			if(profile.e.IsAny("0", "±", "+", "+!", "+!!")
 			   && profile.hy.IsEqualTo("-")
-			   && profile.k.IsAny("-", "-!")
-			   && profile.p.IsAny("0", "+", "±"))
+			   // NB.CompareTo k-! only when p0, distinguish from Heboide
+			   && profile.Sch.IsAny("-,+", "-,±", "-,0", "-!,0"))
 			{
 				detected = true;
 			}
 			
+			//"das Syndrom der Hypochondrie" p.317 (and Skala 11a)
+			if(profile.HasInterpretationNote(InterpretationNotes.HypochondrischeMitte))
+			{	
+				detected = true;
+			}
 			
-			
+			#endregion
 			// Skala row 11b
-			if(profile.hy.IsAny("-", "-!")
-			   && profile.e.IsAny("0", "±", "+")
-			   && profile.k.IsEqualTo("-")
-			   && profile.p.IsAny("-", "-!"))
+			if(profile.P.IsAny("+,-", "+,-!", "±,-", "0,-")
+			   && profile.Sch.IsAny("-,-", "-,-!"))
 			{
 				detected = true;
+			}
+			
+			// Skala row 11c (Organneurose (15)
+			if(profile.P.EqualsTo("-,-")
+			   && profile.Sch.EqualsTo("-,-!"))
+			{
+				detected = true;
+			}
+			
+			// Skala row 11d
+			if(profile.s.IsEqualTo("-")
+			   && profile.P.IsAny("0,0", "0,+")
+			   && profile.Sch.IsAny("-,±", "-,+", "-!,±", "-!,+", "0,0")
+			   && profile.m.IsAny("+!", "+!!"))
+			{
+				detected = true;
+			}
+			
+			if(profile.HasInterpretationNote(InterpretationNotes.Schuldangst) 
+			   && profile.C.EqualsTo("-,+"))
+			{
+				detected = true;//Erste Phase, p.315
+			}
+			
+			if(profile.P.EqualsTo("+,-!")
+			   && profile.Sch.IsAny("+,±", "±,+")
+			   && profile.C.IsAny("-,+", "0,±"))
+			{
+				detected = true;//Zweite Phase, p.315
 			}
 			
 			if(detected)
@@ -1006,6 +1038,7 @@ namespace SzondiTest
 				
 		internal static void DetectSexualstörungen(TestProfile profile)
 		{
+			/* TODO: delete. replaced by Triebzielinversion. Male only. No kontaktstörungen
 			// Sexualstörungen pp.261 X., example p.262
 			if((profile.S.IsAny("+,-", "+!,-", "+!!,-", "+!!!,-") 
 			    || profile.S.IsAny("+,±", "+!,±"))//p.262 IX.2.
@@ -1014,17 +1047,18 @@ namespace SzondiTest
 			   && profile.d.IsAny("+", "+!"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.Sexualstörungen);
-			}
+			}*/
 		}
 		
-		internal static void DetectTriebzielinverion(TestProfile profile)
+		internal static void DetectTriebzielinversion(TestProfile profile)
 		{
 			// p.305, X.
-			var note = InterpretationNotes.Triebzielinverion;
+			var note = InterpretationNotes.Triebzielinversion;
 			
 			if( profile.partOf.testTakerSex == Sex.Male)
 			{
-				if(profile.S.EqualsTo("+,-"))
+				if(profile.S.IsAny("+,-","+!,-","+!!,-", "+!!!,-"))// p.262 IX.1 (h+!)
+				// doubt: +± p.262 IX.2
 				{
 					profile.AddInterpretationNote(note);
 				}
@@ -1032,7 +1066,7 @@ namespace SzondiTest
 			
 			if(profile.partOf.testTakerSex == Sex.Female)
 			{
-				if(profile.S.IsAny("-,+", "-,±"))
+				if(profile.S.IsAny("-,+", "-,±"))//p.305
 				{
 					profile.AddInterpretationNote(note);
 				}
@@ -1546,6 +1580,10 @@ namespace SzondiTest
 				detected = true;
 			}
 			
+			// Skala 4b
+			// Skala 4c
+			// TODO
+			
 			// Skala 4d, Heb.Mitte
 			// p.293
 			if(profile.e.IsEqualTo("0")
@@ -1568,10 +1606,10 @@ namespace SzondiTest
 			if(profile.HasInterpretationNote(InterpretationNotes.HebephreneMitte)
 			   || profile.HasMitte("0,-!", "-,-") 
 			   || profile.HasMitte("0,-", "-!,-")
-			   || profile.HasMitte("0,-", "-,-")
-			   || profile.HasMitte("0,-", "-!!,0")//p.298 4.b)
+			   //|| profile.HasMitte("0,-", "-,-")
+			   //|| profile.HasMitte("0,-", "-!!,0")//p.298 4.b)
 			   || profile.HasMitte("0,-!!", "0,-")//p.298 4.c)
-			   || profile.HasMitte("0,-", "-,±")//p.300 IV.1
+			   //|| profile.HasMitte("0,-", "-,±")//p.300 IV.1
 			   || profile.HasMitte("0,-!", "0,±")//p.300 IV.2.
 			   || profile.HasMitte("0,-", "0,±")//p.300 IV.2.
 			   || profile.HasMitte("0,±", "0,±")//p.300 IV.2.
@@ -1586,7 +1624,7 @@ namespace SzondiTest
 				if(profile.s.IsAny("+!","+!!","+!!!"))
 				{
 					detected = true;
-					var note = InterpretationNotes.ProjektiveHypochondrSynd;
+					var note = InterpretationNotes.HebephreneSyndrom;
 					profile.AddInterpretationNote(note);
 				}
 				else if(profile.C.IsAny("0,0", "0,-", "-,-"))
@@ -1767,7 +1805,7 @@ namespace SzondiTest
 			FurtherIchNotes(profile);
 			DetectAffektstörungenNotes(profile);
 			DetectKain(profile);
-			DetectTriebzielinverion(profile);
+			DetectTriebzielinversion(profile);
 			
 			if((profile.S.EqualsTo("0,+") || profile.S.EqualsTo("-,+"))
 			   && profile.P.EqualsTo("-,±")
@@ -1818,14 +1856,36 @@ namespace SzondiTest
 			#endregion
 			#region neurotische Mitte, Buch 3, p.460
 			
+			// p.316, p.460, Skala 11a
 			if(profile.HasMitte("+,-", "-,+")
 			   || profile.HasMitte("0,-", "-,0") 
 			   || profile.HasMitte("+,-", "-,0") 
+			   || profile.HasMitte("+!,-", "-,0")//p.317, Skala 11a
+			   || profile.HasMitte("+!!,-", "-,0")//Skala 11a
 			   || profile.HasMitte("0,-", "-,+")
 			   || profile.HasMitte("±,-", "-,±")
+			   || profile.HasMitte("0,-", "-,±")
+			   || profile.HasMitte("±,-", "-,0")
+			   || profile.HasMitte("0,±", "-,0")//also psychotische hypochondrische Syndrom
+			   || profile.HasMitte("+,-", "0,+!")
+			   || profile.HasMitte("+,-", "+!,-")
+			   || profile.HasMitte("+,-", "±,+")
+			   || profile.HasMitte("+,-", "+,+")
 			  )
 			{
 				var note = InterpretationNotes.HypochondrischeMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
+			// p.325
+			if(profile.HasMitte("0,-!", "-,-")
+			   || profile.HasMitte("+,-!", "-,-")
+			   || profile.HasMitte("0,-!", "±,-")
+			   || profile.HasMitte("0,-!", "-,±")
+			   || profile.HasMitte("0,±", "-,0")//also HypochondrischeMitte
+			   || profile.HasMitte("+,±!", "-,-"))
+			{
+				var note = InterpretationNotes.PsychotischeHypochondrischeSynd;
 				profile.AddInterpretationNote(note);
 			}
 			
@@ -1954,9 +2014,9 @@ namespace SzondiTest
 			   || profile.HasMitte("0,-", "-!,-!")
 			   || profile.HasMitte("0,-!", "-!,0")
 			   || profile.HasMitte("0,-!", "-,±")
-			   || profile.HasMitte("-,-", "-,-!")
+			   || profile.HasMitte("-,-", "-,-!")// doubt: overlap w/ hypochondrische
 			   //p.295
-			   || profile.HasMitte("0,-", "-,-!!")
+			   || profile.HasMitte("0,-", "-,-!!")// doubt: overlap w/ hypochondrische
 			   || profile.HasMitte("0,-!", "-!,±")
 			   || profile.HasMitte("+,-!", "-!,-")
 			   || profile.HasMitte("0,-!!", "-!,0")
@@ -1964,6 +2024,15 @@ namespace SzondiTest
 			  )
 			{
 				var note = InterpretationNotes.HebephreneMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
+		
+			
+			if(profile.HasMitte("0,-", "-,+")
+			   || profile.HasMitte("+,-", "-,+"))
+			{	//p.315
+				var note = InterpretationNotes.Schuldangst;
 				profile.AddInterpretationNote(note);
 			}
 		}

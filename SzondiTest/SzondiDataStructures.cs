@@ -128,7 +128,7 @@ namespace SzondiTest
 		ParanoSpaltungsSynd,
 		KatatonifMitte,
 		KatatonifSperrungsSynd,//p.283
-		ProjektiveHypochondrSynd,
+		HebephreneSyndrom,//p.298 in der projektiven Hypochondrie
 		InflativParanoSyndrom,
 		Ichsperre,//k- p0
 		TotaleInflation,//0+!
@@ -163,7 +163,7 @@ namespace SzondiTest
 		// Sexuelle
 		SzondiHomo,
 		Sexualstörungen,
-		Triebzielinverion,
+		Triebzielinversion,
 		// Sexuelle - Lustprinzip
 		Lustprinzip,
 		Lustprinzip_Kleptomanie,
@@ -190,8 +190,9 @@ namespace SzondiTest
 		
 		// Schutz
 		HebephreneMitte,
+		Schuldangst,
+		HypochondrischeMitte,//"das Syndrom der Hypochondrie" p.317
 		// Schutz - neurotischeMitte
-		HypochondrischeMitte,
 		InhibitedMitte, //gehemmte
 		ObsessiveCompulsiveMitte,// anankastische
 		KlassischeZwangsneurose,
@@ -212,6 +213,7 @@ namespace SzondiTest
 		
 		//
 		IrrealenBlocksSyndrom,//e,hy,k,p,d,m -- -- --
+		PsychotischeHypochondrischeSynd,
 	};
 	
 	public enum Existenzformen

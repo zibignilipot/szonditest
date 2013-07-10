@@ -1129,7 +1129,7 @@ namespace SzondiTestUnitTests
 				var profiles = Fälle.Fall24;
 				var haves = new List<int>() {1,3,4,5,6,7,9,10,2};//
 				var haveNots = new List<int>() {};
-				var note = InterpretationNotes.ProjektiveHypochondrSynd;
+				var note = InterpretationNotes.HebephreneSyndrom;
 				TestNoteHelper(note, Syndromatic.DetectHeboide, 
 				               profiles, haves, haveNots);
 			}
@@ -1138,7 +1138,7 @@ namespace SzondiTestUnitTests
 				var profiles = Fälle.Fall25;
 				var haves = new List<int>() {9,1,3,4,10,2,5,6,};//
 				var haveNots = new List<int>() {7,8};
-				var note = InterpretationNotes.ProjektiveHypochondrSynd;
+				var note = InterpretationNotes.HebephreneSyndrom;
 				TestNoteHelper(note, Syndromatic.DetectHeboide, 
 				               profiles, haves, haveNots);
 			}
@@ -1147,7 +1147,7 @@ namespace SzondiTestUnitTests
 			{	var profiles = Fälle.Fall26;
 				var haves = new List<int>() {1,2,4,3,7,8,9,10};
 				var haveNots = new List<int>() {5,6,};
-				var note = InterpretationNotes.ProjektiveHypochondrSynd;
+				var note = InterpretationNotes.HebephreneSyndrom;
 				TestNoteHelper(note, Syndromatic.DetectHeboide, 
 				               profiles, haves, haveNots);
 			}
@@ -1458,6 +1458,23 @@ namespace SzondiTestUnitTests
 		}
 		
 		[Test]
+		public void TestTriebzielinversion()
+		{
+			//TODO add p.320 latente Triebzielinversion
+			
+			{	var profiles = Fälle.Fall16;
+				var haves = new List<int>() {2,10};// Buch 3 p.262 IX.1};
+				// +± 4, 5, 6, 7, 8, 9,
+				var haveNots = new List<int>() {1,3,};
+				
+				var noteSex = InterpretationNotes.Triebzielinversion;
+				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion, 
+				                     profiles, haves, haveNots);		
+			}
+			
+		}
+		
+		[Test][Ignore]
 		public void TestSexualstörungen()
 		{
 			{	var profiles = Fälle.Fall16;
@@ -1573,7 +1590,7 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestHypochondrische()
 		{
-			
+			//TODO add Falle 27, p.317, profile 1,2
 		}
 	}
 	
