@@ -918,6 +918,15 @@ namespace SzondiTest
 			{
 				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Sadismus);
+				profile.AddInterpretationNote(InterpretationNotes.Exhibitionismus);
+			}
+			
+			// p.380
+			if(profile.s.IsAny("+!", "+!!", "+!!!")
+			   && profile.HasInterpretationNote(InterpretationNotes.Kain))
+			{
+				detected = true;
+				profile.AddInterpretationNote(InterpretationNotes.SadistischeKain);
 			}
 			
 			#endregion

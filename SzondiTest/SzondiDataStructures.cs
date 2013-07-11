@@ -170,7 +170,7 @@ namespace SzondiTest
 		Lamentation,//p.274 II.8
 		Geltungsdrang,//need for admiration, exhibition obsession
 		// Affekt - Epi
-		MörderE,
+		MörderE,// p.381 Affektmörder 
 		MörderE_mitVentil,
 		ReineKain,
 		Kain,//-+
@@ -191,11 +191,13 @@ namespace SzondiTest
 		Lustprinzip_Oralsadismus,
 		PerverseLustprinzip,
 		GrößenwahnLustprinzip, //
+		Exhibitionismus,//p.375
 		// Sexuelle perversions
 		Fetischismus,
 		Masochismus,
 		Sadomasochismus,
 		Sadismus,
+		SadistischeKain,
 		Analsadismus,
 		Analmasochismus,
 		PolymorphPervers,
@@ -235,6 +237,7 @@ namespace SzondiTest
 		
 		Ödipussyndrom,
 		
+		// move among Affektmörder ?
 		MordUndRapeMitte,
 		MordMitte,
 		LustmordMitte,

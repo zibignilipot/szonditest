@@ -299,6 +299,19 @@ namespace SzondiTestUnitTests
 				var note = InterpretationNotes.Kain;
 				TestNoteHelper(note, Syndromatic.DetectKainUndAbel, profiles, haves, haveNots);	
 			}
+			
+			
+			{	var profilesHinter = new List<TestProfile>();
+				profilesHinter.Add(null);//To preserve numbering
+				profilesHinter.AddRange(Fälle.Fall32[1].partOf.Hintergrundprofile);
+				
+				//Buch 3 p.380 II.2
+				var haves = new List<int>() {1,2,5,};
+				var haveNots = new List<int>() {3,4,6};
+				var note = InterpretationNotes.Kain;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				               profilesHinter, haves, haveNots);
+			}
 		}
 		
 		[Test]
@@ -543,6 +556,17 @@ namespace SzondiTestUnitTests
 				var haveNots = new List<int>() {3,4,6,};
 				var note = InterpretationNotes.MörderE;
 				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profiles, haves, haveNots);	
+			}
+			
+			{	var profilesHinter = new List<TestProfile>();
+				profilesHinter.Add(null);//To preserve numbering
+				profilesHinter.AddRange(Fälle.Fall32[1].partOf.Hintergrundprofile);
+				
+				//Buch 3 p.380 II.2
+				var haves = new List<int>() {1,2,5,};
+				var haveNots = new List<int>() {3,4,6};
+				var note = InterpretationNotes.MörderE;
+				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profilesHinter, haves, haveNots);	
 			}
 		}
 		
@@ -1559,6 +1583,22 @@ namespace SzondiTestUnitTests
 			                         Syndromatic.DetectPerversionSadomasochismus
 			                        );
 		}
+		
+		[Test]
+		public void TestSadismus()
+		{		
+			{	var profilesHinter = new List<TestProfile>();
+				profilesHinter.Add(null);//To preserve numbering
+				profilesHinter.AddRange(Fälle.Fall32[1].partOf.Hintergrundprofile);
+				
+				//Buch 3 p.380 II.2
+				var haves = new List<int>() {1,2,5,};
+				var haveNots = new List<int>() {3,4,6};
+				var note = InterpretationNotes.SadistischeKain;
+				TestNoteHelper(note, Syndromatic.DetectPerversionSadomasochismus, 
+				               profilesHinter, haves, haveNots);
+			}
+		}
 	
 		[Test]
 		public void TestPolymorphPervers()
@@ -1683,6 +1723,32 @@ namespace SzondiTestUnitTests
 			                         Syndromatic.DetectInversion);
 		}
 	
+		[Test]
+		public static void TestAnalmasochismus()
+		{
+			{	var profiles = Fälle.Fall32;
+				var haves = new List<int>() {1,2,4,5,6};//p.380
+				var haveNots = new List<int>() {3};//
+				
+				var note = InterpretationNotes.Analmasochismus;
+				TestNoteHelper(note, Syndromatic.DetectPerversionSadomasochismus, 
+				                     profiles, haves, haveNots);		
+			}
+		}
+		
+		[Test]
+		public static void TestFetischismus()
+		{
+			{	var profiles = Fälle.Fall32;
+				var haves = new List<int>() {3};//p.380
+				var haveNots = new List<int>() {};//1,2,4,5,6,
+				
+				var note = InterpretationNotes.Fetischismus;
+				TestNoteHelper(note, Syndromatic.DetectPerversionSadomasochismus, 
+				                     profiles, haves, haveNots);		
+			}
+		}
+		
 		[Test]
 		public static void TestHasLustprinzipSyndrom()
 		{
