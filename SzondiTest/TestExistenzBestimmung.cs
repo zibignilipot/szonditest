@@ -321,7 +321,7 @@ namespace SzondiTestUnitTests
 			{	var profiles = Fälle.Fall21;
 				var haves = new List<int>() {18};
 				var haveNots = new List<int>() {11, 12,13,14,15,16,17,19,20};//?
-				var note = InterpretationNotes.Geltungsdrang;
+				var note = InterpretationNotes.BesessenheitGeltungsdrangMitte;
 				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
 			}
 		}
@@ -346,7 +346,7 @@ namespace SzondiTestUnitTests
 			{	var profiles = Fälle.Fall21;
 				var haves = new List<int>() {16};
 				var haveNots = new List<int>() {11, 12,13,14,15,17,18,19,20};//?
-				var note = InterpretationNotes.PhobischenBesessenheit;
+				var note = InterpretationNotes.PhobischenBesessenheitMitte;
 				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
 			}
 		}
@@ -1072,7 +1072,7 @@ namespace SzondiTestUnitTests
 			}
 		}
 		
-		[Test][Ignore]
+		[Test][Ignore]//FIXME no test examples
 		public void TestInflativParanoideSyndrom()
 		{
 			{
@@ -1675,7 +1675,7 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestSzondiHomo()
 		{
-			var maleProfiles = new System.Collections.Generic.List<TestProfile>()
+			var maleProfiles = new List<TestProfile>()
 			{
 				// Buch 3 p.406-
 				new TestProfile("+,-", "+,-", "0,±", "+,+"),
@@ -1703,7 +1703,7 @@ namespace SzondiTestUnitTests
 				//new TestProfile("+,±", "-,-", "0,+!", "0,+"),//14
 			};
 			SetSexForProfiles(Sex.Male, maleProfiles);
-			VerifyExistenzformHelper(Existenzformen.Inversion_Homo_Trans, 
+			VerifyExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
 			                         maleProfiles,
 			                        Syndromatic.DetectInversion);
 			
@@ -1726,7 +1726,7 @@ namespace SzondiTestUnitTests
 				//new TestProfile("±,-!", "0,±", "±,0", "+,0"),//14
 			};
 			SetSexForProfiles(Sex.Female, femaleProfiles);
-			VerifyExistenzformHelper(Existenzformen.Inversion_Homo_Trans, 
+			VerifyExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
 			                         femaleProfiles, 
 			                         Syndromatic.DetectInversion);
 		}
@@ -1760,6 +1760,15 @@ namespace SzondiTestUnitTests
 		[Test]
 		public static void TestHasLustprinzipSyndrom()
 		{
+			{	var profiles = Fälle.Fall12;
+				var haves = new List<int>() {1};//p.210
+				var haveNots = new List<int>() {};
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);		
+			}
+			
 			{	var profiles = Fälle.Fall32;
 				var haves = new List<int>() {1,2,4,5,6};//p.380
 				var haveNots = new List<int>() {};//TODO review 3,
@@ -1781,22 +1790,13 @@ namespace SzondiTestUnitTests
 			
 			{	var profiles = Fälle.Fall34;
 				var haves = new List<int>() {9,10};//p.389// perversen Lustsyndroms
-				var haveNots = new List<int>() {1,2,3,4,5,6,7,8,};
+				var haveNots = new List<int>() {3,5,6,7,8,};//1,2,4,
 				
 				var note = InterpretationNotes.Lustprinzip;
 				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
-				                     profiles, haves, haveNots);		
+				                     profiles, haves, haveNots);
 			}
-			
-			{	var profiles = Fälle.Fall12;
-				var haves = new List<int>() {1};//p.210
-				var haveNots = new List<int>() {};
-				
-				var note = InterpretationNotes.Lustprinzip;
-				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
-				                     profiles, haves, haveNots);		
-			}				
-		}	
+		}
 	
 		[Test]
 		public static void TestPsychopatischeMitte()

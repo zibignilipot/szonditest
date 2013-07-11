@@ -126,62 +126,66 @@ namespace SzondiTest
 		#region Ich
 		ParanoKammSynd, // -s -hy -p -m"
 		ParanoKammSyndU, //-s -hy -p -m
-		FuguesAusreißen,//±-!
+		//Simple bilds
+		FuguesAusreißen,//Sch±-(!) p.390 (p-! p.?)
 		Dissimulation,//--!
 		DestruktiveVerneinung,//Sch-!,0
-		//Projektiv
-		ProjektivParanoMitte,//ProjektivMitte, same as ProjektivParanoideMitte
 		Alienation,//Sch 0,-(!!!) p.?
 		Entfremdung,// Sch -± p.330
 		ParanoTotalProjektion,//Sch 0,-(!) p.310
-		ParanoSpaltungsSynd,
-		//Katatoni
 		Ichsperrung,//k- p0
 		KatatonifIchsperrung,//k-! p0
+		HebeKonbProjUndSperrung,//-!-(!)
+		TotaleInflation,//0+!
+		Introinflation,//++!
+		//Projektiv
+		ProjektivParanoMitte,//ProjektivMitte, same as ProjektivParanoideMitte
+		ParanoSpaltungsSynd,
+		//Katatoni
 		TotaleKatatonifIchsperrung,//Sch-0, C--
 		KatatonifSperrungsSynd,//p.283
 		KatatonifMitte,
 		IrrealenBlocksSyndrom,//e,hy,k,p,d,m -- -- --
 		//Hebefr
 		HebephreneSyndrom,//p.298 in der projektiven Hypochondrie
-		HebeKonbProjUndSperrung,//-!-(!)
 		//Inflativ
 		InflativParanoMitte,
 		InflativParanoSyndrom,
-		TotaleInflation,//0+!
-		Introinflation,//++!
 		GrößenwahnParano,
 		#endregion
 		
 		#region Affekt
+		Kain,//-+ (-0)
+		Abel,//+-
+		Gewissensangst,//+-(!)
+		AffektPolarität,//"±0, ±-
+		SensitiveBeziehungsangst,//Was würden die Menschen sagen? 0-, ±-
+		Phobie,//+0
+		TotalDesintegrAffektleben,//p.274 II.7 P00 
+		Lamentation,//p.274 II.8 P0± 
+		Religionswahn,//p.390 P+±
 		KonvHyst,
 		KonvHystSukzessionAffekt,
 		KonvHystSukzessionIch,
 		Affektstörungen,
-		Gewissensangst,
-		SensitiveBeziehungsangst,//Was würden die Menschen sagen?
 		AffektLabilitätUndPolarität,
-		AffektPolarität,
 		HysteriformeMitte,
+		PhobischenBesessenheitMitte,//p.280 
+		BesessenheitGeltungsdrangMitte,//need for admiration, exhibition obsession
 		PhobischeMitte,
-		PhobischenBesessenheit,//p.280
-		Phobie,
-		TotalDesintegrAffektleben,//p.274 II.7
-		Lamentation,//p.274 II.8
-		Geltungsdrang,//need for admiration, exhibition obsession
+		ReineKainMitte,
 		// Affekt - Epi
 		MörderE,// p.381 Affektmörder 
 		MörderE_mitVentil,
-		ReineKain,
-		Kain,//-+
-		Abel,//+-
 		KainAbelWechsel,//p.349 XI.
 		#endregion
 		
 		#region Sexuelle
 		SzondiHomo,
+		Bisexualität,//p.390
 		Sexualstörungen,
 		Triebzielinversion,
+		Exhibitionismus,//p.375
 		// Sexuelle - Lustprinzip
 		Lustprinzip,//p.358 ist oft gleichzeitig auch das Syndrom der Polymorphen Perversion
 		Lustprinzip_Kleptomanie,
@@ -191,8 +195,8 @@ namespace SzondiTest
 		Lustprinzip_Oralsadismus,
 		PerverseLustprinzip,
 		GrößenwahnLustprinzip, //
-		Exhibitionismus,//p.375
 		// Sexuelle perversions
+		Asketismus,
 		Fetischismus,
 		Masochismus,
 		Sadomasochismus,
@@ -201,6 +205,7 @@ namespace SzondiTest
 		Analsadismus,
 		Analmasochismus,
 		PolymorphPervers,
+		TierischeBrutalität,//unmenschliche Brutalität p.391
 		// 
 		FetischMitte,
 		MasochistMitte,
@@ -221,6 +226,7 @@ namespace SzondiTest
 		ObsessiveCompulsiveMitte,// anankastische
 		KlassischeZwangsneurose,
 		Zwangsimpulse,
+		Zwangsperson,//p.388
 		#endregion
 		
 		#region Kontakt
@@ -255,7 +261,7 @@ namespace SzondiTest
 	{
 		//A.Gefahr-Existenzformen
 		//I. Sexuelle Existenzformen
-		Inversion_Homo_Trans=10,
+		Inversion_SzondiHomo_Trans=10,
 		Perversion_Sadismus_Masochismus=9,
 		
 		//II. Affektanfällige Existenzformen

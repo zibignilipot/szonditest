@@ -506,7 +506,15 @@ namespace SzondiTestUnitTests
 					fall34 = new List<TestProfile>()
 					{
 						null,
-						null,null,null,null,null,null,null,null,//TODO
+						new TestProfile("±,+", "0,0", "-,±", "0,±"),
+						new TestProfile("-,-!!!", "-,+", "0,+!!", "0,+"),
+						new TestProfile("+,±", "+,0", "+,-", "0,-!"),
+						new TestProfile("±,+", "-,0", "-,+", "+,0"),
+						new TestProfile("±,±", "+,-", "0,-", "0,+"),//5
+						
+						new TestProfile("-,+!!", "-,0", "0,-", "0,+"),//6
+						new TestProfile("!±,+", "-,-", "0,+!", "0,-"),
+						new TestProfile("+!,+!!!", "-,0", "-,-", "0,0"),
 						new TestProfile("±,±", "-,0", "0,+!", "0,+"),//9
 						new TestProfile("±,-", "+,-", "+,+!", "0,±"),//10
 					};

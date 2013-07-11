@@ -144,7 +144,7 @@ namespace SzondiTest
 			// side effect: in PPP, count unpicked images in current serie
 			// (so to display 4 in PCE instead of 8)
 			try
-			{	
+			{
 				for(ushort imageArrayIndex=0; 
 			    imageArrayIndex < this.imageSplitContainers.Length; 
 			    imageArrayIndex++)

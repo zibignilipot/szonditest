@@ -109,7 +109,7 @@ namespace SzondiTest
 			}
 			
 			{
-				int factorsLenght = Enum.GetNames(typeof(Factors)).Length;
+				int factorsLenght = Enum.GetNames(typeof(Factors)).Length - 1;//1 value is for "undefined"
 				if(factorsLenght != ImagesPerSerie)
 				{
 					string message = "#factors: " + factorsLenght

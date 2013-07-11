@@ -181,11 +181,11 @@ namespace SzondiTestUnitTests
 		{		
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
-				profilesHinter.AddRange(Fälle.Fall33[1].partOf.Hintergrundprofile);
+				profilesHinter.AddRange(Fälle.Fall34[1].partOf.Hintergrundprofile);
 				
-				var profile1 = profilesHinter[1];
+				var profile2 = profilesHinter[2];
 				var profile5 = profilesHinter[5];
-				Syndromatic.BestimmungDerExistenzformen(profile1);
+				Syndromatic.BestimmungDerExistenzformen(profile2);
 				Syndromatic.BestimmungDerExistenzformen(profile5);
 				System.Console.WriteLine("pause");
 			}

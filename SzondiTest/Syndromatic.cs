@@ -123,7 +123,7 @@ namespace SzondiTest
 			   || profile.HasMitte("-,+", "+,-") )
 			{
 				detected = true;
-				var note = InterpretationNotes.ReineKain;
+				var note = InterpretationNotes.ReineKainMitte;
 				profile.AddInterpretationNote(note);
 			}
 			#endregion
@@ -897,11 +897,18 @@ namespace SzondiTest
 			
 			// p.375 III. Syndrom des Sadismus s+!, d+!
 			if(profile.s.IsAny("+!", "+!!", "+!!!")
-				&& profile.d.IsAny("+", "+!", "+!!", "+!!!"))
+				&& profile.d.IsAny("+", "+!", "+!!", "+!!!", "±"))// d± p.389 doubt: needs s!!!?
 			{
-				detected = true;
+				detected = true;// doubt: conditions enough?
 				profile.AddInterpretationNote(InterpretationNotes.Analsadismus);
 			}
+			
+			// multiple places take s ipertension as enough for sadismus note
+			if(profile.s.IsAny("+!", "+!!", "+!!!")) // doubt +! too?
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Sadismus);
+			}
+			
 			
 			// p.375 III. Syndrom des Sadismus, mit Lustsyndrom
 			if(profile.s.IsAny("+!", "+!!", "+!!!")
@@ -1026,25 +1033,17 @@ namespace SzondiTest
 			#endregion
 			
 			#region polymorph perversion (row 9c)
-			// p.380 
 			if(profile.S.HasFactorReaction("±", Factors.s)
 				&& HasLustprinzipSyndrom(profile))
 			{
 				detected = true;
 			}
-			#endregion
-			
-			#region Perverses Lustsyndrom, PolymorphPervers (rows 9abc)
-			// p.377 (Column 3, section VII.C.), 389 
-			// TODO delete? dubious, weak sources
-			// p.502, IV (profiles 6, 8 from p.501)	
-			if(HasLustprinzipSyndrom(profile)
-			   && profile.Sch.EqualsTo("+,+!")
-			   && profile.S.HasFactorReaction("-", Factors.s))
+					
+			if(profile.HasInterpretationNote(InterpretationNotes.PolymorphPervers))
 			{
 				detected = true;
-				profile.AddInterpretationNote(InterpretationNotes.PolymorphPervers);
 			}
+						
 			#endregion
 			
 			//TODO row 9d
@@ -1057,6 +1056,8 @@ namespace SzondiTest
 		
 		internal static void DetectInversion(TestProfile profile)
 		{
+			bool detected = false;
+			
 			#region Existenzskala row 10a
 			// Apha version: with no checks to Syndromatic
 			{
@@ -1068,7 +1069,7 @@ namespace SzondiTest
 						//TODO add check for "{" symbol : sequence 
 					)
 					{
-						// detectedExistenzFormen.Add(Existenzformen.Inversion_Homo_Trans);
+						// detected = true;
 					}
 				}
 			}
@@ -1084,7 +1085,7 @@ namespace SzondiTest
 				  && profile.C.EqualsTo("+,+")
 				 )
 				{
-					profile.AddHasExistenzform(Existenzformen.Inversion_Homo_Trans);
+					detected = true;
 					profile.AddInterpretationNote(InterpretationNotes.SzondiHomo);
 				}
 			}
@@ -1098,7 +1099,7 @@ namespace SzondiTest
 				   && profile.C.EqualsTo("+,+")
 				 )
 				{
-					profile.AddHasExistenzform(Existenzformen.Inversion_Homo_Trans);
+					detected = true;
 					profile.AddInterpretationNote(InterpretationNotes.SzondiHomo);
 				}
 			}
@@ -1115,12 +1116,25 @@ namespace SzondiTest
 				   && (profile.C.EqualsTo("±,+") || profile.C.EqualsTo("0,+")
 				      || profile.C.EqualsTo("+,±") || profile.C.EqualsTo("+,0")))
 				{
-					profile.AddHasExistenzform(Existenzformen.Inversion_Homo_Trans);
+					detected = true;
 					profile.AddInterpretationNote(InterpretationNotes.SzondiHomo);
 				}
 			}
 						
 			#endregion
+			
+			#region Existenzskala row 10b
+			// Buch 3, p.390
+			if(profile.S.EqualsTo("±,±"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Bisexualität);
+			}
+			#endregion
+			
+			if(detected)
+			{
+				profile.AddHasExistenzform(Existenzformen.Inversion_SzondiHomo_Trans);
+			}
 		}
 				
 		internal static void DetectLustprinzip(TestProfile profile)
@@ -1137,6 +1151,18 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.Lustprinzip);
 				
 				// more detailed notes:
+				
+				// Perverses Lustsyndrom, PolymorphPervers (rows 9abc)
+				// p.377 (Column 3, section VII.C.), 389 "Perverses Lustsyndrom"
+				// TODO delete? move to note only (no exForm)? dubious, weak sources
+				// p.502, IV (profiles 6, 8 from p.501)	Sch0±, -±
+				//p.358: Lustprinzip ist oft gleichzeitig auch das Syndrom der Polymorphen Perversion
+				// p.380
+				if(profile.Sch.EqualsTo("+,+!") // ??
+				   && profile.s.IsEqualTo("-"))
+				{
+					profile.AddInterpretationNote(InterpretationNotes.PolymorphPervers);
+				}
 				
 				#region Buch 3, p.359
 				if(profile.P.HasFactorReaction("0", Factors.e)
@@ -1868,9 +1894,16 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.Introinflation);
 			}
 			
-			if(profile.Sch.EqualsTo("±,-!"))
+			// Sch±-(!) p.390 (p-! p.?)
+			if(profile.Sch.IsAny("±,-", "±,-!"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.FuguesAusreißen);
+			}
+			
+			// p.388
+			if(profile.Sch.IsAny("±,-!!", "±,-!!!"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Zwangsperson);
 			}
 			
 			if(profile.Sch.EqualsTo("-,-!"))
@@ -1942,18 +1975,7 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			#endregion
-			
-			if((profile.S.EqualsTo("0,+") || profile.S.EqualsTo("-,+"))
-			   && profile.P.EqualsTo("-,±")
-			   && profile.Sch.EqualsTo("-,±")
-			   && profile.C.EqualsTo("-,±")
-			  )
-			{
-				// Buch 3, p.359
-				// and Buch 3, cap.III
-				profile.AddInterpretationNote(InterpretationNotes.Ödipussyndrom);
-			}
-			
+	
 			#region Mord
 			// Buch 3, p.361, Tabelle 39 Variationen der Mitter bei Psychopathen
 			//p.377 VI
@@ -1991,6 +2013,7 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.MordMitte);
 			}
 			#endregion
+			
 			#region neurotische Mitte, Buch 3, p.460
 			
 			// p.316, p.460, Skala 11a
@@ -2083,21 +2106,14 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
+			// p.390 
+			if(profile.P.EqualsTo("+,±"))
+			{
+				var note = InterpretationNotes.Religionswahn;
+				profile.AddInterpretationNote(note);
+			}
+			
 			#endregion
-			
-			// p.280 VII.
-			if(profile.HasMitte("+,0", "0,+", FactorsComparisonOptions.Hypertension_insensitive))
-			{
-				var note = InterpretationNotes.PhobischenBesessenheit;
-				profile.AddInterpretationNote(note);
-			}
-			
-			// p.280 VII.
-			if(profile.HasMitte("0,+", "0,+", FactorsComparisonOptions.Hypertension_insensitive))
-			{
-				var note = InterpretationNotes.Geltungsdrang;
-				profile.AddInterpretationNote(note);
-			}
 			
 			#region Kontakt notes
 			// p.300 V.1.
@@ -2149,54 +2165,6 @@ namespace SzondiTest
 			#endregion
 							
 			#endregion
-			
-			// p.293
-			if(profile.HasMitte("0,-!", "-!,-")
-			   || profile.HasMitte("0,-", "-!,-!")
-			   || profile.HasMitte("0,-!", "-!,0")
-			   || profile.HasMitte("0,-!", "-,±")
-			   || profile.HasMitte("-,-", "-,-!")// doubt: overlap w/ hypochondrische
-			   //p.295
-			   || profile.HasMitte("0,-", "-,-!!")// doubt: overlap w/ hypochondrische
-			   || profile.HasMitte("0,-!", "-!,±")
-			   || profile.HasMitte("+,-!", "-!,-")
-			   || profile.HasMitte("0,-!!", "-!,0")
-			   || profile.HasMitte("-,-!", "-!,-")//Antisoziale Mite
-			  )
-			{
-				var note = InterpretationNotes.HebephreneMitte;
-				profile.AddInterpretationNote(note);
-			}
-			
-			if(profile.HasMitte("0,-", "-,+")
-			   || profile.HasMitte("+,-", "-,+"))
-			{	//p.315
-				var note = InterpretationNotes.Schuldangst;
-				profile.AddInterpretationNote(note);
-			}
-	
-			if(profile.HasMitte("+,-", "-,±")
-			   || profile.HasMitte("+,-!", "-,±")
-			   || profile.HasMitte("0,-", "-,±")
-			   || profile.HasMitte("-,-", "-,±")
-			   || profile.HasMitte("-,-", "-,0")//p.336 V.
-			  )
-			{	//p.329
-				var note = InterpretationNotes.DepersonalisationMitte;
-				profile.AddInterpretationNote(note);
-			}
-			
-			// Buch 3, p.362, Tabelle 39 Variationen der Mitter bei Psychopathen
-			if(profile.HasMitte("0,0", "0,0")
-			   || profile.HasMitte("0,0", "0,+") // Paranoide Trunksucht; Kleptomanie
-			   || profile.HasMitte("+,0", "0,0") // Trunksucht
-			   || profile.HasMitte("0,-", "0,0") // Trunksucht; Sadomasochismus
-			   || profile.HasMitte("+,0", "0,±") // Trunksucht
-			   || profile.HasMitte("+,0", "0,-") // Exhibitionismus; Trunksucht
-			  )
-			{
-				profile.AddInterpretationNote(InterpretationNotes.TrunksuchtMitte);
-			}
 			
 			#region sex notes
 			// pp.376-7
@@ -2259,7 +2227,92 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.SchwacheMitte);
 			}
 			
+			// Buch 3, p.390
+			if(profile.S.EqualsTo("0,0"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Asketismus);
+			}
+			
+			// Buch 3, p.391
+			if(profile.S.EqualsTo("+!,+!!!"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.TierischeBrutalität);
+			}
+			
 			#endregion
+			
+			if((profile.S.EqualsTo("0,+") || profile.S.EqualsTo("-,+"))
+			   && profile.P.EqualsTo("-,±")
+			   && profile.Sch.EqualsTo("-,±")
+			   && profile.C.EqualsTo("-,±")
+			  )
+			{
+				// Buch 3, p.359
+				// and Buch 3, cap.III
+				profile.AddInterpretationNote(InterpretationNotes.Ödipussyndrom);
+			}
+			
+			// p.280 VII.
+			if(profile.HasMitte("+,0", "0,+", FactorsComparisonOptions.Hypertension_insensitive))
+			{
+				var note = InterpretationNotes.PhobischenBesessenheitMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
+			// p.280 VII.
+			if(profile.HasMitte("0,+", "0,+", FactorsComparisonOptions.Hypertension_insensitive))
+			{
+				var note = InterpretationNotes.BesessenheitGeltungsdrangMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
+			// p.293
+			if(profile.HasMitte("0,-!", "-!,-")
+			   || profile.HasMitte("0,-", "-!,-!")
+			   || profile.HasMitte("0,-!", "-!,0")
+			   || profile.HasMitte("0,-!", "-,±")
+			   || profile.HasMitte("-,-", "-,-!")// doubt: overlap w/ hypochondrische
+			   //p.295
+			   || profile.HasMitte("0,-", "-,-!!")// doubt: overlap w/ hypochondrische
+			   || profile.HasMitte("0,-!", "-!,±")
+			   || profile.HasMitte("+,-!", "-!,-")
+			   || profile.HasMitte("0,-!!", "-!,0")
+			   || profile.HasMitte("-,-!", "-!,-")//Antisoziale Mite
+			  )
+			{
+				var note = InterpretationNotes.HebephreneMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
+			if(profile.HasMitte("0,-", "-,+")
+			   || profile.HasMitte("+,-", "-,+"))
+			{	//p.315
+				var note = InterpretationNotes.Schuldangst;
+				profile.AddInterpretationNote(note);
+			}
+	
+			if(profile.HasMitte("+,-", "-,±")
+			   || profile.HasMitte("+,-!", "-,±")
+			   || profile.HasMitte("0,-", "-,±")
+			   || profile.HasMitte("-,-", "-,±")
+			   || profile.HasMitte("-,-", "-,0")//p.336 V.
+			  )
+			{	//p.329
+				var note = InterpretationNotes.DepersonalisationMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
+			// Buch 3, p.362, Tabelle 39 Variationen der Mitter bei Psychopathen
+			if(profile.HasMitte("0,0", "0,0")
+			   || profile.HasMitte("0,0", "0,+") // Paranoide Trunksucht; Kleptomanie
+			   || profile.HasMitte("+,0", "0,0") // Trunksucht
+			   || profile.HasMitte("0,-", "0,0") // Trunksucht; Sadomasochismus
+			   || profile.HasMitte("+,0", "0,±") // Trunksucht
+			   || profile.HasMitte("+,0", "0,-") // Exhibitionismus; Trunksucht
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.TrunksuchtMitte);
+			}
 			
 			FurtherCompositeNotes(profile);
 		}
