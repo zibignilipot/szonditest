@@ -1632,6 +1632,14 @@ namespace SzondiTestUnitTests
 				                     profiles, haves, haveNots);		
 			}
 			
+			{	var profiles = Fälle.Fall33;
+				var haves = new List<int>() {1,2,3,4,5,6,7,8,9,10};// Buch 3 p.385
+				var haveNots = new List<int>() {};
+				
+				var noteSex = InterpretationNotes.Triebzielinversion;
+				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion, 
+				                     profiles, haves, haveNots);		
+			}
 		}
 		
 		[Test][Ignore]
@@ -1762,6 +1770,14 @@ namespace SzondiTestUnitTests
 			}
 			
 			//TODO p.375: add Fall 33 (p.384) for Lustprinzip_Perversionssyndrom
+			{	var profiles = Fälle.Fall33;
+				var haves = new List<int>() {1,9,4};//p.383// perversen Lustsyndroms
+				var haveNots = new List<int>() {2,3,5,6,7,8,10};
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);		
+			}
 			
 			{	var profiles = Fälle.Fall34;
 				var haves = new List<int>() {9,10};//p.389// perversen Lustsyndroms
@@ -1781,6 +1797,28 @@ namespace SzondiTestUnitTests
 				                     profiles, haves, haveNots);		
 			}				
 		}	
+	
+		[Test]
+		public static void TestPsychopatischeMitte()
+		{
+			{	var profiles = Fälle.Fall33;
+				var haves = new List<int>() {8,};//p.383
+				var haveNots = new List<int>() {1,2,3,5,4,6,7,9,10};//
+				
+				var note = InterpretationNotes.PsychopatischeVerlustMitte;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);		
+			}
+			
+			{	var profiles = Fälle.Fall33;
+				var haves = new List<int>() {1,5,4,6,7};//p.383
+				var haveNots = new List<int>() {2,3,8,9,10};//
+				
+				var note = InterpretationNotes.SchwacheMitte;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);		
+			}
+		}
 	}
 	
 	[TestFixture]

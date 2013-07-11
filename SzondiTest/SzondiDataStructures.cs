@@ -207,6 +207,8 @@ namespace SzondiTest
 		SadistMitte,
 		NegativeMitte,
 		ExhibitionistMitte,
+		PsychopatischeVerlustMitte,//p.383
+		SchwacheMitte,//p.383
 		#endregion
 					
 		#region Schutz

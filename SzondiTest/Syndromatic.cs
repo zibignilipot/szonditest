@@ -1213,7 +1213,10 @@ namespace SzondiTest
 			
 			if( profile.partOf.testTakerSex == Sex.Male)
 			{
-				if(profile.S.IsAny("+,-","+!,-","+!!,-", "+!!!,-"))// p.262 IX.1 (h+!)
+				if(profile.S.IsAny("+,-", "+!,-", "+!!,-", "+!!!,-")
+				   || profile.S.IsAny("+!,-!", "+,-!", "+,-!!"))
+				// p.262 IX.1 (h+!)
+				// p.385 +-!
 				// doubt: +± p.262 IX.2
 				{
 					profile.AddInterpretationNote(note);
@@ -2241,6 +2244,19 @@ namespace SzondiTest
 			   || profile.HasMitte("0,-", "-,0"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.ExhibitionistMitte);
+			}
+			
+			if(profile.HasMitte("0,±", "0,0"))
+			{	//p.383
+				profile.AddInterpretationNote(InterpretationNotes.PsychopatischeVerlustMitte);
+			}
+			
+			if(profile.HasMitte("-,-", "+,+")
+			   || profile.HasMitte("-,-", "±,+")
+			   || profile.HasMitte("0,-", "+,+")
+			   || profile.HasMitte("0,-", "+,0"))
+			{	//p.383
+				profile.AddInterpretationNote(InterpretationNotes.SchwacheMitte);
 			}
 			
 			#endregion
