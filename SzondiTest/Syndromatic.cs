@@ -1081,6 +1081,27 @@ namespace SzondiTest
 				}
 			}
 			
+			if(profile.PartOf.testTakerSex == Sex.Female)
+			{
+				// p.412 //TODO add/verify Faktorenverband
+				// p.412 //TODO add more Vektor reactions
+				if((profile.IsVorOrExperimental
+				    && (profile.HasInterpretationNote(InterpretationNotes.Triebzielinversion)
+				        || profile.S.IsAny("-,-!!", "+,-!!", "0,-!!")//p.412 9.b)
+				        || profile.S.IsAny("-,-!", "-!,-!")//p.415
+				        || profile.S.IsAny("±,+", "±,-", "±,-!")//p.412 9.c)
+				        || profile.S.IsAny("±,0", "-,0")//p.412 9.d)
+				       )
+				    && profile.P.IsAny("-,+", "±,+", "0,+", "0,±")// 0± p.412
+				    && profile.Sch.IsAny("±,0", "+,0", "±,+", "0,0")//Sch00 p.412
+				    && profile.C.IsAny("+,+", "±,+", "+,±", "+,0", "+!,0")
+				  ))
+				{
+					detected = true;
+					profile.AddInterpretationNote(InterpretationNotes.SzondiHomosexualität);
+				}
+			}
+			
 			// Apha version: with no checks to Syndromatic
 			{
 				if( profile.PartOf.testTakerSex == Sex.Male)
@@ -1288,8 +1309,14 @@ namespace SzondiTest
 			if(profile.PartOf.testTakerSex == Sex.Female
 			   && profile.IsVorOrExperimental)
 			{
-				if(profile.S.IsAny("-,+", "-!,+")
-				   || profile.S.EqualsTo("-,±"))//p.305 //doubt, confirm w/examples
+				if((profile.S.IsAny("-,+", "-!,+")
+				   || profile.S.EqualsTo("0,+")//pp.410-1
+				   || profile.S.EqualsTo("±,+")//p.411
+				   || profile.S.EqualsTo("-,±"))//pp.305, 412, 415
+				   &&
+				   (profile.Sch.IsAny("±,0", "+,0")//p.410 Needed for female
+				    //dout: also Sch±- p.411 but not in skala?
+				   ))
 				{
 					profile.AddInterpretationNote(note);
 				}

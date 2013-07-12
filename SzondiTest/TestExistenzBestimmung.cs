@@ -1639,13 +1639,12 @@ namespace SzondiTestUnitTests
 		public void TestTriebzielinversion()
 		{
 			//TODO add p.320 c) latente Triebzielinversion
+			var noteSex = InterpretationNotes.Triebzielinversion;
 			
 			{	var profiles = Fälle.Fall16;
 				var haves = new List<int>() {2,10};// Buch 3 p.262 IX.1};
 				// +± 4, 5, 6, 7, 8, 9,
 				var haveNots = new List<int>() {1,3,};
-				
-				var noteSex = InterpretationNotes.Triebzielinversion;
 				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion, 
 				                     profiles, haves, haveNots);		
 			}
@@ -1653,10 +1652,15 @@ namespace SzondiTestUnitTests
 			{	var profiles = Fälle.Fall33;
 				var haves = new List<int>() {1,2,3,4,5,6,7,8,9,10};// Buch 3 p.385
 				var haveNots = new List<int>() {};
-				
-				var noteSex = InterpretationNotes.Triebzielinversion;
 				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion, 
 				                     profiles, haves, haveNots);		
+			}
+			
+			{	var profiles = Fälle.Fall5;
+				var haves = new List<int>{1,2,3,4,5,7,8,9};//Buch3, pp.413-4
+				var haveNots = new List<int>{6,10};//
+				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion,
+				               profiles, haves, haveNots);
 			}
 		}
 		
@@ -1694,62 +1698,56 @@ namespace SzondiTestUnitTests
 		}
 		
 		[Test]
-		public void TestSzondiHomo()
+		public void TestSzondiHomosexualität()
 		{
 			var maleProfiles = new List<TestProfile>()
 			{
 				// Buch 3 p.406-
 				new TestProfile("+,-", "+,-", "0,±", "+,+"),
 				new TestProfile("±,-", "±,-", "0,±", "+,+"),
-					
-				// Buch 3, p.187, p.413, II, III
-				new TestProfile("+,-", "0,-", "0,±", "+!,+"),
-				new TestProfile("0,-!", "+,-", "0,±", "+,0"),
-				// new TestProfile("+,-", "0,-", "-,±", "+,±") // IV
-					
-				// Buch 3, p.415, Tabelle 49
-				new TestProfile("+,-", "+,-", "0,±", "+,+"),
-				new TestProfile("+,-!", "0,-", "0,±", "+!,+"),
-				//new TestProfile("+,-", "0,-", "-,±", "+,±"),
-				//new TestProfile("+,-", "0,-", "-,±", "+,+"),// Sch-±
-				//new TestProfile("0,±", "0,-", "-,±", "+,+"), // 5
-				new TestProfile("0,-!!", "0,±", "0,±", "+,+"),
-				new TestProfile("±,-!!", "0,±", "0,±", "+,0"),
-				new TestProfile("+,-", "0,±", "0,±", "+,+"),
-				new TestProfile("-,-!!", "0,-", "0,±", "+!,+"),
-				//new TestProfile("±,-!", "+,0", "0,±", "0,+!"),//10
-				//new TestProfile("±,±", "0,-", "0,±", "0,0"),
-				//new TestProfile("±,±", "0,0", "0,+!", "0,0"),
-				//new TestProfile("±,-!", "+,-", "0,+!", "0,0"),
-				//new TestProfile("+,±", "-,-", "0,+!", "0,+"),//14
 			};
 			SetSexAndNameForProfiles(Sex.Male, "[male profiles]", maleProfiles);
 			VerifyExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
 			                         maleProfiles,
 			                        Syndromatic.DetectInversion);
+						
+			// from Buch3, p.415
+			{	var profiles = Fälle.B3Tab49Mann;
+				var haves = new List<int>{1,2,3,4,5,6,7,8,9,};//FIXME 10,11,12,13,14
+				var haveNots = new List<int>{};
+
+				TestExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
+				                       Syndromatic.DetectInversion,
+				                       profiles, haves, haveNots);
+			}
 			
-			var femaleProfiles = new List<TestProfile>()
-			{
-				// Buch 3, p.415, Tabelle 49
-				new TestProfile("-,+", "-,+", "±,0", "+,+"),
-				//new TestProfile("-,+", "-,0", "±,0", "0,0"),
-				//new TestProfile("±,+", "±,0", "±,0", "+,+"),
-				//new TestProfile("±,+", "+,±", "0,0", "-,0"),
-				//new TestProfile("±,+", "0,-", "0,0", "+,±"),//5
-				//new TestProfile("±,+", "-,+", "+!,0", "±,±"),
-				//new TestProfile("-!,-!", "-,+", "+,-", "+,±"),
-				//new TestProfile("-!,-!", "±,+", "+!,+", "0,0"),
-				//new TestProfile("±,±", "-,+", "0,+", "0,+"),
-				//new TestProfile("-,±", "±,+", "+!,0", "-,0"),//10
-				//new TestProfile("+,0", "+,±", "±,-!", "0,0"),
-				//new TestProfile("-,0", "-,+", "+,-", "+,+"),
-				//new TestProfile("-,-!", "±,-", "0,0", "+,+"),
-				//new TestProfile("±,-!", "0,±", "±,0", "+,0"),//14
-			};
-			SetSexAndNameForProfiles(Sex.Female, "[female profiles]", femaleProfiles);
-			VerifyExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
-			                         femaleProfiles, 
-			                         Syndromatic.DetectInversion);
+			// from Buch3, p.415
+			{	var profiles = Fälle.B3Tab49Frau;
+				var haves = new List<int>{1,14};//FIXME 2,3,4,5,6,7,8,9,10,11,12,13
+				var haveNots = new List<int>{};
+
+				TestExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
+				                       Syndromatic.DetectInversion,
+				                       profiles, haves, haveNots);
+			}
+			
+			// from Buch3, pp.413-4 (Fall 5 p.187)
+			{	var profiles = Fälle.Fall5;
+				var haves = new List<int>{2,3,4,};//
+				var haveNots = new List<int>{1,5,6,7,8,9,10};//
+
+				TestExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
+				                       Syndromatic.DetectInversion,
+				                       profiles, haves, haveNots);
+			}
+			
+			{	//TODO FIXME
+				var profiles = Fälle.Fall7;
+				TestSeries serie = profiles[1].PartOf;
+				Existenzformen exForm = Existenzformen.Inversion_SzondiHomo_Trans;
+				ExistenzFormDetector detector = Syndromatic.DetectInversion;
+				//SeriesContainsDiagnostic(serie, exForm, detector);
+			}
 		}
 	
 		[Test]
