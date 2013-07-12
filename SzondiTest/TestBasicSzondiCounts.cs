@@ -162,9 +162,9 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestComputeLinnaeus()
 		{
-			Fälle.Fall18[1].partOf.ComputeLinnaeus();
+			Fälle.Fall18[1].PartOf.ComputeLinnaeus();
 			List<KeyValuePair<int , Triebklasse>> latezProportionen 
-				= Fälle.Fall18[1].partOf.latezProportionen;
+				= Fälle.Fall18[1].PartOf.latezProportionen;
 			
 			Assert.IsTrue(latezProportionen[0].Key == 8);
 			Assert.IsTrue(latezProportionen[0].Value == new Triebklasse("C", "m", "-"));
@@ -195,7 +195,7 @@ namespace SzondiTestUnitTests
 			
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
-				profilesHinter.AddRange(Fälle.Fall37[1].partOf.Hintergrundprofile);
+				profilesHinter.AddRange(Fälle.Fall37[1].PartOf.Hintergrundprofile);
 				
 				var profile2 = profilesHinter[2];
 				var profile5 = profilesHinter[5];

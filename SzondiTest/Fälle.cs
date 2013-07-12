@@ -72,10 +72,11 @@ namespace SzondiTestUnitTests
 						new TestProfile("+!!,-", "0,-", "0,-!", "+,0"),
 						new TestProfile("+!,+", "-,-!", "0,-", "+,±"),
 						new TestProfile("+,±", "0,-!", "0,-", "+,-"),
-						new TestProfile("+,±", "0,-", "0,-", "+,-"),
-						new TestProfile("+,±", "+,-", "0,-", "+,-"),
+						new TestProfile("+,±", "0,-", "0,-", "+,-"),//5
+						
+						new TestProfile("+,±", "+,-", "0,-", "+,-"),//6
 						new TestProfile("+!,±", "0,-", "0,-", "+,-"),
-						null,// 8==6
+						new TestProfile("+,±", "+,-", "0,-", "+,-"),// 8==6
 						new TestProfile("+,±", "0,-", "0,-", "+!,-"),
 						new TestProfile("+,-", "+,-", "0,-", "+!,-"),
 					};

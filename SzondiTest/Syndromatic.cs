@@ -8,6 +8,11 @@ namespace SzondiTest
 	/// </summary>
 	public class Syndromatic
 	{
+		/*
+		  * TODO
+		  * Review "Triebüberdruck" sections to update conditions on which factors can have !
+		  * */
+		
 		public static List<Existenzformen> BestimmungDerExistenzformen(TestProfile profile)
 		{
 			#region Interpretation notes			
@@ -1043,9 +1048,42 @@ namespace SzondiTest
 			bool detected = false;
 			
 			#region Existenzskala row 10a
+			// p.406
+			if(profile.PartOf.testTakerSex == Sex.Male)
+			{	
+				// p.406, 409
+				if((profile.IsVorOrExperimental
+				   && profile.HasInterpretationNote(InterpretationNotes.Triebzielinversion)
+				   && profile.P.IsAny("+,-", "±,-", "0,-")//P0- p.409 10.a)
+				   && profile.HasInterpretationNote(InterpretationNotes.Lustprinzip))//p.409
+				   ||
+				   (profile.IsThKP
+				   && profile.HasInterpretationNote(InterpretationNotes.Triebzielinversion)
+				   && profile.P.IsAny("-,+", "0,+")
+				   && profile.Sch.EqualsTo("±,0")
+				   && profile.C.EqualsTo("-,-")))
+				{
+					detected = true;
+					profile.AddInterpretationNote(InterpretationNotes.SzondiHomosexualität);
+				}
+				
+				//p.406 and Skala 10a, lax version
+				if((profile.IsVorOrExperimental
+				    && profile.HasInterpretationNote(InterpretationNotes.Triebzielinversion)
+				    && profile.Sch.IsAny("0,±", "0,+", "-,+", "+,±"))
+				   ||
+				   (profile.IsThKP
+				   && profile.HasInterpretationNote(InterpretationNotes.Triebzielinversion)
+				   && profile.Sch.IsAny("±,0", "±,-", "+,-", "-,0")))
+				{
+					detected = true;
+					profile.AddInterpretationNote(InterpretationNotes.SzondiHomosexualität);
+				}
+			}
+			
 			// Apha version: with no checks to Syndromatic
 			{
-				if( profile.partOf.testTakerSex == Sex.Male)
+				if( profile.PartOf.testTakerSex == Sex.Male)
 				{
 					if((profile.S.ContainsFactorReaction("+", Factors.h) 
 					   || profile.S.ContainsFactorReaction("0", Factors.h))
@@ -1061,21 +1099,21 @@ namespace SzondiTest
 			
 			#region Existenzskala row 10c
 			// Buch 3, p.406, p.409 6. a)b)c)d), (p.411 reprise)
-			if( profile.partOf.testTakerSex == Sex.Male)
+			if( profile.PartOf.testTakerSex == Sex.Male)
 			{
 				if(profile.S.ContainsFactorReaction("-", Factors.s)
 				  && profile.P.ContainsFactorReaction("-", Factors.hy) 
-				  && profile.Sch.EqualsTo("0,±") 
-				  && profile.C.EqualsTo("+,+")
+				  && profile.p.IsAny("±", "+")//p.406-7
+				  && profile.C.IsAny("+,+", "+!,+")// C+!+ B3 p.408 (4d), p.415 (Tab.49)
 				 )
 				{
 					detected = true;
-					profile.AddInterpretationNote(InterpretationNotes.SzondiHomo);
+					profile.AddInterpretationNote(InterpretationNotes.SzondiHomosexualität);
 				}
 			}
 			
 			// Buch 3, p.411
-			if( profile.partOf.testTakerSex == Sex.Female)
+			if( profile.PartOf.testTakerSex == Sex.Female)
 			{
 				if(profile.S.HasFactorReaction("+", Factors.s)
 				   && profile.P.ContainsFactorReaction("+", Factors.hy)
@@ -1084,14 +1122,14 @@ namespace SzondiTest
 				 )
 				{
 					detected = true;
-					profile.AddInterpretationNote(InterpretationNotes.SzondiHomo);
+					profile.AddInterpretationNote(InterpretationNotes.SzondiHomosexualität);
 				}
 			}
 			#endregion
 			
 			#region Existenzskala row 10a
 			// Buch 3, p.409
-			if( profile.partOf.testTakerSex == Sex.Male)
+			if( profile.PartOf.testTakerSex == Sex.Male)
 			{
 				if(profile.S.HasAnyFactorReaction("-", "-!", "-!!", "-!!!", Factors.s)
 				   && profile.P.ContainsFactorReaction("-", Factors.hy)
@@ -1101,7 +1139,7 @@ namespace SzondiTest
 				      || profile.C.EqualsTo("+,±") || profile.C.EqualsTo("+,0")))
 				{
 					detected = true;
-					profile.AddInterpretationNote(InterpretationNotes.SzondiHomo);
+					profile.AddInterpretationNote(InterpretationNotes.SzondiHomosexualität);
 				}
 			}
 						
@@ -1221,10 +1259,14 @@ namespace SzondiTest
 			// p.305, X.
 			var note = InterpretationNotes.Triebzielinversion;
 			
-			if( profile.partOf.testTakerSex == Sex.Male)
+			if(profile.PartOf.testTakerSex == Sex.Male 
+			   && profile.IsVorOrExperimental)
 			{
 				if(profile.S.IsAny("+,-", "+!,-", "+!!,-", "+!!!,-")
-				   || profile.S.IsAny("+!,-!", "+,-!", "+,-!!"))
+				   || profile.S.IsAny("+!,-!", "+,-!", "+,-!!", "+,-!!!")
+				   || profile.S.IsAny("±,-", "0,-!", "0,-!!")//Skala 10a, p.409 9.b)c)
+				  )
+				// p.408 
 				// p.262 IX.1 (h+!)
 				// p.385 +-!
 				// doubt: +± p.262 IX.2
@@ -1233,9 +1275,21 @@ namespace SzondiTest
 				}
 			}
 			
-			if(profile.partOf.testTakerSex == Sex.Female)
+			if(profile.PartOf.testTakerSex == Sex.Male
+			   && profile.IsThKP)
 			{
-				if(profile.S.IsAny("-,+", "-,±"))//p.305
+				if(profile.S.IsAny("-,+", "-,+!", "-,+!!", "-,+!!!")
+				   || profile.S.EqualsTo("0,+"))
+				{
+					profile.AddInterpretationNote(note);
+				}
+			}
+			
+			if(profile.PartOf.testTakerSex == Sex.Female
+			   && profile.IsVorOrExperimental)
+			{
+				if(profile.S.IsAny("-,+", "-!,+")
+				   || profile.S.EqualsTo("-,±"))//p.305 //doubt, confirm w/examples
 				{
 					profile.AddInterpretationNote(note);
 				}
@@ -1708,8 +1762,8 @@ namespace SzondiTest
 				if(profile.C.EqualsTo("0,-")
 				  // && profile.k.IsEqualTo("-")
 				  && profile.s.IsAny("+", "0", "-")//s- in less aggressive, lesser Hypomanic
-				  && (profile.partOf.HasGefahrTriebklasse("C", "m", "-") 
-				      || profile.partOf.HasGefahrTriebklasse("Sch", "p", "-")))	
+				  && (profile.PartOf.HasGefahrTriebklasse("C", "m", "-") 
+				      || profile.PartOf.HasGefahrTriebklasse("Sch", "p", "-")))	
 				{
 					// Symptome 3, 4 p.267
 					detected = true;
@@ -2268,6 +2322,16 @@ namespace SzondiTest
 			   || profile.HasMitte("0,-", "+,0"))
 			{	//p.383
 				profile.AddInterpretationNote(InterpretationNotes.SchwacheMitte);
+			}
+			
+			if(profile.HasMitte("+,-", "0,±")
+			   || profile.HasMitte("0,-", "0,±")
+			   || profile.HasMitte("0,-", "-,+")
+			   || profile.HasMitte("0,±", "0,±")
+			   || profile.HasMitte("0,±", "0,+")
+			   || profile.HasMitte("0,0", "0,+"))
+			{	//p.408
+				profile.AddInterpretationNote(InterpretationNotes.SzondiInversionsMitte);
 			}
 			
 			// Buch 3, p.390

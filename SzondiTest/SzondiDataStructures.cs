@@ -187,7 +187,7 @@ namespace SzondiTest
 		#endregion
 		
 		#region Sexuelle
-		SzondiHomo,
+		SzondiHomosexualität,
 		Bisexualität,//p.390 S±±
 		Sublimation,//p.394 S--
 		Sexualstörungen,
@@ -213,7 +213,8 @@ namespace SzondiTest
 		Lustprinzip_Oralsadismus,
 		PerverseLustprinzip,
 		GrößenwahnLustprinzip, //
-		// 
+		//
+		SzondiInversionsMitte,
 		FetischMitte,
 		MasochistMitte,
 		SadistMitte,
@@ -1210,7 +1211,7 @@ namespace SzondiTest
 				if(profile != null)
 				{
 					this.vorergrundprofile.Add(profile);
-					profile.partOf = this;
+					profile.PartOf = this;
 				}
 			}
 		}
@@ -1238,7 +1239,7 @@ namespace SzondiTest
 				if(profile != null)
 				{	
 					this.empirischekomplementprofile.Add(profile);
-					profile.partOf = this;
+					profile.PartOf = this;
 				}
 			}
 			
@@ -1706,7 +1707,7 @@ namespace SzondiTest
 		// TODO disintguish VGP, EKP, ThKP
 		private TestProfile theoricComplementar;
 		private TestProfile experimentalComplementar;
-		public TestSeries partOf;
+		private TestSeries partOf;
 		
 		#region Constructors
 		public TestProfile(string description)
@@ -1947,7 +1948,7 @@ namespace SzondiTest
 		{
 			if(this.GetVectorByName(vector).IsAny(reactions))
 			{
-				if(this.partOf.Sukzession(reactions, vector,
+				if(this.PartOf.Sukzession(reactions, vector,
 			                             this.dimension))
 				{
 					return true;
@@ -1960,7 +1961,7 @@ namespace SzondiTest
 		
 		public bool SerieHasVectorReaction(string reaction, Vectors vectorName)
 		{
-			return this.partOf.HasVectorReaction(reaction, vectorName, 
+			return this.PartOf.HasVectorReaction(reaction, vectorName, 
 			                                     this.dimension);
 		}
 		
@@ -1968,18 +1969,18 @@ namespace SzondiTest
 		                           string reaction3, string reaction4, 
 		                           Factors factor)
 		{
-			return this.partOf.GroßeMobilität(reaction1, reaction2, reaction3, 
+			return this.PartOf.GroßeMobilität(reaction1, reaction2, reaction3, 
 			                           reaction4, factor, this.dimension);
 		}
 		
 		public bool IsAlways(string reaction, Factors factor)
 		{
-			return this.partOf.IsAlways(reaction, factor, this.dimension);
+			return this.PartOf.IsAlways(reaction, factor, this.dimension);
 		}
 		
 		public bool IsAlways(string reaction, Vectors vectorName)
 		{
-			return this.partOf.IsAlways(reaction, vectorName, this.dimension);
+			return this.PartOf.IsAlways(reaction, vectorName, this.dimension);
 		}
 		
 		#region properties
@@ -2088,7 +2089,7 @@ namespace SzondiTest
 						this.theoricComplementar.dimension = DimensionenUndFormenDerPsyche.VGP;
 					}
 					
-					this.theoricComplementar.partOf = this.partOf;
+					this.theoricComplementar.PartOf = this.PartOf;
 				}
 				
 				return this.theoricComplementar;
@@ -2101,6 +2102,69 @@ namespace SzondiTest
 			{
 				return this.S.NoHypertension && this.P.NoHypertension 
 					&& this.Sch.NoHypertension && this.C.NoHypertension;
+			}
+		}
+		
+		public bool IsVorOrExperimental
+		{
+			get
+			{
+				if(this.dimension == DimensionenUndFormenDerPsyche.VGP
+				   || this.dimension == DimensionenUndFormenDerPsyche.EKP)
+				{
+					return true;
+				}
+				else if(this.dimension == DimensionenUndFormenDerPsyche.ThKP)
+				{
+					return false;
+				}
+				else
+				{
+					// should be true (Vor) by default for solo profiles?
+					return false;
+				}
+			}
+		}
+		
+		public bool IsThKP
+		{
+			get
+			{
+				if(this.dimension == DimensionenUndFormenDerPsyche.VGP
+				   || this.dimension == DimensionenUndFormenDerPsyche.EKP)
+				{
+					return false;
+				}
+				else if(this.dimension == DimensionenUndFormenDerPsyche.ThKP)
+				{
+					return true;
+				}
+				else
+				{
+					// should be false (not Th) by default for solo profiles?
+					return false;
+				}
+			}
+		}
+		
+		public TestSeries PartOf
+		{
+			get
+			{
+				return this.partOf;
+			}
+			set
+			{
+				if(this.partOf==null)
+				{
+					this.partOf = value;
+				}
+				else if(this.partOf != value)
+				{
+					throw new ArgumentException("Serie for this profile "
+					                            + this + " " + this.partOf.Name
+					                            + " walready set");
+				}
 			}
 		}
 		

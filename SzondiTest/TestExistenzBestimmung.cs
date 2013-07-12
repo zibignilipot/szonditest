@@ -129,7 +129,7 @@ namespace SzondiTestUnitTests
 				{
 					not = " NOT";
 				}
-				errorMessage = profile + " in " + profile.partOf.Name
+				errorMessage = profile + " in " + profile.PartOf.Name
 					+ not + " expected as " + exForm;
 			}
 			Assert.True(expectedOk, errorMessage);
@@ -154,7 +154,7 @@ namespace SzondiTestUnitTests
 						if(!expectedToHaveIt)
 						{	not = " NOT";
 						}
-						errorMessage = profile + " in " + profile.partOf.Name
+						errorMessage = profile + " in " + profile.PartOf.Name
 							+ not + " expected with " + note;
 					}
 					Assert.True(expectedOk, errorMessage);
@@ -303,7 +303,7 @@ namespace SzondiTestUnitTests
 			
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
-				profilesHinter.AddRange(Fälle.Fall32[1].partOf.Hintergrundprofile);
+				profilesHinter.AddRange(Fälle.Fall32[1].PartOf.Hintergrundprofile);
 				
 				//Buch 3 p.380 II.2
 				var haves = new List<int>() {1,2,5,};
@@ -565,7 +565,7 @@ namespace SzondiTestUnitTests
 			
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
-				profilesHinter.AddRange(Fälle.Fall32[1].partOf.Hintergrundprofile);
+				profilesHinter.AddRange(Fälle.Fall32[1].PartOf.Hintergrundprofile);
 				
 				//Buch 3 p.380 II.2
 				var haves = new List<int>() {1,2,5,};
@@ -585,7 +585,7 @@ namespace SzondiTestUnitTests
 			
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
-				profilesHinter.AddRange(Fälle.Fall37[1].partOf.Hintergrundprofile);
+				profilesHinter.AddRange(Fälle.Fall37[1].PartOf.Hintergrundprofile);
 				
 				//Buch 3 p.402 B.1
 				var haves = new List<int>() {5,};
@@ -748,9 +748,6 @@ namespace SzondiTestUnitTests
 					new TestProfile("+,-", "+,-", "±,-", "0,-"),
 					new TestProfile("+,-", "+,-", "±,-", "-,0"),
 					new TestProfile("+,-", "+,±", "±,-", "+,-"),
-					
-					// from Buch3, pp.260, 261, 263, Tab. Abb.33 Fall16, prof.X
-					Fälle.Fall16[10],
 				};
 				
 				// set sex for profiles
@@ -760,7 +757,7 @@ namespace SzondiTestUnitTests
 				                         exampleProfiles, 
 				                         Syndromatic.DetectProjektivParanoid);
 			}
-			
+			 
 			//Buch 3, pp.241-3, Tabelle 32
 			{
 			
@@ -808,18 +805,15 @@ namespace SzondiTestUnitTests
 				                       profiles, haves, haveNots);
 				}
 				
-				{
-					var profiles = Fälle.Fall16;
-					var haves = new List<int>() 
-					{
-						// example from Buch 3 p.263, Fall 16, Profil II
-						2,
-					};
-					var haveNots = new List<int>() {1,3};
+				// from Buch3, pp.260, 261, 263, Tab. Abb.33 Fall16, prof.X
+				// example from Buch 3 p.263, Fall 16, Profil II
+				{	var profiles = Fälle.Fall16;
+					var haves = new List<int>() {2,10};
+					var haveNots = new List<int>() {1,3,};//4,5,6,7,8,9,
 					TestExistenzformHelper(Existenzformen.ProjektivParanoide, 
 				                       Syndromatic.DetectProjektivParanoid,
 				                       profiles, haves, haveNots);
-				}			
+				}
 			}
 			
 			{
@@ -838,8 +832,8 @@ namespace SzondiTestUnitTests
 			
 			//Projective Paranoid
 			{
-				TestSeries serie16 = Fälle.Fall17[1].partOf;
-				TestSeries serie17 = Fälle.Fall17[1].partOf;
+				TestSeries serie16 = Fälle.Fall17[1].PartOf;
+				TestSeries serie17 = Fälle.Fall17[1].PartOf;
 				
 				SeriesContainsDiagnostic(serie17, Existenzformen.ProjektivParanoide,
 				                         Syndromatic.DetectProjektivParanoid);
@@ -890,7 +884,7 @@ namespace SzondiTestUnitTests
 			//Maniforme Paranoid
 			{
 				var profiles = Fälle.Fall18;
-				TestSeries serie = profiles[1].partOf;
+				TestSeries serie = profiles[1].PartOf;
 				Existenzformen[] exForms 
 					= {Existenzformen.ProjektivParanoide, Existenzformen.Hypomanische_Manische};
 				ExistenzFormDetector[] detectors 
@@ -900,7 +894,7 @@ namespace SzondiTestUnitTests
 			}
 			
 			{
-				TestSeries serie19 = Fälle.Fall19[1].partOf;
+				TestSeries serie19 = Fälle.Fall19[1].PartOf;
 				
 				Existenzformen[] exForms 
 					= {Existenzformen.ProjektivParanoide, Existenzformen.Depressive_Melancholische};
@@ -913,7 +907,7 @@ namespace SzondiTestUnitTests
 			//Katatoniforme (zwanghafte) Paranoid
 			{
 				var profiles = Fälle.Fall20;
-				TestSeries serie = profiles[1].partOf;
+				TestSeries serie = profiles[1].PartOf;
 				Existenzformen exForm = Existenzformen.Katatoniforme;
 				ExistenzFormDetector detector = Syndromatic.DetectKatatoniforme;
 				SeriesContainsDiagnostic(serie, exForm, detector);
@@ -968,8 +962,8 @@ namespace SzondiTestUnitTests
 			
 			//Katatoniforme 
 			{
-				TestSeries serie22 = Fälle.Fall22[1].partOf;
-				TestSeries serie23 = Fälle.Fall22[1].partOf;
+				TestSeries serie22 = Fälle.Fall22[1].PartOf;
+				TestSeries serie23 = Fälle.Fall22[1].PartOf;
 				Existenzformen exForm = Existenzformen.Katatoniforme;
 				ExistenzFormDetector detector = Syndromatic.DetectKatatoniforme;
 				SeriesContainsDiagnostic(serie22, exForm, detector);
@@ -1079,7 +1073,7 @@ namespace SzondiTestUnitTests
 			
 			//InflaivParanoiden 
 			{	var profiles = Fälle.Fall21;
-				TestSeries serie = profiles[11].partOf;
+				TestSeries serie = profiles[11].PartOf;
 				SeriesContainsDiagnostic(serie, Existenzformen.InflativParanoide, 
 				                         Syndromatic.DetectInflativParanoid);
 			}
@@ -1630,7 +1624,7 @@ namespace SzondiTestUnitTests
 		{		
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
-				profilesHinter.AddRange(Fälle.Fall32[1].partOf.Hintergrundprofile);
+				profilesHinter.AddRange(Fälle.Fall32[1].PartOf.Hintergrundprofile);
 				
 				//Buch 3 p.380 II.2
 				var haves = new List<int>() {1,2,5,};
@@ -1669,6 +1663,9 @@ namespace SzondiTestUnitTests
 		[Test][Ignore]
 		public void TestSexualstörungen()
 		{
+			//TODO FIXME 
+			//detect notable cases of "Sexualstörungen" that differ from "Triebzielinversion"
+			
 			/* TODO: DetectSexualstörungen deleted. replaced by Triebzielinversion. Male only. 
 			// No kontaktstörungen
 			// Sexualstörungen pp.261 X., example p.262, //p.262 IX.2.
@@ -1726,7 +1723,7 @@ namespace SzondiTestUnitTests
 				//new TestProfile("±,-!", "+,-", "0,+!", "0,0"),
 				//new TestProfile("+,±", "-,-", "0,+!", "0,+"),//14
 			};
-			SetSexForProfiles(Sex.Male, maleProfiles);
+			SetSexAndNameForProfiles(Sex.Male, "[male profiles]", maleProfiles);
 			VerifyExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
 			                         maleProfiles,
 			                        Syndromatic.DetectInversion);
@@ -1749,7 +1746,7 @@ namespace SzondiTestUnitTests
 				//new TestProfile("-,-!", "±,-", "0,0", "+,+"),
 				//new TestProfile("±,-!", "0,±", "±,0", "+,0"),//14
 			};
-			SetSexForProfiles(Sex.Female, femaleProfiles);
+			SetSexAndNameForProfiles(Sex.Female, "[female profiles]", femaleProfiles);
 			VerifyExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
 			                         femaleProfiles, 
 			                         Syndromatic.DetectInversion);
@@ -1872,7 +1869,7 @@ namespace SzondiTestUnitTests
 			
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
-				profilesHinter.AddRange(Fälle.Fall35[1].partOf.Hintergrundprofile);
+				profilesHinter.AddRange(Fälle.Fall35[1].PartOf.Hintergrundprofile);
 				
 				var haves = new List<int>() {1,2};//p.394// polymorph perverse
 				var haveNots = new List<int>() {};
@@ -1884,7 +1881,7 @@ namespace SzondiTestUnitTests
 			
 			{	var profilesEmpirischekomp = new List<TestProfile>();
 				profilesEmpirischekomp.Add(null);//To preserve numbering
-				profilesEmpirischekomp.AddRange(Fälle.Fall35[1].partOf.empirischekomplementprofile);
+				profilesEmpirischekomp.AddRange(Fälle.Fall35[1].PartOf.empirischekomplementprofile);
 				
 				var haves = new List<int>() {1,};//p.394// polymorph perverse
 				var haveNots = new List<int>() {2};
@@ -2046,7 +2043,7 @@ namespace SzondiTestUnitTests
 	        #region write to file
 	        WriteToFile(profilesSeries);
 	        
-	        var serieFall31 = Fälle.Fall31[1].partOf;
+	        var serieFall31 = Fälle.Fall31[1].PartOf;
 	        serieFall31.Interpret();
 	        WriteToFile(serieFall31);
 	        #endregion
