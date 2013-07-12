@@ -164,6 +164,7 @@ namespace SzondiTest
 		TotalDesintegrAffektleben,//p.274 II.7 P00 
 		Lamentation,//p.274 II.8 P0± 
 		Religionswahn,//p.390 P+±
+		KainHideWechsel,//0--0
 		KonvHyst,
 		KonvHystSukzessionAffekt,
 		KonvHystSukzessionIch,
@@ -175,28 +176,20 @@ namespace SzondiTest
 		PhobischeMitte,
 		ReineKainMitte,
 		// Affekt - Epi
-		MörderE,// p.381 Affektmörder 
+		MörderE,// p.381 Affektmörder Raubmördersyndrom,// (psychop.?) p.398
 		MörderE_mitVentil,
 		KainAbelWechsel,//p.349 XI.
 		#endregion
 		
 		#region Sexuelle
 		SzondiHomo,
-		Bisexualität,//p.390
+		Bisexualität,//p.390 S±±
+		Sublimation,//p.394 S--
 		Sexualstörungen,
 		Triebzielinversion,
 		Exhibitionismus,//p.375
-		// Sexuelle - Lustprinzip
-		Lustprinzip,//p.358 ist oft gleichzeitig auch das Syndrom der Polymorphen Perversion
-		Lustprinzip_Kleptomanie,
-		Lustprinzip_AcquisitionUrge,
-		Lustprinzip_ConstRivalWPartner,
-		Lustprinzip_IdealsNegation,
-		Lustprinzip_Oralsadismus,
-		PerverseLustprinzip,
-		GrößenwahnLustprinzip, //
 		// Sexuelle perversions
-		Asketismus,
+		Asketismus,// S00
 		Fetischismus,
 		Masochismus,
 		Sadomasochismus,
@@ -206,13 +199,22 @@ namespace SzondiTest
 		Analmasochismus,
 		PolymorphPervers,
 		TierischeBrutalität,//unmenschliche Brutalität p.391
+		// Sexuelle - Lustprinzip
+		Lustprinzip,//p.358 ist oft gleichzeitig auch das Syndrom der Polymorphen Perversion
+		Lustprinzip_Kleptomanie,
+		Lustprinzip_AcquisitionUrge,
+		Lustprinzip_ConstRivalWPartner,
+		Lustprinzip_IdealsNegation,
+		Lustprinzip_Oralsadismus,
+		PerverseLustprinzip,
+		GrößenwahnLustprinzip, //
 		// 
 		FetischMitte,
 		MasochistMitte,
 		SadistMitte,
 		NegativeMitte,
 		ExhibitionistMitte,
-		PsychopatischeVerlustMitte,//p.383
+		PsychopatischerMitte,//p.383, p.394
 		SchwacheMitte,//p.383
 		#endregion
 					
@@ -249,7 +251,7 @@ namespace SzondiTest
 		MordUndRapeMitte,
 		MordMitte,
 		LustmordMitte,
-		
+			
 		//doubles
 		ManiformeParanoide,
 		

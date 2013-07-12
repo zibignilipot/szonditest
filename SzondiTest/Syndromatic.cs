@@ -76,7 +76,7 @@ namespace SzondiTest
 			// Buch 3, p.493
 			// und Buch 2, Existenzskala Tabelle 25
 			{
-				if((profile.k.IsEqualTo ("-") //Überdruck?
+				if((profile.k.IsAny("-", "-!", "-!!", "-!!!") //Überdruck p.398 k-!!
 				    || profile.Sch.ContainsFactorReaction("-", Factors.p)//Überdruck?
 				   )
 				   &&
@@ -85,7 +85,7 @@ namespace SzondiTest
 				{
 					if(profile.e.IsEqualTo ("-")) //Überdruck?
 					{
-						// Mörder-E
+						// Mörder-E (Raubmördersyndrom p.398)
 						detected = true;
 						profile.AddInterpretationNote(InterpretationNotes.MörderE);
 					}
@@ -325,21 +325,6 @@ namespace SzondiTest
 					detected = true;
 					var note = InterpretationNotes.KonvHyst;
 				   	profile.AddInterpretationNote(note);
-				}
-			}
-			
-			// p.487
-			{
-				if(profile.InSukzession("+,+", "0,0", Vectors.P))
-				{
-					var note = InterpretationNotes.KonvHystSukzessionAffekt;
-					profile.AddInterpretationNote(note);
-				}
-				
-				if(profile.InSukzession("-,0", "-,+", "-,±", Vectors.Sch))
-				{
-					var note = InterpretationNotes.KonvHystSukzessionIch;
-					profile.AddInterpretationNote(note);
 				}
 			}
 			
@@ -896,8 +881,9 @@ namespace SzondiTest
 			#region sadismus (row 9a) (Destruktive Perversion)
 			
 			// p.375 III. Syndrom des Sadismus s+!, d+!
-			if(profile.s.IsAny("+!", "+!!", "+!!!")
-				&& profile.d.IsAny("+", "+!", "+!!", "+!!!", "±"))// d± p.389 doubt: needs s!!!?
+			if(profile.s.IsAny("0", "+", "+!", "+!!", "+!!!")//s0(d0), s+ p.400
+				&& profile.d.IsAny("0", "+", "+!", "+!!", "+!!!", "±")// d± p.389 doubt: needs s!!!?
+				&& !(profile.s.IsEqualTo("0") && profile.d.IsEqualTo("0")))//p.400 s0d+ or s+d0
 			{
 				detected = true;// doubt: conditions enough?
 				profile.AddInterpretationNote(InterpretationNotes.Analsadismus);
@@ -2113,6 +2099,28 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
+			// p.487
+			{
+				if(profile.InSukzession("+,+", "0,0", Vectors.P))
+				{
+					var note = InterpretationNotes.KonvHystSukzessionAffekt;
+					profile.AddInterpretationNote(note);
+				}
+				
+				if(profile.InSukzession("-,0", "-,+", "-,±", Vectors.Sch))
+				{
+					var note = InterpretationNotes.KonvHystSukzessionIch;
+					profile.AddInterpretationNote(note);
+				}
+			}
+			
+			//p.398
+			if(profile.InSukzession("0,-", "-,0", Vectors.P))
+			{
+				var note = InterpretationNotes.KainHideWechsel;
+				profile.AddInterpretationNote(note);
+			}
+			
 			#endregion
 			
 			#region Kontakt notes
@@ -2214,9 +2222,11 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.ExhibitionistMitte);
 			}
 			
-			if(profile.HasMitte("0,±", "0,0"))
-			{	//p.383
-				profile.AddInterpretationNote(InterpretationNotes.PsychopatischeVerlustMitte);
+			if(profile.HasMitte("0,±", "0,0")//p.383
+			   || profile.HasMitte("0,±", "+,0")//p.394
+			  )
+			{	
+				profile.AddInterpretationNote(InterpretationNotes.PsychopatischerMitte);
 			}
 			
 			if(profile.HasMitte("-,-", "+,+")
@@ -2231,6 +2241,12 @@ namespace SzondiTest
 			if(profile.S.EqualsTo("0,0"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.Asketismus);
+			}
+			
+			// Buch 3, p.394
+			if(profile.S.EqualsTo("-,-"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Sublimation);
 			}
 			
 			// Buch 3, p.391

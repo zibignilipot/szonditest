@@ -178,7 +178,21 @@ namespace SzondiTestUnitTests
 		
 		[Test]//[Ignore]
 		public void CustomTest()
-		{		
+		{	
+			{	
+				var profile1 = Fälle.Fall36[1];
+				var profile2 = Fälle.Fall36[2];
+				var profile9 = Fälle.Fall36[9];
+				var profile7 = Fälle.Fall36[7];
+				var profile10 = Fälle.Fall36[10];
+				Syndromatic.BestimmungDerExistenzformen(profile1);
+				Syndromatic.BestimmungDerExistenzformen(profile2);
+				Syndromatic.BestimmungDerExistenzformen(profile9);
+				Syndromatic.BestimmungDerExistenzformen(profile7);
+				Syndromatic.BestimmungDerExistenzformen(profile10);
+				System.Console.WriteLine("pause");
+			}
+			
 			{	var profilesHinter = new List<TestProfile>();
 				profilesHinter.Add(null);//To preserve numbering
 				profilesHinter.AddRange(Fälle.Fall34[1].partOf.Hintergrundprofile);

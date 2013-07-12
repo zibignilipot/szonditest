@@ -417,14 +417,6 @@ namespace SzondiTestUnitTests
 				});
 				allProbandensProfile.Add(new List<TestProfile>
 				{
-					// p.380 Hintergänger ThKomplementar, Tab.AddInterpretationNote 41
-					// I, II, V
-					new TestProfile("-,+!!!", "-,0", "-,±", "±,-"),
-					new TestProfile("-,+!!", "-,0", "-,±", "±,-"),
-					new TestProfile("-!,+!!!", "-,0", "-,±", "±,-"),
-				});
-				allProbandensProfile.Add(new List<TestProfile>
-				{
 					// p.495 Tabelle 55 I
 					new TestProfile("+!,+!!", "-,-", "-,-", "0,-"),
 					new TestProfile("+,+!", "0,-", "-,-", "+,-"),
@@ -567,6 +559,15 @@ namespace SzondiTestUnitTests
 				var haveNots = new List<int>() {3,4,6};
 				var note = InterpretationNotes.MörderE;
 				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profilesHinter, haves, haveNots);	
+			}
+			
+			{	var profiles = Fälle.Fall36;
+				
+				//Buch 3 p.398 I.
+				var haves = new List<int>() {1,4,5,9,};
+				var haveNots = new List<int>() {2,3,6,7,8,10};
+				var note = InterpretationNotes.MörderE;
+				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profiles, haves, haveNots);	
 			}
 		}
 		
@@ -895,6 +896,8 @@ namespace SzondiTestUnitTests
 			}
 		}
 		
+		
+		
 		#endregion
 		
 		#region Katatoni
@@ -1082,6 +1085,20 @@ namespace SzondiTestUnitTests
 				
 				var note = InterpretationNotes.InflativParanoSyndrom;
 				TestNoteHelper(note, Syndromatic.DetectInflativParanoidSyndrom, 
+				                     profiles, haves, haveNots);
+			}
+		}
+		
+		[Test]
+		public void TestParanoideGrößenwahnSyndrom()
+		{
+			{
+				var profiles = Fälle.Fall36;
+				var haves = new List<int>() {1,9};//2, p.400
+				var haveNots = new List<int>() {};
+				
+				var note = InterpretationNotes.MordMitte;//FIXME overlapping mitte, add Größenwahn
+				TestNoteHelper(note, Syndromatic.DetectInflativParanoideMitte, 
 				                     profiles, haves, haveNots);
 			}
 		}
@@ -1599,23 +1616,6 @@ namespace SzondiTestUnitTests
 				               profilesHinter, haves, haveNots);
 			}
 		}
-	
-		[Test]
-		public void TestPolymorphPervers()
-		{
-			var polymorphPerversProfiles = new List<TestProfile>()
-			{
-				// Buch 3 p.479 Profil VI, VIII, X
-				// new TestProfile("+,-", "±,-", "±,0", "0,±"),// VI, VIII, X
-
-				// p.502, IV (profiles 6, 8 from p.501)				
-			};
-			
-			SetSexForProfiles(Sex.Male, polymorphPerversProfiles);
-			var note = InterpretationNotes.PolymorphPervers;
-			//TestExistenzBestimmung.VerifyInterpretationNote(note, polymorphPerversProfiles);						
-		
-		}
 		
 		[Test]
 		public void TestTriebzielinversion()
@@ -1742,6 +1742,28 @@ namespace SzondiTestUnitTests
 				TestNoteHelper(note, Syndromatic.DetectPerversionSadomasochismus, 
 				                     profiles, haves, haveNots);		
 			}
+			
+			{	var profiles = Fälle.Fall36;
+				var haves = new List<int>() {};//1,3//p.400
+				var haveNots = new List<int>() {2,4,5,6,7,8,9,10};//
+				
+				var note = InterpretationNotes.Analmasochismus;
+				TestNoteHelper(note, Syndromatic.DetectPerversionSadomasochismus, 
+				                     profiles, haves, haveNots);		
+			}
+		}
+		
+		[Test]
+		public static void TestAnalsadismus()
+		{
+			{	var profiles = Fälle.Fall36;
+				var haves = new List<int>() {4,5,6,7,8,9};//p.400
+				var haveNots = new List<int>() {1,2,3,10};//
+				
+				var note = InterpretationNotes.Analsadismus;
+				TestNoteHelper(note, Syndromatic.DetectPerversionSadomasochismus, 
+				                     profiles, haves, haveNots);		
+			}
 		}
 		
 		[Test]
@@ -1755,6 +1777,24 @@ namespace SzondiTestUnitTests
 				TestNoteHelper(note, Syndromatic.DetectPerversionSadomasochismus, 
 				                     profiles, haves, haveNots);		
 			}
+		}
+		
+		[Test]
+		public void TestPolymorphPervers()
+		{
+			var polymorphPerversProfiles = new List<TestProfile>()
+			{
+				// Buch 3 p.479 Profil VI, VIII, X
+				// new TestProfile("+,-", "±,-", "±,0", "0,±"),// VI, VIII, X
+
+				// p.502, IV (profiles 6, 8 from p.501)
+				// p.394
+			};
+			
+			SetSexForProfiles(Sex.Male, polymorphPerversProfiles);
+			var note = InterpretationNotes.PolymorphPervers;
+			//TestExistenzBestimmung.VerifyInterpretationNote(note, polymorphPerversProfiles);						
+		
 		}
 		
 		[Test]
@@ -1796,16 +1836,58 @@ namespace SzondiTestUnitTests
 				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
 				                     profiles, haves, haveNots);
 			}
+			
+			{	var profiles = Fälle.Fall35;
+				var haves = new List<int>() {1,2};//p.394// polymorph perverse Lustsyndrom
+				var haveNots = new List<int>() {};
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);
+			}
+			
+			{	var profilesHinter = new List<TestProfile>();
+				profilesHinter.Add(null);//To preserve numbering
+				profilesHinter.AddRange(Fälle.Fall35[1].partOf.Hintergrundprofile);
+				
+				var haves = new List<int>() {1,2};//p.394// polymorph perverse
+				var haveNots = new List<int>() {};
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profilesHinter, haves, haveNots);
+			}
+			
+			{	var profilesEmpirischekomp = new List<TestProfile>();
+				profilesEmpirischekomp.Add(null);//To preserve numbering
+				profilesEmpirischekomp.AddRange(Fälle.Fall35[1].partOf.empirischekomplementprofile);
+				
+				var haves = new List<int>() {1,};//p.394// polymorph perverse
+				var haveNots = new List<int>() {2};
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profilesEmpirischekomp, haves, haveNots);
+			}
+			
+			{	var profiles = Fälle.Fall36;
+				var haves = new List<int>() {3};//p.394// polymorph perverse Lustsyndrom
+				var haveNots = new List<int>() {1,4,5,6,7,8,9,10};//2,FIXME d- only in special cases apparently
+				
+				var note = InterpretationNotes.Lustprinzip;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				                     profiles, haves, haveNots);
+			}
 		}
 	
 		[Test]
-		public static void TestPsychopatischeMitte()
+		public static void TestPsychopatischerMitte()
 		{
 			{	var profiles = Fälle.Fall33;
 				var haves = new List<int>() {8,};//p.383
 				var haveNots = new List<int>() {1,2,3,5,4,6,7,9,10};//
 				
-				var note = InterpretationNotes.PsychopatischeVerlustMitte;
+				var note = InterpretationNotes.PsychopatischerMitte;
 				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
 				                     profiles, haves, haveNots);		
 			}
