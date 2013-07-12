@@ -176,6 +176,10 @@ namespace SzondiTest
 		BesessenheitGeltungsdrangMitte,//need for admiration, exhibition obsession
 		PhobischeMitte,
 		ReineKainMitte,
+		SchuldUStrafangstMitte,
+		AutistischenKainMitte,
+		PositivMitte,
+		TeilsPositivKainsMitte,
 		// Affekt - Epi
 		MörderE,// p.381 Affektmörder Raubmördersyndrom,// (psychop.?) p.398
 		MörderE_mitVentil,

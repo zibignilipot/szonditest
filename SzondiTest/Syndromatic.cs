@@ -119,13 +119,11 @@ namespace SzondiTest
 			
 			#region Existenzskala row 13a (reine Kain)
 			// p.495, Tabelle 55, III 4-5
-			if(profile.HasMitte("-,0", "+,-") 
-			   || profile.HasMitte("-,+", "+,-") )
+			if(profile.HasInterpretationNote(InterpretationNotes.ReineKainMitte))
 			{
 				detected = true;
-				var note = InterpretationNotes.ReineKainMitte;
-				profile.AddInterpretationNote(note);
 			}
+			
 			#endregion
 			
 			#region Existenzskala row 13a 
@@ -2099,6 +2097,14 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
+			if(profile.HasMitte("-,0", "+,-") 
+			   || profile.HasMitte("-,+", "+,-") )
+			{	// skala row 13a (reine Kain)
+				// p.495, Tabelle 55, III 4-5
+				var note = InterpretationNotes.ReineKainMitte;
+				profile.AddInterpretationNote(note);
+			}
+			
 			// p.487
 			{
 				if(profile.InSukzession("+,+", "0,0", Vectors.P))
@@ -2119,6 +2125,33 @@ namespace SzondiTest
 			{
 				var note = InterpretationNotes.KainHideWechsel;
 				profile.AddInterpretationNote(note);
+			}
+			
+			//B3 p.402 A.3
+			if(profile.HasMitte("+,-", "-!,+")
+			   || profile.HasMitte("+,-", "-,±")
+			   || profile.HasMitte("0,-", "-,±"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.SchuldUStrafangstMitte);
+			}
+
+			//B3 p.402 B.2 a)
+			if(profile.HasMitte("-,+", "+,0")
+			   || profile.HasMitte("-,+", "+!,-"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.AutistischenKainMitte);
+			}
+			
+			//B3 p.402 B.2 b)
+			if(profile.HasMitte("0,+", "+,+"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.PositivMitte);
+			}
+			
+			//B3 p.402 B.2 b)
+			if(profile.HasMitte("0,+", "+,+"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.TeilsPositivKainsMitte);
 			}
 			
 			#endregion

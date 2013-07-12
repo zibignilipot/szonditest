@@ -582,6 +582,17 @@ namespace SzondiTestUnitTests
 				var note = InterpretationNotes.MörderE;
 				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profiles, haves, haveNots);	
 			}
+			
+			{	var profilesHinter = new List<TestProfile>();
+				profilesHinter.Add(null);//To preserve numbering
+				profilesHinter.AddRange(Fälle.Fall37[1].partOf.Hintergrundprofile);
+				
+				//Buch 3 p.402 B.1
+				var haves = new List<int>() {5,};
+				var haveNots = new List<int>() {1,2,3,4,6};
+				var note = InterpretationNotes.MörderE;
+				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profilesHinter, haves, haveNots);	
+			}
 		}
 		
 		[Test]
