@@ -276,7 +276,7 @@ namespace SzondiTestUnitTests
 			{	var profiles = Fälle.Fall19;
 				var haves = new List<int>() {5,6,};//Buch 3 p.274 II.7
 				var haveNots = new List<int>() {1,2,3,4,7,8,9,10};
-				var note = InterpretationNotes.TotalDesintegrAffektleben;
+				var note = InterpretationNotes.TotalDesintegrAffekte;
 				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
 			}
 		}
@@ -311,6 +311,19 @@ namespace SzondiTestUnitTests
 				var note = InterpretationNotes.Kain;
 				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
 				               profilesHinter, haves, haveNots);
+			}
+		}
+		
+		[Test]
+		public void TestParoxKainSyndrom()
+		{
+			// Buch 3 p.398 III
+			{	var profiles = Fälle.Fall36;
+				var haves = new List<int>() {1,2,4,5,9,6,7,10};
+				var haveNots = new List<int>() {8};//3,
+				var note = InterpretationNotes.ParoxKainSyndrom;
+				TestNoteHelper(note, Syndromatic.DetectIntepretationNotes, 
+				               profiles, haves, haveNots);
 			}
 		}
 		

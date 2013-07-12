@@ -2081,7 +2081,7 @@ namespace SzondiTest
 			// p.274 II.7
 			if(profile.P.EqualsTo("0,0"))
 			{
-				var note = InterpretationNotes.TotalDesintegrAffektleben;
+				var note = InterpretationNotes.TotalDesintegrAffekte;
 				profile.AddInterpretationNote(note);
 			}
 			
@@ -2352,7 +2352,7 @@ namespace SzondiTest
 			
 			// p.283 VII katatoniforme Sperrungssyndrom
 			// p.306 VII. (s+! + kain + Ichsperre + kontaktsperre)
-			// p..312
+			// p.312
 			if(profile.HasInterpretationNote(InterpretationNotes.TotaleKatatonifIchsperrung)
 			   && (profile.HasInterpretationNote(InterpretationNotes.Kain) 
 			       || profile.e.IsEqualTo("-"))// hy (0,±,-) optional; hy ±,- p.286 VII.
@@ -2361,6 +2361,56 @@ namespace SzondiTest
 			{
 				var note = InterpretationNotes.KatatonifSperrungsSynd;
 				profile.AddInterpretationNote(note);
+			}
+			
+			//p.398 III. paroxymale (epileptiforme) «Kain»-Syndrom
+			if(profile.HasInterpretationNote(InterpretationNotes.Kain) 
+			   || profile.P.EqualsTo("0,-")// sich verstecken
+			   || profile.HasInterpretationNote(InterpretationNotes.TotalDesintegrAffekte)
+			   || profile.HasInterpretationNote(InterpretationNotes.KainHideWechsel)
+			   || profile.HasInterpretationNote(InterpretationNotes.MörderE)
+			   || profile.HasInterpretationNote(InterpretationNotes.MörderE_mitVentil))
+			{
+				ushort symptoms = 0;
+				
+				if(profile.GroßeMobilität("-", "0", "+", "±", Factors.e))
+				{
+					symptoms++;
+				}
+				
+				if(profile.HasInterpretationNote(InterpretationNotes.Kontaktsperre))
+				{
+					symptoms++;
+				}
+				
+				if(profile.InSukzession("0,-", "-,0", Vectors.P))
+				{
+					symptoms++;
+				}
+				
+				if(profile.HasInterpretationNote(InterpretationNotes.MörderE)
+				   || profile.HasInterpretationNote(InterpretationNotes.MörderE_mitVentil))
+				{
+					symptoms++;
+				}
+				
+				if(profile.HasInterpretationNote(InterpretationNotes.TotalDesintegrAffekte)
+				   || profile.HasInterpretationNote(InterpretationNotes.Kain)
+				   || profile.P.EqualsTo("0,-"))
+				{
+					symptoms++;
+				}
+				
+				
+				if(profile.HasInterpretationNote(InterpretationNotes.KainHideWechsel))
+				{
+					symptoms++;
+				}
+					
+				if(symptoms >= 2)
+				{
+					profile.AddInterpretationNote(InterpretationNotes.ParoxKainSyndrom);
+				}
 			}
 		}
 		

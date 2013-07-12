@@ -161,10 +161,11 @@ namespace SzondiTest
 		AffektPolarität,//"±0, ±-
 		SensitiveBeziehungsangst,//Was würden die Menschen sagen? 0-, ±-
 		Phobie,//+0
-		TotalDesintegrAffektleben,//p.274 II.7 P00 
+		TotalDesintegrAffekte,//p.274 II.7 TotalDesintegrAffektleben, P00 
 		Lamentation,//p.274 II.8 P0± 
 		Religionswahn,//p.390 P+±
 		KainHideWechsel,//0--0
+		ParoxKainSyndrom,
 		KonvHyst,
 		KonvHystSukzessionAffekt,
 		KonvHystSukzessionIch,
