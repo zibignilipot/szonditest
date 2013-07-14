@@ -21,6 +21,7 @@ namespace SzondiTest
 			
 			var detectedExistenzFormen = new List<Existenzformen>();
 			
+			#region Existenzformen
 			// Ich
 			DetectProjektivParanoid(profile);
 			DetectInflativParanoid(profile);
@@ -46,9 +47,14 @@ namespace SzondiTest
 			
 			// doubles
 			DetectManiformeParanoide(profile);
-						
-			return detectedExistenzFormen;
+
+			#endregion
 			
+			#region	Gegen Synmptome, GegenInterpretationNotes
+			DetectGegenInterpretationNotes(profile);
+			#endregion
+			
+			return detectedExistenzFormen;			
 		}
 		
 		internal static void DetectIntepretationNotes(TestProfile profile)
@@ -69,6 +75,20 @@ namespace SzondiTest
 			
 			// Further notes
 			FurtherNotes(profile);
+		}
+		
+		internal static void DetectGegenInterpretationNotes(TestProfile profile)
+		{
+			if(profile.HasExistenzform(Existenzformen.Depressive_Melancholische) 
+			   || NotesGroups.HasAnyMelancholischeNote(profile))
+			{
+				// p.444
+				if(!profile.PartOf.HasFactorReaction("+", Factors.k, profile.dimension)
+				   || profile.Sch.IsAny("-,+", "0,±")) //instead of +-
+				{
+					profile.AddInterpretationNote(InterpretationNotes.GegenZirkuläreDepression);
+				}
+			}
 		}
 		
 		#region AffektExistenzFormen (13-14)	
@@ -2264,7 +2284,8 @@ namespace SzondiTest
 			//B3 p.402 A.3
 			if(profile.HasMitte("+,-", "-!,+")
 			   || profile.HasMitte("+,-", "-,±")
-			   || profile.HasMitte("0,-", "-,±"))
+			   || profile.HasMitte("0,-", "-,±")
+			   || profile.HasMitte("0,-", "-,+"))//p.442 I.2.a)
 			{
 				profile.AddInterpretationNote(InterpretationNotes.SchuldUStrafangstMitte);
 			}
@@ -2412,6 +2433,14 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
+			if(profile.s.IsAny("-", "-!", "-!!", "-!!!")
+			   && profile.k.IsAny("-", "-!", "-!!", "-!!!"))
+			{
+				//p.442 II.4
+				var note = InterpretationNotes.EntwertungSelb;
+				profile.AddInterpretationNote(note);
+			}
+			
 			DetectSexualMitte(profile);
 			DetectPsychopatischeMitte(profile);
 			
@@ -2513,7 +2542,7 @@ namespace SzondiTest
 			}
 			
 			// p.433 haltlose Mitte 
-			if(profile.HasMitte("-,-", "-,+")
+			if(profile.HasMitte("-,-", "-,+")// also "asoziale Mitte" p.442
 			   || profile.HasMitte("-,-", "-,±")
 			   || profile.HasMitte("+,+", "+,+")
 			   || profile.HasMitte("+,+", "+,±")
@@ -2544,8 +2573,8 @@ namespace SzondiTest
 			}
 			
 			//p.439-40 x00x, 00xx, xx00
-			if(profile.P.EqualsTo("0,0")
-			   || profile.Sch.EqualsTo("0,0")
+			if((profile.P.EqualsTo("0,0") && (profile.k.IsEqualTo("0") || profile.p.IsEqualTo("0")))
+			   || ( profile.Sch.EqualsTo("0,0") && (profile.e.IsEqualTo("0") || profile.hy.IsEqualTo("0")))
 			   || (profile.hy.IsEqualTo("0")
 			       && profile.k.IsEqualTo("0")))
 			{
@@ -2633,7 +2662,7 @@ namespace SzondiTest
 					
 				if(symptoms >= 2)
 				{
-					profile.AddInterpretationNote(InterpretationNotes.ParoxKainSyndrom);
+					profile.AddInterpretationNote(InterpretationNotes.ParoxyKainSyndrom);
 				}
 			}	
 		}

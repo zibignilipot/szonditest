@@ -165,7 +165,7 @@ namespace SzondiTest
 		Lamentation,//p.274 II.8 P0± 
 		Religionswahn,//p.390 P+±
 		KainHideWechsel,//0--0
-		ParoxKainSyndrom,
+		ParoxyKainSyndrom,
 		KonvHyst,
 		KonvHystSukzessionAffekt,
 		KonvHystSukzessionIch,
@@ -225,12 +225,13 @@ namespace SzondiTest
 		#region Psychopatische
 		PsychopatischerMitte,//p.383, p.394
 		SchwacheMitte,//p.383
+		VerlustDerMitte,//p.439-40 x00x, 00xx, xx00 // a type of SchwacheMitte p.383 
 		PositiveSchwacheMitte,//p.439
 		TrunksuchtMitte,
 		HaltloseMitte,
-		VerlustDerMitte,//p.439-40 x00x, 00xx, xx00
 		SexuellenHaltlosigkeit,
 		Sucht,
+		EntwertungSelb,//p.442 II.4 Entwertung seiner eigenen Person
 		#endregion
 		
 		#region Schutz
@@ -256,6 +257,9 @@ namespace SzondiTest
 		Kontaktsperre,// C--
 		HypomanischeOrHaltlose, //C0- //HypomanischeBenehmen or Haltlose Kontaktbild
 		InzestuösesAnhangen,//C-+, p.374
+		
+		//Gegen Symptom
+		GegenZirkuläreDepression,
 		#endregion
 		
 		Ödipussyndrom,
@@ -271,6 +275,36 @@ namespace SzondiTest
 		//
 		DepersonalisationMitte,
 	};
+	
+	public static class NotesGroups
+	{
+		public static InterpretationNotes[] MelancholischeSymptoms 
+			= new InterpretationNotes[]
+		{
+			InterpretationNotes.MelancholischeMitte,
+			InterpretationNotes.DepressionHinweis,
+			
+			//doubt
+			InterpretationNotes.Kontaktstörungen,
+			InterpretationNotes.SuchenNachVerfolger,
+			InterpretationNotes.Akzeptationsdrang,
+			InterpretationNotes.Kontaktsperre,
+			InterpretationNotes.InzestuösesAnhangen,
+		};
+		
+		public static bool HasAnyMelancholischeNote(TestProfile profile)
+		{
+			foreach(var note in MelancholischeSymptoms)
+			{
+				if(profile.HasInterpretationNote(note))
+				{	
+					return true;
+				}
+			}
+			
+			return false;
+		}
+	}
 	
 	public enum Existenzformen
 	{
