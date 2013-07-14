@@ -239,6 +239,8 @@ namespace SzondiTest
 		
 		#region Kontakt
 		TrunksuchtMitte,
+		SexuellenHaltlosigkeit,
+		HaltloseMitte,
 		MelancholischeMitte,
 		ManischeMitte,
 		Sucht,
@@ -1322,22 +1324,6 @@ namespace SzondiTest
 		
 		// TODO add strict order? reaction2 immediately after reaction1
 		
-		public bool Sukzession(string reaction1, string reaction2,
-		                       Vectors vector, 
-		                       DimensionenUndFormenDerPsyche dimension)
-		{
-			return this.HasVectorReaction(reaction1, vector, dimension) 
-				&& this.HasVectorReaction(reaction2, vector, dimension);
-		}
-		
-		public bool Sukzession(string reaction1, string reaction2, 
-		                       string reaction3, Vectors vector,
-		                       DimensionenUndFormenDerPsyche dimension)
-		{
-			string[] reactions = {reaction1,reaction2,reaction3,};
-			return Sukzession(reactions, vector, dimension);
-		}
-		
 		public bool Sukzession(string[] reactions, Vectors vector,
 		                      DimensionenUndFormenDerPsyche dimension)
 		{
@@ -1770,16 +1756,6 @@ namespace SzondiTest
 			
 			//S(h0, s+) P(e-, hy+/-) Sch(k0, p+) C(d-, m+/-)
 			// (0,+) (-,±) (0,+) (-,±)
-		}
-		
-		public TestProfile(string h, string s, string e, string hy,
-		                   string k, string p, string d, string m)
-			:this( new VectorReaction(h, s, Vectors.S),
-			      new VectorReaction(e, hy, Vectors.P),
-			      new VectorReaction(k, p, Vectors.Sch),
-			      new VectorReaction(d, m, Vectors.C))
-		{
-			
 		}
 		
 		public TestProfile(string S, string P, string Sch, string C)

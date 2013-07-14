@@ -435,45 +435,81 @@ namespace SzondiTest
 		
 		//TODO pp.350 Mischformen: 1. paranoide Melancholie, 2. depressive Paranoid,
 		// 3. stuporöse Manie, 4. agitierende Katatonie.
-		
-		internal static void DetectKontaktPsychopathische(TestProfile profile)
+		internal static void DetectKSexuellenHaltlosigkeit(TestProfile profile)
 		{
-			bool detected = false;
-			// Buch 3 p.430, V (Trunksucht)
-			// Skala row 8d
-			if(profile.C.HasAnyFactorReaction("+!", "+!!", "+!!!", Factors.m)
-			   //&& profile.Sch.HasFactorReaction("-!", Factors.k, FactorsComparisonOptions.HypertensionEqualORGreater)
+			// p.433
+			if(profile.PartOf.testTakerSex == Sex.Female
+			   && profile.d.IsEqualTo("0")
+			   && profile.e.IsEqualTo("0")
+			   && profile.s.IsAny("-!", "-!!", "±", "+!!")
+			   && profile.k.IsEqualTo("-")
+			   && profile.p.IsEqualTo("±")
 			  )
 			{
-			   	detected = true;
-			   	profile.AddInterpretationNote(InterpretationNotes.Sucht);
+				profile.AddInterpretationNote(InterpretationNotes.SexuellenHaltlosigkeit);
 			}
 			
+			if(profile.PartOf.testTakerSex == Sex.Male
+			   && profile.e.IsAny("0", "±")
+			   && profile.k.IsAny("-", "0")
+			   && HasLustprinzipSyndrom(profile)
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.SexuellenHaltlosigkeit);
+			}
+		}
+		
+		internal static void DetectSucht(TestProfile profile)
+		{
+			#region Skala row 8a
+			// Buch 3 p.430, VI Variation 1., und VII Süchtige Mitte
+			if(profile.hy.IsEqualTo("0") 
+			   && profile.k.IsEqualTo("0")
+			   && HasLustprinzipSyndrom(profile))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Sucht);
+			}
+			#endregion
+			
+			#region Skala row 8b
+			if(profile.hy.IsAny("-!", "-!!") // Buch 3 p.430, XI.1
+			   && profile.k.IsEqualTo("0")
+			   && HasLustprinzipSyndrom(profile))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Sucht);
+			}
+			#endregion
+			
+			#region Skala row 8c
 			// Buch 3 p.430, VI Variation 1.
-			// Skala row 8c
 			// pp.434-5, V. e) Lustprinzip 
-			if(profile.S.HasAnyFactorReaction("-!", "-!!", "-!!!",Factors.s)
-			   && profile.P.HasFactorReaction("0", Factors.hy)
-			   && profile.Sch.HasFactorReaction("-!", Factors.k, FactorsComparisonOptions.HypertensionEqualORGreater)
+			if((profile.s.IsAny("-!", "-!!", "-!!!")
+			    || profile.s.IsAny("+!", "+!!", "+!!!")//not found in syndromatik
+			    || profile.h.IsAny("+!", "+!!", "+!!!"))//not found in syndromatik
+			   && profile.hy.IsEqualTo("0")
+			   && profile.k.IsAny("-!", "-!!", "-!!!")
 			   && HasLustprinzipSyndrom(profile)// TODO fix special LustS. for row 8
 			  )
 			{
-				detected = true;
-				profile.AddInterpretationNote(InterpretationNotes.Sucht);
+				profile.AddInterpretationNote(InterpretationNotes.Sucht);//Sucht? Not in Skala
 			}
+			#endregion
+			
+			#region Skala row 8d
+			// Buch 3 p.430, V (Trunksucht)
+			if(profile.m.IsAny("+!", "+!!", "+!!!")
+			   && (profile.k.IsAny("-!", "-!!", "-!!!") 
+			       || profile.Sch.EqualsTo("-,+"))//not found in syndromatik
+			   //&& profile.P.IsAny("0,0", "-,+")
+			  )
+			{
+			   	profile.AddInterpretationNote(InterpretationNotes.Sucht);
+			}		
+			#endregion
 			
 			//TODO add p.440 Lustprinzip
 			
-			// Buch 3 p.430, VI Variation 1., und VII Süchtige Mitte
-			// Skala row 8a
-			if(profile.HasMitte("0,0", "0,0") 
-			   && HasLustprinzipSyndrom(profile))
-			{
-				detected = true;
-				profile.AddInterpretationNote(InterpretationNotes.Sucht);
-			}
-			
-			// Buch 3 p.430, VI Variation 1. (full Faktorenverban)
+			// Buch 3 p.430, VI Variation 1. (full Faktorenverband)
 			if(Faktorenverband(new bool[] {
 			        profile.s.IsAny("-", "-!", "-!!", "-!!!"),
 					profile.e.IsEqualTo("0"),
@@ -483,7 +519,6 @@ namespace SzondiTest
 					profile.d.IsAny("0", "+!", "+!!", "+!!!"),
 					profile.m.IsAny("0", "+!", "+!!", "+!!!")}))
 			{
-				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Sucht);
 			}
 			
@@ -497,11 +532,14 @@ namespace SzondiTest
 				   profile.d.IsAny("-", "-!", "-!!", "-!!!"),
 				   profile.m.IsAny("0", "±", "+", "+!", "+!!", "+!!!")}))
 			{
-				detected = true;
 				profile.AddInterpretationNote(InterpretationNotes.Sucht);
 			}
-			
-			if(detected)
+		}
+		
+		internal static void DetectKontaktPsychopathische(TestProfile profile)
+		{
+			if(profile.HasInterpretationNote(InterpretationNotes.Sucht) 
+			   || profile.HasInterpretationNote(InterpretationNotes.SexuellenHaltlosigkeit))
 			{
 				profile.AddHasExistenzform(Existenzformen.KontaktPsychopathische);
 			}
@@ -1286,11 +1324,11 @@ namespace SzondiTest
 				if(profile.S.IsAny("+,-", "+!,-", "+!!,-", "+!!!,-")
 				   || profile.S.IsAny("+!,-!", "+,-!", "+,-!!", "+,-!!!")
 				   || profile.S.IsAny("±,-", "0,-!", "0,-!!")//Skala 10a, p.409 9.b)c)
+				   || profile.S.IsAny("+,±", "+!,±")// Triebzielinversion mit Ambivalenz, +±: p.262 IX.2, p.434 III.1
 				  )
 				// p.408 
 				// p.262 IX.1 (h+!)
 				// p.385 +-!
-				// doubt: +± p.262 IX.2
 				{
 					profile.AddInterpretationNote(note);
 				}
@@ -2443,15 +2481,33 @@ namespace SzondiTest
 			}
 			
 			// Buch 3, p.362, Tabelle 39 Variationen der Mitter bei Psychopathen
+			// p.430 Süchtige Mitte
+			// p.433 haltlose Mitte (some coincide)
 			if(profile.HasMitte("0,0", "0,0")
 			   || profile.HasMitte("0,0", "0,+") // Paranoide Trunksucht; Kleptomanie
 			   || profile.HasMitte("+,0", "0,0") // Trunksucht
 			   || profile.HasMitte("0,-", "0,0") // Trunksucht; Sadomasochismus
 			   || profile.HasMitte("+,0", "0,±") // Trunksucht
 			   || profile.HasMitte("+,0", "0,-") // Exhibitionismus; Trunksucht
+			   || profile.HasMitte("0,0", "0,-") // p.430 Süchtige Mitte
+			   || profile.HasMitte("0,0", "0,±")
+			   || profile.HasMitte("±,0", "0,0")
+			   || profile.HasMitte("-,0", "0,0")
 			  )
 			{
 				profile.AddInterpretationNote(InterpretationNotes.TrunksuchtMitte);
+			}
+			
+			// p.433 haltlose Mitte 
+			if(profile.HasMitte("-,-", "-,+")
+			   || profile.HasMitte("-,-", "-,±")
+			   || profile.HasMitte("+,+", "+,+")
+			   || profile.HasMitte("+,+", "+,±")
+			   || profile.HasMitte("+,-", "-,+")
+			   || profile.HasMitte("0,-", "-,+")
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.HaltloseMitte);
 			}
 			
 			FurtherCompositeNotes(profile);
@@ -2459,6 +2515,9 @@ namespace SzondiTest
 		
 		internal static void FurtherCompositeNotes(TestProfile profile)
 		{
+			DetectSucht(profile);
+			DetectKSexuellenHaltlosigkeit(profile);
+			
 			if((profile.HasInterpretationNote(InterpretationNotes.Ichsperrung) 
 			   || profile.Sch.EqualsTo("-!!,±"))//doubt, from Skala 5a
 			   &&
@@ -2535,7 +2594,7 @@ namespace SzondiTest
 				{
 					profile.AddInterpretationNote(InterpretationNotes.ParoxKainSyndrom);
 				}
-			}
+			}	
 		}
 		
 		#region utils

@@ -1392,32 +1392,55 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestSucht()
 		{
-			
-			var suchtProfiles = new System.Collections.Generic.List<TestProfile>()
 			{
-				// from Buch3, p.435, Fall 1 (p.176)
-				// profile VII
-				new TestProfile("+,-!!", "0,0", "0,0", "+!,±"),//TODO remove? only Mitte?
-				// profiles 2, 8, 4, 10, 3, 5		
-				//new TestProfile("+,±", "0,0", "-,+", "+,-"),//2 s±, d+, m-
-				new TestProfile("-,-", "0,0", "-,+", "+!!,-"),//8 m-
-				new TestProfile("+,±", "0,0", "-,0", "+!,±"),//4
-				//new TestProfile("+,±", "0,-", "0,0", "+!!,-"),//10, 3
-				//new TestProfile("+,±", "0,±", "-,0", "+,-"),//5
+				var suchtProfiles = new List<TestProfile>()
+				{				
+					//pp.438-9, Fall 38, IV, VI, I, V
+					new TestProfile("+!,-!", "+,0", "0,-", "-,±"),//1, 5
+					new TestProfile("±,-!", "0,+", "+,±", "+,0"),//4 //k+, d+
+					new TestProfile("±,-!", "+,+", "0,±", "0,-"),//6 //e+, m-
+				};
 				
-				//pp.438-9, Fall 38, IV, VI, I, V
-				new TestProfile("+!,-!", "+,0", "0,-", "-,±"),//1, 5
-				new TestProfile("±,-!", "0,+", "+,±", "+,0"),//4 //k+, d+
-				new TestProfile("±,-!", "+,+", "0,±", "0,-"),//6 //e+, m-
-			};
+				// set sex for profiles
+				SetSexForProfiles(Sex.Male, suchtProfiles);
+				
+				VerifyExistenzformHelper(Existenzformen.KontaktPsychopathische, 
+				                         suchtProfiles, 
+				                         Syndromatic.DetectKontaktPsychopathische);
+				//TestExistenzBestimmung.VerifyInterpretationNote(InterpretationNotes.Sucht, suchtProfiles);
+			}
 			
-			// set sex for profiles
-			SetSexForProfiles(Sex.Male, suchtProfiles);
+			{	var profiles = Fälle.B3Tab50IV;
+				var haves = new List<int>() {};//p.428 1,2,
+				var haveNots = new List<int>() {};
+				TestExistenzformHelper(Existenzformen.CompulsiveZwang,
+				                       Syndromatic.DetectKontaktPsychopathische,
+				                       profiles, haves, haveNots);
+				TestNoteHelper(InterpretationNotes.Sucht,
+				               Syndromatic.DetectKontaktstörungen,
+				               profiles, haves, haveNots);	
+			}
 			
-			VerifyExistenzformHelper(Existenzformen.KontaktPsychopathische, 
-			                         suchtProfiles, 
-			                         Syndromatic.DetectKontaktPsychopathische);
-			//TestExistenzBestimmung.VerifyInterpretationNote(InterpretationNotes.Sucht, suchtProfiles);
+			{	var profiles = Fälle.Fall01;
+				//2(issues: s±, d+, m-),10,3,5
+				var haves = new List<int>() {7,8,4};//2,10,3,5,1,9,
+				var haveNots = new List<int>() {};
+				TestExistenzformHelper(Existenzformen.KontaktPsychopathische,
+				                       Syndromatic.DetectKontaktPsychopathische,
+				                       profiles, haves, haveNots);
+				TestNoteHelper(InterpretationNotes.Sucht,
+				               Syndromatic.DetectSucht,
+				               profiles, haves, haveNots);	
+			}
+			
+			{	var profiles = Fälle.Fall01;
+				//p.434 V.p.435 VI.
+				var haves = new List<int>() {7,3,10};//4,8,2
+				var haveNots = new List<int>() {};
+				TestNoteHelper(InterpretationNotes.TrunksuchtMitte,
+				               Syndromatic.DetectIntepretationNotes,
+				               profiles, haves, haveNots);	
+			}
 		}
 	
 		[Test]
@@ -1434,9 +1457,9 @@ namespace SzondiTestUnitTests
 				var haveNots = new List<int>() {1,2,3};
 				
 				var note = InterpretationNotes.Kontaktstörungen;
-				TestNoteHelper(note, 
-				                     Syndromatic.DetectKontaktstörungen,
-				                     profiles, haves, haveNots);	
+				TestNoteHelper(note,
+				               Syndromatic.DetectKontaktstörungen,
+				               profiles, haves, haveNots);	
 			}
 			
 			{	var profiles = Fälle.Fall17;
@@ -1642,8 +1665,8 @@ namespace SzondiTestUnitTests
 			var noteSex = InterpretationNotes.Triebzielinversion;
 			
 			{	var profiles = Fälle.Fall16;
-				var haves = new List<int>() {2,10};// Buch 3 p.262 IX.1};
-				// +± 4, 5, 6, 7, 8, 9,
+				var haves = new List<int>() {2,10,4,5,6,7,8,9,};// Buch 3 p.262 IX.1};
+				// +± 
 				var haveNots = new List<int>() {1,3,};
 				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion, 
 				                     profiles, haves, haveNots);		
@@ -1656,9 +1679,17 @@ namespace SzondiTestUnitTests
 				                     profiles, haves, haveNots);		
 			}
 			
-			{	var profiles = Fälle.Fall5;
+			{	var profiles = Fälle.Fall05;
 				var haves = new List<int>{1,2,3,4,5,7,8,9};//Buch3, pp.413-4
 				var haveNots = new List<int>{6,10};//
+				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion,
+				               profiles, haves, haveNots);
+			}
+			
+			{	//p.434 III.1
+				var profiles = Fälle.Fall01;
+				var haves = new List<int>{2,3,4,5,9,10};//
+				var haveNots = new List<int>{1,6,};//7,8
 				TestNoteHelper(noteSex, Syndromatic.DetectTriebzielinversion,
 				               profiles, haves, haveNots);
 			}
@@ -1732,7 +1763,7 @@ namespace SzondiTestUnitTests
 			}
 			
 			// from Buch3, pp.413-4 (Fall 5 p.187)
-			{	var profiles = Fälle.Fall5;
+			{	var profiles = Fälle.Fall05;
 				var haves = new List<int>{2,3,4,};//
 				var haveNots = new List<int>{1,5,6,7,8,9,10};//
 
@@ -1742,7 +1773,7 @@ namespace SzondiTestUnitTests
 			}
 			
 			{	//TODO FIXME
-				var profiles = Fälle.Fall7;
+				var profiles = Fälle.Fall07;
 				TestSeries serie = profiles[1].PartOf;
 				Existenzformen exForm = Existenzformen.Inversion_SzondiHomo_Trans;
 				ExistenzFormDetector detector = Syndromatic.DetectInversion;
@@ -1928,20 +1959,30 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestCompulsiveNeurotic()
 		{
-			// from Buch3, p.479, Tabelle 52
-			var exampleProfiles = new System.Collections.Generic.List<TestProfile>()
 			{
-				new TestProfile("±,-", "±,0", "±,0", "0,+"),
-				new TestProfile("±,-", "±,+", "±,0", "0,±"),
-				new TestProfile("+,-", "±,0", "±,0", "0,±"),
-				new TestProfile("+,-", "±,+", "±,0", "0,±")
-			};
+				// from Buch3, p.479, Tabelle 52
+				var exampleProfiles = new System.Collections.Generic.List<TestProfile>()
+				{
+					new TestProfile("±,-", "±,0", "±,0", "0,+"),
+					new TestProfile("±,-", "±,+", "±,0", "0,±"),
+					new TestProfile("+,-", "±,0", "±,0", "0,±"),
+					new TestProfile("+,-", "±,+", "±,0", "0,±")
+				};
+				
+				SetSexForProfiles(exampleProfiles);
+				
+				VerifyExistenzformHelper(Existenzformen.CompulsiveZwang, 
+				                         exampleProfiles,
+				                         Syndromatic.DetectCompulsiveNeurotic);
+			}
 			
-			SetSexForProfiles(exampleProfiles);
-			
-			VerifyExistenzformHelper(Existenzformen.CompulsiveZwang, 
-			                         exampleProfiles,
-			                         Syndromatic.DetectCompulsiveNeurotic);
+			{	var profiles = Fälle.B3Tab50I;
+				var haves = new List<int>() {1,2,};//p.428
+				var haveNots = new List<int>() {};
+				TestExistenzformHelper(Existenzformen.CompulsiveZwang, 
+			                       Syndromatic.DetectCompulsiveNeurotic,
+			                       profiles, haves, haveNots);
+			}
 		}	
 		
 		[Test]
