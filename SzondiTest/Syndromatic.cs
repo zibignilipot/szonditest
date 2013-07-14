@@ -463,10 +463,10 @@ namespace SzondiTest
 		{
 			#region Skala row 8a
 			// Buch 3 p.430, VI Variation 1., und VII Süchtige Mitte
-			if(profile.hy.IsEqualTo("0") 
-			   && profile.k.IsEqualTo("0")
+			if(profile.HasInterpretationNote(InterpretationNotes.VerlustDerMitte)
 			   && HasLustprinzipSyndrom(profile))
 			{
+				// doubt if it is Sucht or just general Psychopatisch
 				profile.AddInterpretationNote(InterpretationNotes.Sucht);
 			}
 			#endregion
@@ -538,8 +538,23 @@ namespace SzondiTest
 		
 		internal static void DetectKontaktPsychopathische(TestProfile profile)
 		{
+			bool detected = false;
+			
+			// covers most of Syndromatic and 8abcd
 			if(profile.HasInterpretationNote(InterpretationNotes.Sucht) 
 			   || profile.HasInterpretationNote(InterpretationNotes.SexuellenHaltlosigkeit))
+			{
+				detected =true;
+			}
+			
+			// Skala 8a and Syndromatic VerlustDerMitte Symptom pp.439-40
+			if(profile.HasInterpretationNote(InterpretationNotes.VerlustDerMitte)
+			   && HasLustprinzipSyndrom(profile))
+			{
+				detected =true;
+			}
+			
+			if(detected)
 			{
 				profile.AddHasExistenzform(Existenzformen.KontaktPsychopathische);
 			}
@@ -2279,7 +2294,7 @@ namespace SzondiTest
 			// p.300 V.1.
 			if(profile.C.IsAny("0,-", "0,-!", "0,-!!"))
 			{
-				var note = InterpretationNotes.HypomanischeBenehmen;
+				var note = InterpretationNotes.HypomanischeOrHaltlose;
 				profile.AddInterpretationNote(note);
 			}
 			
@@ -2326,38 +2341,8 @@ namespace SzondiTest
 							
 			#endregion
 			
-			#region sex notes
-			// pp.376-7
-			if(profile.HasMitte("+,-", "+,0")
-			   || profile.HasMitte("+,±", "+,0")
-			   || profile.HasMitte("+,0", "+,0")
-			   || profile.HasMitte("+,0", "+,±")
-			   || profile.HasMitte("+,+", "+,0")
-			  )
-			{
-				profile.AddInterpretationNote(InterpretationNotes.FetischMitte);
-			}
-			
-			if(profile.HasMitte("+,-", "+,-")
-			   || profile.HasMitte("+,-", "0,+")
-			   || profile.HasMitte("+,-", "+,+")
-			   || profile.HasMitte("0,-", "+,-")
-			   || profile.HasMitte("0,-", "0,+")
-			   || profile.HasMitte("0,-", "+,+")
-			   || profile.HasMitte("+,-", "0,0"))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.MasochistMitte);
-			}
-			
-			if((profile.P.IsAny("-,+", "-,±") && profile.Sch.IsAny("-,+", "-,±"))
-			   || (profile.P.EqualsTo("-,0") && profile.Sch.IsAny("-!,+", "-!,±", "0,-!"))
-			   || (profile.P.EqualsTo("0,-") && profile.Sch.IsAny("-,+", "-,±", "-,0"))
-			   || (profile.P.EqualsTo("0,0") && profile.Sch.IsAny("0,±", "0,+", "-,-"))
-			  )
-			{
-				profile.AddInterpretationNote(InterpretationNotes.SadistMitte);
-			}
-			
+			// p.?
+			// doubt: move to DetectPsychopatischeMitte or DetectSexualMitte?
 			if(profile.HasMitte("±,-", "-,-")
 			   || profile.HasMitte("+,-", "-,-")
 			   || profile.HasMitte("+,±", "-!,-")
@@ -2365,59 +2350,6 @@ namespace SzondiTest
 			{
 				profile.AddInterpretationNote(InterpretationNotes.NegativeMitte);
 			}
-			
-			if(profile.HasMitte("0,-", "-,±")
-			   || profile.HasMitte("0,0", "-,±")
-			   || profile.HasMitte("-,-", "-,±")
-			   || profile.HasMitte("0,-", "-,0"))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.ExhibitionistMitte);
-			}
-			
-			if(profile.HasMitte("0,±", "0,0")//p.383
-			   || profile.HasMitte("0,±", "+,0")//p.394
-			  )
-			{	
-				profile.AddInterpretationNote(InterpretationNotes.PsychopatischerMitte);
-			}
-			
-			if(profile.HasMitte("-,-", "+,+")
-			   || profile.HasMitte("-,-", "±,+")
-			   || profile.HasMitte("0,-", "+,+")
-			   || profile.HasMitte("0,-", "+,0"))
-			{	//p.383
-				profile.AddInterpretationNote(InterpretationNotes.SchwacheMitte);
-			}
-			
-			if(profile.HasMitte("+,-", "0,±")
-			   || profile.HasMitte("0,-", "0,±")
-			   || profile.HasMitte("0,-", "-,+")
-			   || profile.HasMitte("0,±", "0,±")
-			   || profile.HasMitte("0,±", "0,+")
-			   || profile.HasMitte("0,0", "0,+"))
-			{	//p.408
-				profile.AddInterpretationNote(InterpretationNotes.SzondiInversionsMitte);
-			}
-			
-			// Buch 3, p.390
-			if(profile.S.EqualsTo("0,0"))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.Asketismus);
-			}
-			
-			// Buch 3, p.394
-			if(profile.S.EqualsTo("-,-"))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.Sublimation);
-			}
-			
-			// Buch 3, p.391
-			if(profile.S.EqualsTo("+!,+!!!"))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.TierischeBrutalität);
-			}
-			
-			#endregion
 			
 			if((profile.S.EqualsTo("0,+") || profile.S.EqualsTo("-,+"))
 			   && profile.P.EqualsTo("-,±")
@@ -2480,6 +2412,118 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
+			DetectSexualMitte(profile);
+			DetectPsychopatischeMitte(profile);
+			
+			FurtherCompositeNotes(profile);
+		}
+		
+		internal static void DetectSexualMitte(TestProfile profile)
+		{
+			// pp.376-7
+			if(profile.HasMitte("+,-", "+,0")
+			   || profile.HasMitte("+,±", "+,0")
+			   || profile.HasMitte("+,0", "+,0")
+			   || profile.HasMitte("+,0", "+,±")
+			   || profile.HasMitte("+,+", "+,0")
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.FetischMitte);
+			}
+			
+			if(profile.HasMitte("+,-", "+,-")
+			   || profile.HasMitte("+,-", "0,+")
+			   || profile.HasMitte("+,-", "+,+")
+			   || profile.HasMitte("0,-", "+,-")
+			   || profile.HasMitte("0,-", "0,+")
+			   || profile.HasMitte("0,-", "+,+")
+			   || profile.HasMitte("+,-", "0,0"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.MasochistMitte);
+			}
+			
+			if((profile.P.IsAny("-,+", "-,±") && profile.Sch.IsAny("-,+", "-,±"))
+			   || (profile.P.EqualsTo("-,0") && profile.Sch.IsAny("-!,+", "-!,±", "0,-!"))
+			   || (profile.P.EqualsTo("0,-") && profile.Sch.IsAny("-,+", "-,±", "-,0"))
+			   || (profile.P.EqualsTo("0,0") && profile.Sch.IsAny("0,±", "0,+", "-,-"))
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.SadistMitte);
+			}
+			
+			if(profile.HasMitte("0,-", "-,±")
+			   || profile.HasMitte("0,0", "-,±")
+			   || profile.HasMitte("-,-", "-,±")
+			   || profile.HasMitte("0,-", "-,0"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.ExhibitionistMitte);
+			}
+			
+			if(profile.HasMitte("+,-", "0,±")
+			   || profile.HasMitte("0,-", "0,±")
+			   || profile.HasMitte("0,-", "-,+")
+			   || profile.HasMitte("0,±", "0,±")
+			   || profile.HasMitte("0,±", "0,+")
+			   || profile.HasMitte("0,0", "0,+"))
+			{	//p.408
+				profile.AddInterpretationNote(InterpretationNotes.SzondiInversionsMitte);
+			}
+			
+			// Buch 3, p.390
+			if(profile.S.EqualsTo("0,0"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Asketismus);
+			}
+			
+			// Buch 3, p.394
+			if(profile.S.EqualsTo("-,-"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.Sublimation);
+			}
+			
+			// Buch 3, p.391
+			if(profile.S.EqualsTo("+!,+!!!"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.TierischeBrutalität);
+			}
+		}
+		
+		internal static void DetectPsychopatischeMitte(TestProfile profile)
+		{
+			if(profile.HasMitte("0,±", "0,0")//p.383
+			   || profile.HasMitte("0,±", "+,0")//p.394
+			  )
+			{	
+				profile.AddInterpretationNote(InterpretationNotes.PsychopatischerMitte);
+			}
+			
+			if(profile.HasMitte("-,-", "+,+")
+			   || profile.HasMitte("-,-", "±,+")
+			   || profile.HasMitte("0,-", "+,+")
+			   || profile.HasMitte("0,-", "+,0"))
+			{	//p.383
+				profile.AddInterpretationNote(InterpretationNotes.SchwacheMitte);
+			}
+			
+			//p.439
+			if(profile.HasMitte("0,+", "+,±")
+			   || profile.HasMitte("+,+", "0,±"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.PositiveSchwacheMitte);
+			}
+			
+			// p.433 haltlose Mitte 
+			if(profile.HasMitte("-,-", "-,+")
+			   || profile.HasMitte("-,-", "-,±")
+			   || profile.HasMitte("+,+", "+,+")
+			   || profile.HasMitte("+,+", "+,±")
+			   || profile.HasMitte("+,-", "-,+")
+			   || profile.HasMitte("0,-", "-,+")
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.HaltloseMitte);
+			}
+			
 			// Buch 3, p.362, Tabelle 39 Variationen der Mitter bei Psychopathen
 			// p.430 Süchtige Mitte
 			// p.433 haltlose Mitte (some coincide)
@@ -2495,22 +2539,19 @@ namespace SzondiTest
 			   || profile.HasMitte("-,0", "0,0")
 			  )
 			{
+				// overlap with VerlustDerMitte
 				profile.AddInterpretationNote(InterpretationNotes.TrunksuchtMitte);
 			}
 			
-			// p.433 haltlose Mitte 
-			if(profile.HasMitte("-,-", "-,+")
-			   || profile.HasMitte("-,-", "-,±")
-			   || profile.HasMitte("+,+", "+,+")
-			   || profile.HasMitte("+,+", "+,±")
-			   || profile.HasMitte("+,-", "-,+")
-			   || profile.HasMitte("0,-", "-,+")
-			  )
+			//p.439-40 x00x, 00xx, xx00
+			if(profile.P.EqualsTo("0,0")
+			   || profile.Sch.EqualsTo("0,0")
+			   || (profile.hy.IsEqualTo("0")
+			       && profile.k.IsEqualTo("0")))
 			{
-				profile.AddInterpretationNote(InterpretationNotes.HaltloseMitte);
+				// overlap with TrunksuchtMitte
+				profile.AddInterpretationNote(InterpretationNotes.VerlustDerMitte);
 			}
-			
-			FurtherCompositeNotes(profile);
 		}
 		
 		internal static void FurtherCompositeNotes(TestProfile profile)

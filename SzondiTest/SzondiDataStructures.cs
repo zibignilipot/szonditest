@@ -218,12 +218,21 @@ namespace SzondiTest
 		FetischMitte,
 		MasochistMitte,
 		SadistMitte,
-		NegativeMitte,
+		NegativeMitte,// p.?// doubt: move to DetectPsychopatischeMitte or DetectSexualMitte?
 		ExhibitionistMitte,
+		#endregion
+				
+		#region Psychopatische
 		PsychopatischerMitte,//p.383, p.394
 		SchwacheMitte,//p.383
+		PositiveSchwacheMitte,//p.439
+		TrunksuchtMitte,
+		HaltloseMitte,
+		VerlustDerMitte,//p.439-40 x00x, 00xx, xx00
+		SexuellenHaltlosigkeit,
+		Sucht,
 		#endregion
-					
+		
 		#region Schutz
 		HebephreneMitte,
 		Schuldangst,
@@ -238,18 +247,14 @@ namespace SzondiTest
 		#endregion
 		
 		#region Kontakt
-		TrunksuchtMitte,
-		SexuellenHaltlosigkeit,
-		HaltloseMitte,
 		MelancholischeMitte,
 		ManischeMitte,
-		Sucht,
 		Kontaktstörungen, // -p +d -m
 		SuchenNachVerfolger,
 		DepressionHinweis,
 		Akzeptationsdrang,//C0+
 		Kontaktsperre,// C--
-		HypomanischeBenehmen, //C0-
+		HypomanischeOrHaltlose, //C0- //HypomanischeBenehmen or Haltlose Kontaktbild
 		InzestuösesAnhangen,//C-+, p.374
 		#endregion
 		

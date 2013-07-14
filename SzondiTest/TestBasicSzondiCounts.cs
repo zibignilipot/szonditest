@@ -180,6 +180,16 @@ namespace SzondiTestUnitTests
 		public void CustomTest()
 		{	
 			{	
+				var profile3 = Fälle.Fall38[3];
+				var profile4 = Fälle.Fall38[4];
+				var profile6 = Fälle.Fall38[6];
+				Syndromatic.BestimmungDerExistenzformen(profile3);
+				Syndromatic.BestimmungDerExistenzformen(profile4);
+				Syndromatic.BestimmungDerExistenzformen(profile6);
+				System.Console.WriteLine("pause");
+			}
+			
+			{	
 				var profile5 = Fälle.Fall37[5];
 				var profile3 = Fälle.Fall37[3];
 				var profile6 = Fälle.Fall37[6];
