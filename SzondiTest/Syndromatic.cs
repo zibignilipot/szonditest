@@ -23,6 +23,7 @@ namespace SzondiTest
 			
 			#region Existenzformen
 			// Ich
+			DetectPraepsychotischeEvSuicidale(profile);
 			DetectProjektivParanoid(profile);
 			DetectInflativParanoid(profile);
 			DetectKatatoniforme(profile);
@@ -35,7 +36,9 @@ namespace SzondiTest
 			// Schutz
 			DetectCompulsiveNeurotic(profile);
 			DetectHypochondrischeExistenzformen(profile);
-				
+			DetectSozialisierendeAlltagsmenschen(profile);
+			DetectGeistigHumanisierendeMenschen(profile);
+			
 			// Sexuelle
 			DetectPerversionSadomasochismus(profile);
 			DetectInversion(profile);
@@ -87,6 +90,15 @@ namespace SzondiTest
 				   || profile.Sch.IsAny("-,+", "0,±")) //instead of +-
 				{
 					profile.AddInterpretationNote(InterpretationNotes.GegenZirkuläreDepression);
+				}
+			}
+			
+			if(profile.HasExistenzform(Existenzformen.CompulsiveZwang)
+			   || NotesGroups.HasAnyZwangsNote(profile))
+			{	
+				if(!profile.NoHypertension)
+				{	// p.478 and p.?: Zwang usually have no hypertension
+					profile.AddInterpretationNote(InterpretationNotes.GegenZwangs);
 				}
 			}
 		}
@@ -206,8 +218,31 @@ namespace SzondiTest
 				detected = true;
 			}
 			
+			//only from skala 13b, to detect Buch3 Fall34, profil 4
+			if(//profile.GroßeMobilität("0", "±", "-", "+", Factors.e) &&
+			   profile.P.IsAny("-,+", "-,+!", "-,0", "-,±", "0,0", "0,+", "±,+", "±,-")
+			  && profile.Sch.IsAny("-,+", "-,±", "±,-", "0,+", "0,±", "+,+!", "±,+")
+			  && profile.m.IsAny("+", "0"))
+			{
+				detected = true;
+			}
+			
 			#endregion
 			
+			#region Skala 13d
+			{
+				if((profile.e.IsAny("-!", "-!!", "+!", "+!!") 
+				   || profile.P.IsAny("-,-!", "+!,-", "-!,+"))
+				   &&
+				   profile.Sch.IsAny("0,0", "±,±", "±,-", "-,±", "-,+", "+,-", "0,+", "+,0")
+				   && profile.m.IsEqualTo("-"))
+				{
+					detected = true;
+				}
+			}
+			#endregion
+			
+			#region Syndromatic pp.494-6
 			// p.494, IV. Faktorenverband
 			{
 				bool[] EpileptiformeFaktorenverband = new bool[]{
@@ -258,6 +293,7 @@ namespace SzondiTest
 					detected = true;
 				}
 			}
+			#endregion
 			
 			if(detected)
 			{
@@ -281,6 +317,7 @@ namespace SzondiTest
 		{
 
 			bool detected = false;
+			
 			#region Existenzskala row 14c (Hysteriforme)
 			// Buch 3, p.483 intro, p.484 IV b)
 			// und Buch 2, Existenzskala Tabelle 25
@@ -308,21 +345,27 @@ namespace SzondiTest
 					detected = true;
 				}
 			}
+			
+			//TODO add more from Skala
 			#endregion
 			
 			#region Existenzskala row 14b (Hysteriforme)
 			// Buch 3, p.484 IVa,
 			// und Buch 2, Existenzskala Tabelle 25
 			{
-				if( (profile.P.EqualsTo("+,+") || profile.P.EqualsTo("0,0"))
-				   &&
-				   (profile.Sch.HasFactorReaction("-", Factors.k, FactorsComparisonOptions.Hypertension_insensitive)
-				    && profile.Sch.HasFactorReaction("±", Factors.p)))
+				if( (profile.P.IsAny("+,+", "0,0", "-,-", "-,-!"))//p.484 II.1
+				   && 
+				   (profile.k.IsAny("-", "-!", "-!!", "-!!!")//p.484 III.a
+				   && profile.p.IsAny("±", "0", "+")) 
+				   || (profile.Sch.EqualsTo("0,0"))
+				  )
 				{
 					// Konversionshysterie p.484 IVa and row 14b
 				   	detected = true;
 				}
 			}
+			
+			//TODO add more from Skala
 			#endregion
 			
 			#region Existenzskala row 14a (Hysteriforme)
@@ -334,6 +377,14 @@ namespace SzondiTest
 				   	detected = true;
 				   	var note = InterpretationNotes.KonvHyst;
 				   	profile.AddInterpretationNote(note);
+				}
+				
+				// from Skala only
+				if(profile.hy.IsAny("+!", "+!!", "+!!!")
+				   && profile.Sch.IsAny("-,0", "-,+", "-!,±", "0,0", "+,+")
+				   && profile.m.IsAny("+!", "-!")
+				  )
+				{	detected = true;
 				}
 			}
 			
@@ -350,6 +401,7 @@ namespace SzondiTest
 				   	profile.AddInterpretationNote(note);
 				}
 			}
+			#endregion
 			
 			#region Existenzskala rows 14abc (Hysteriforme)
 			// Buch 3, p.484 IVc,
@@ -366,8 +418,8 @@ namespace SzondiTest
 				}
 			}
 			#endregion
+				
 			
-			#endregion
 			if(detected)
 			{
 				profile.AddHasExistenzform(Existenzformen.Hysteriforme);
@@ -574,6 +626,16 @@ namespace SzondiTest
 				detected =true;
 			}
 			
+			// Skala 8c
+			//TODO "auch ohne lustsyndrom, per skala. Seems to easily met, find gegen conditions"
+			if((profile.h.IsEqualTo("+!") || profile.s.IsAny("-!", "+!")) 
+			   && profile.hy.IsEqualTo("0")
+			   && profile.k.IsEqualTo("-!")
+			  )
+			{
+				detected =true;
+			}
+			
 			if(detected)
 			{
 				profile.AddHasExistenzform(Existenzformen.KontaktPsychopathische);
@@ -614,10 +676,20 @@ namespace SzondiTest
 			//Buch 3, pp.243-4, Tabelle 34
 			//Buch 3, p.272 I.4, p.274 II.6 (depressive Faktorenverband
 			{
+				//Skala conditions in bold square
 				if( profile.k.IsAny("+", "+!", "+!!", "±")//k± p.350 VII
-				   && profile.d.IsAny("+", "+!", "+!!")
+				   && profile.d.IsAny("+", "+!", "+!!", "±")//± from skala only
 				   && profile.s.IsAny("-", "-!", "0"))
 				// p.341 m±, h+ optional (omitted) in Skala
+				{
+					detected = true;
+				}
+				
+				//Skala 6aconditions not in bold squares
+				if(profile.s.IsEqualTo("±")
+				   && profile.P.IsAny("-,+", "0,+", "0,0")
+				   && profile.k.IsAny("+", "+!", "+!!")
+				   && profile.d.IsAny("+", "+!", "+!!", "±"))
 				{
 					detected = true;
 				}
@@ -699,6 +771,7 @@ namespace SzondiTest
 			
 			#region Existenzskala rows 7a
 			{
+				//TODO for 0- (too easily met), add i-notes that speak gegen this diagnosis
 				if(profile.C.IsAny("0,-", "0,-!", "0,-!!", "0,-!!!"))
 				{
 					// doubt: more stringent condition for 0- ? note only?
@@ -764,12 +837,84 @@ namespace SzondiTest
 		}
 		#endregion
 		
-		#region SchutzExistenzformen (11-12, 15-17)
+		#region SchutzExistenzformen (11(15), 12, 16, 17)
+		internal static void DetectHypochondrischeExistenzformen(TestProfile profile)
+			
+		{
+			//p.309 diff btw Hypocondriac (11u15) and Hebephrene (4):
+			// Hypocondriac: inhibits (Sch=-+) or removes (Sch=-0) the obsession
+			// Hebephrene: projects the obsession to a body organ (Sc-!-!)
+			
+			bool detected = false;
+			
+			#region Skala row 11a
+			// p.292, p.460
+			if(profile.P.IsAny("0,-", "±,-", "+,-", "+!,-", "+!!,-")
+			   // NB.CompareTo k-! only when p0, distinguish from Heboide
+			   && profile.Sch.IsAny("-,+", "-,±", "-,0", "-!,0"))
+			{
+				detected = true;
+			}
+			
+			//"das Syndrom der Hypochondrie" p.317 (and Skala 11a)
+			if(profile.HasInterpretationNote(InterpretationNotes.HypochondrischeMitte))
+			{	
+				detected = true;
+			}
+			
+			#endregion
+			
+			#region Skala row 11b
+			if(profile.P.IsAny("+,-", "+,-!", "±,-", "0,-")
+			   && profile.Sch.IsAny("-,-", "-,-!"))
+			{
+				detected = true;
+			}
+			#endregion
+			
+			#region Skala row 11c (Organneurose (15)
+			if(profile.P.EqualsTo("-,-")
+			   && profile.Sch.EqualsTo("-,-!"))
+			{
+				detected = true;
+			}
+			#endregion
+			
+			#region Skala row 11d
+			if(profile.s.IsEqualTo("-")
+			   && profile.P.IsAny("0,0", "0,+")
+			   && profile.Sch.IsAny("-,±", "-,+", "-!,±", "-!,+", "0,0")
+			   && profile.m.IsAny("+!", "+!!"))
+			{
+				detected = true;
+			}
+			#endregion
+			
+			if(profile.HasInterpretationNote(InterpretationNotes.Schuldangst) 
+			   && profile.C.EqualsTo("-,+"))
+			{
+				detected = true;//Erste Phase, p.315
+			}
+			
+			if(profile.P.EqualsTo("+,-!")
+			   && profile.Sch.IsAny("+,±", "±,+")
+			   && profile.C.IsAny("-,+", "0,±"))
+			{
+				detected = true;//Zweite Phase, p.315
+			}
+			
+			if(detected)
+			{
+				var exForm = Existenzformen.Hypochondrische_Organneurose;
+				profile.AddHasExistenzform(exForm);
+			}
+		}
+		
 		internal static void DetectCompulsiveNeurotic(TestProfile profile)
 		{
 			bool detected = false;
 			
-			// TODO more examples (for unittesting and checking) from Buch 4 Ich-A
+			// TODO more examples (for unit testing and checking) from Buch 4 Ich-A
 			// NB. Überdruck (!) is rare
 			
 			#region Zwangsimpulse (row 12a)
@@ -783,14 +928,15 @@ namespace SzondiTest
 			}
 			#endregion
 			
-			#region Zwangsimpulse (row 12a) less strict version
+			#region Zwangsimpulse (row 12a und 12c) less strict version
 			//row 12a un d p.474 VI. b)
 			{
 				// 3 Vektoren mit ± Reaktionen
 				ushort countAmbivalentVectors = 0;
 				
-				if(profile.Sch.HasFactorReaction("±", Factors.k) 
-				   || profile.Sch.HasFactorReaction("±", Factors.p))
+				if(profile.k.IsEqualTo("±") //12a
+				   || profile.p.IsEqualTo("±")//12a
+				   || profile.Sch.EqualsTo("+,0")) //12c
 				{
 					countAmbivalentVectors++;
 				}
@@ -875,78 +1021,70 @@ namespace SzondiTest
 			}
 		}
 		
-		internal static void DetectHypochondrischeExistenzformen(TestProfile profile)
-			
+		internal static void DetectSozialisierendeAlltagsmenschen(TestProfile profile)
 		{
-			//p.309 diff btw Hypocondriac (11u15) and Hebephrene (4):
-			// Hypocondriac: inhibits (Sch=-+) or removes (Sch=-0) the obsession
-			// Hebephrene: projects the obsession to a body organ (Sc-!-!)
-			
+			//purely from Skala, not found in Syndromatic (because is not a disease)
 			bool detected = false;
 			
-			#region Skala row 11a
-			// p.292, p.460
-			if(profile.e.IsAny("0", "±", "+", "+!", "+!!")
-			   && profile.hy.IsEqualTo("-")
-			   // NB.CompareTo k-! only when p0, distinguish from Heboide
-			   && profile.Sch.IsAny("-,+", "-,±", "-,0", "-!,0"))
+			#region Skala 16a
+			if(profile.S.EqualsTo("+,+") 
+			   && profile.Sch.EqualsTo("-,-") 
+			  )
 			{
 				detected = true;
 			}
 			
-			//"das Syndrom der Hypochondrie" p.317 (and Skala 11a)
-			if(profile.HasInterpretationNote(InterpretationNotes.HypochondrischeMitte))
-			{	
+			
+			if(profile.S.IsAny("+,0", "+!,+", "+,+!", "+,-") 
+			   && profile.Sch.IsAny("-,+", "-,0", "-!,-", "-!,+", "-!,0") 
+			   && profile.C.EqualsTo("0,+"))
+			{
 				detected = true;
 			}
 			
 			#endregion
 			
-			#region Skala rows 11b, 11c, 11d
-			// Skala row 11b
-			if(profile.P.IsAny("+,-", "+,-!", "±,-", "0,-")
-			   && profile.Sch.IsAny("-,-", "-,-!"))
-			{
-				detected = true;
-			}
-			
-			// Skala row 11c (Organneurose (15)
-			if(profile.P.EqualsTo("-,-")
-			   && profile.Sch.EqualsTo("-,-!"))
-			{
-				detected = true;
-			}
-			
-			// Skala row 11d
-			if(profile.s.IsEqualTo("-")
-			   && profile.P.IsAny("0,0", "0,+")
-			   && profile.Sch.IsAny("-,±", "-,+", "-!,±", "-!,+", "0,0")
-			   && profile.m.IsAny("+!", "+!!"))
+			#region Skala 16bcd
+			if(profile.S.IsAny("±,+", "+,±", "-,+", "-!,+", "-,+!", "-,-", "±,-", "-,±") 
+			   && profile.Sch.IsAny("-,+", "-,0", "-!,-", "-!,+", "-!,0"))
 			{
 				detected = true;
 			}
 			#endregion
 			
-			if(profile.HasInterpretationNote(InterpretationNotes.Schuldangst) 
-			   && profile.C.EqualsTo("-,+"))
+			#region Skala 16e
+			if(profile.S.IsAny("+,+", "±,+", "+,0", "+,±") 
+			   && profile.Sch.EqualsTo("±,+"))
 			{
-				detected = true;//Erste Phase, p.315
+				detected = true;
 			}
-			
-			if(profile.P.EqualsTo("+,-!")
-			   && profile.Sch.IsAny("+,±", "±,+")
-			   && profile.C.IsAny("-,+", "0,±"))
-			{
-				detected = true;//Zweite Phase, p.315
-			}
+			#endregion
 			
 			if(detected)
 			{
-				var exForm = Existenzformen.Hypochondrische_Organneurose;
-				profile.AddHasExistenzform(exForm);
+				profile.AddHasExistenzform(Existenzformen.SozialisierendeAlltagsmensche);
 			}
 		}
 		
+		internal static void DetectGeistigHumanisierendeMenschen(TestProfile profile)
+		{
+			//purely from Skala, not found in Syndromatic (because is not a disease)
+			bool detected = false;
+			
+			#region Skala 17abc
+			if(profile.S.IsAny("-,-", "-!,-", "-,-!", "-,0", "-!,0", "±,-", "-,±")
+			   && profile.Sch.IsAny("±,±", "±,+", "+,+")
+			  )
+			{
+				detected = true;
+			}
+			#endregion
+			
+			if(detected)
+			{
+				profile.AddHasExistenzform(Existenzformen.GeistigHumanisierendeMenschen);
+			}
+		}
 		#endregion
 		
 		#region SexuelleExistenzformen
@@ -1108,7 +1246,25 @@ namespace SzondiTest
 						
 			#endregion
 			
-			//TODO row 9d
+			#region row 9d 
+			//from Skala only TODO check syndromatic
+			{
+				if(profile.S.IsAny("-,+!", "-,+!!")
+				   && profile.P.IsAny("-,+", "0,+", "0,±", "0,-")
+				   && profile.Sch.IsAny("+,0", "0,0", "+,-")
+				   && profile.d.IsAny("-!", "-!!"))
+				{
+					detected = true;
+				}
+				
+				// TODO check in syndromatic if only conditions s and m are required
+				if(profile.s.IsAny("-!!", "+!!")
+				   && profile.m.IsAny("+", "+!", "+!!"))//TODO confirm m with hypertension
+				{
+					detected = true;
+				}
+			}
+			#endregion
 			
 			if(detected)
 			{
@@ -1400,6 +1556,29 @@ namespace SzondiTest
 		
 		#region IchExistenzformen
 		
+		internal static void DetectPraepsychotischeEvSuicidale(TestProfile profile)
+		{
+			bool detected = false;
+			
+			#region Skala abcd
+			//Skala only, not found in Syndromatics
+			//"{" symbol: must check for a sukzession?
+			if(profile.k.IsAny("-", "+", "0", "±")
+			   && profile.p.IsEqualTo("-")
+			   && profile.C.EqualsTo("-,-")
+			  )
+			{
+				detected = true;
+			}
+			#endregion
+			
+			if(detected)
+			{
+				profile.AddHasExistenzform(Existenzformen.Praepsychotische);
+			}
+		}
+		
+		#region ProjektivParanoid
 		internal static void DetectProjektivParanoid(TestProfile profile)
 		{
 			FactorsComparisonOptions noHypertension = FactorsComparisonOptions.HypertensionOnOff;
@@ -1544,9 +1723,79 @@ namespace SzondiTest
 					profile.AddInterpretationNote(note);
 				}
 			}
-		}
+		}	
+			
+		internal static void DetectParanoideKammSyndrom(TestProfile profile)
+		{
+			// p.262
+			if(profile.p.IsAny("-", "-!", "-!!", "-!!!")
+			   && profile.S.HasFactorReaction("-", Factors.s)
+			   && profile.P.HasFactorReaction("-", Factors.hy)
+			   && profile.C.HasFactorReaction("-", Factors.m))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.ParanoKammSynd);
+			}
+			else if(profile.p.Contains("-")
+			        && profile.hy.IsAny("-", "-!", "0", "±") // hy can be 0, ±: p.272 I.6
+			        && !profile.m.IsAny("+", "+!", "+!!", "+!!!")
+			        && !profile.s.IsAny("+", "+!", "+!!", "+!!!"))
+				//TODO verify with more examples if hy can't be +
+				// (see p.264 VII, where profile 7 is not listed
+				//TODO veryfy w/ more examples that s, m can't be "+"
+		   	{
+				//NB. m± contains m-, or s± -> unpure form (p.262)
+				// also admitted m0 and s0
+				
+		   		ushort detectionPoints = 0;
+		   		
+		   		detectionPoints += GradeCorrespondence(profile.S, "-", Factors.s);
+		   		detectionPoints += GradeCorrespondence(profile.P, "-", Factors.hy);
+		   		detectionPoints += GradeCorrespondence(profile.C, "-", Factors.m);
+		   		
+		   		//TODO reconsidere the whole GradeCorrespondence idea
+		   		if(detectionPoints >= 6)
+		   		{
+		   			// impure form ("unreiner" p.262)
+		   			profile.AddInterpretationNote(InterpretationNotes.ParanoKammSyndU);
+		   		}
+		   	}
+		}		
+						
+		internal static void DetectManiformeParanoide(TestProfile profile)
+		{
+			bool detected = false;
+			
+			// Buch 3 p.267 I.
+			if(profile.HasInterpretationNote(InterpretationNotes.ProjektivParanoMitte) 
+				   || profile.HasInterpretationNote(InterpretationNotes.ParanoKammSynd) 
+				   || profile.HasInterpretationNote(InterpretationNotes.ParanoKammSyndU))
+			{	
+				if(profile.C.EqualsTo("0,-")
+				  // && profile.k.IsEqualTo("-")
+				  && profile.s.IsAny("+", "0", "-")//s- in less aggressive, lesser Hypomanic
+				  && (profile.PartOf.HasGefahrTriebklasse("C", "m", "-") 
+				      || profile.PartOf.HasGefahrTriebklasse("Sch", "p", "-")))	
+				{
+					// Symptome 3, 4 p.267
+					detected = true;
+				}
+				else if (profile.h.IsAny("+!!", "+!!!")
+				         && profile.m.IsAny("-!", "-!!", "-!!!"))
+				{
+					// Symptom 6 p.267
+					detected = true;
+				}
+			}
+			
+			if(detected)
+			{
+				var note = InterpretationNotes.ManiformeParanoide;
+				profile.AddInterpretationNote(note);
+			}
+		}		
+		#endregion
 		
-		
+		#region InflativParanoid
 		internal static void DetectInflativParanoid(TestProfile profile)
 		{
 			FactorsComparisonOptions noHypertension = FactorsComparisonOptions.HypertensionOnOff;
@@ -1593,6 +1842,24 @@ namespace SzondiTest
 			}
 			#endregion
 			
+			#region Existenzskala row 3c
+			if(profile.S.EqualsTo("-,+") 
+			   && profile.P.EqualsTo("-,+") 
+			   && profile.Sch.IsAny("-,+!", "0,+") 
+			   && profile.C.IsAny("-,+", "0,-") 
+			  )
+			{
+				detected = true;
+			}
+			#endregion
+			
+			#region Existenzskala row 3d
+			if(profile.HasInterpretationNote(InterpretationNotes.InflativParanoMitte))
+			{
+				detected = true;
+			}
+			#endregion
+			
 			if(detected)
 			{
 				profile.AddHasExistenzform(Existenzformen.InflativParanoide);
@@ -1613,8 +1880,10 @@ namespace SzondiTest
 		
 		internal static void DetectInflativParanoideMitte(TestProfile profile)
 		{
-			if((profile.P.IsAny("-,+", "-,0", "±,0", "0,+", "-,-", "0,+")
+			// p.?
+			if((profile.P.IsAny("-,+", "-,0", "±,0", "0,+", "-,-", "0,+")//FIXME duplicate 0+
 			    //|| profile.P.IsAny("-,+!",)//doubt, p.281
+			    || profile.P.IsAny("0,0","+,+")//Skala only
 			   )
 			   && profile.Sch.IsAny("0,+", "0,+!")
 			  )
@@ -1623,6 +1892,9 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 		}
+		#endregion
+		
+		#region Accessory: SpaltungsSyndrom
 		
 		internal static void DetectParanoideSpaltungsSyndrom(TestProfile profile)
 		{
@@ -1704,41 +1976,156 @@ namespace SzondiTest
 			
 			return false;
 		}
-			
-		internal static void DetectParanoideKammSyndrom(TestProfile profile)
-		{
-			// p.262
-			if(profile.p.IsAny("-", "-!", "-!!", "-!!!")
-			   && profile.S.HasFactorReaction("-", Factors.s)
-			   && profile.P.HasFactorReaction("-", Factors.hy)
-			   && profile.C.HasFactorReaction("-", Factors.m))
-			{
-				profile.AddInterpretationNote(InterpretationNotes.ParanoKammSynd);
-			}
-			else if(profile.p.Contains("-")
-			        && profile.hy.IsAny("-", "-!", "0", "±") // hy can be 0, ±: p.272 I.6
-			        && !profile.m.IsAny("+", "+!", "+!!", "+!!!")
-			        && !profile.s.IsAny("+", "+!", "+!!", "+!!!"))
-				//TODO verify with more examples if hy can't be +
-				// (see p.264 VII, where profile 7 is not listed
-				//TODO veryfy w/ more examples that s, m can't be "+"
-		   	{
-				//NB. m± contains m-, or s± -> unpure form (p.262)
-				// also admitted m0 and s0
+		#endregion
 				
-		   		ushort detectionPoints = 0;
-		   		
-		   		detectionPoints += GradeCorrespondence(profile.S, "-", Factors.s);
-		   		detectionPoints += GradeCorrespondence(profile.P, "-", Factors.hy);
-		   		detectionPoints += GradeCorrespondence(profile.C, "-", Factors.m);
-		   		
-		   		//TODO reconsidere the whole GradeCorrespondence idea
-		   		if(detectionPoints >= 6)
-		   		{
-		   			// impure form ("unreiner" p.262)
-		   			profile.AddInterpretationNote(InterpretationNotes.ParanoKammSyndU);
-		   		}
-		   	}
+		internal static void DetectHeboide(TestProfile profile)
+		{
+			//1. Theatralische, Pathetische, Ekstatische Heboide
+			//		(unstillbaren Geltungs- und Exhibitionsdrang) (4c ?)
+			//2. Sprunghaftigkeit
+			//		(Paroxysmalität der Hebeohrenen zusammen, P e0 hy-) (4d?)
+			//3.irreale Phantasiewelt, Lügenhaftigkeit, Pseudologia phantastica (Mythomanie)
+			//		(hy-!) (4ab?)
+			//4.Leib- oder Organhalluzinationen
+			// eine Form des hypocondrischen Syndroms: projektive Form des 
+			// hypochondrischen Organs. (11 und 15 Skala)
+			
+			//p.309 main diff btw Parano and heboide is, 
+			//hebephrenen use also k-! (egosystole), while paranoiden k0
+			// so -!-(!) heboide, 0-! paranoide
+			
+			//p309 diff btw Hypocondriac (11u15) and Hebephrene (4):
+			// Hypocondriac: inhibits (Sch=-+) or removes (Sch=-0) the obsession
+			// Hebephrene: projects the obsession to a body organ (Sc-!-!)
+			
+			bool detected = false;
+			
+			#region Skala 4a
+			if(profile.hy.IsAny("-!", "-!!", "-!!!")
+			   && profile.k.IsAny("-!", "-!!", "-!!!"))
+			{
+				detected = true;
+			}
+			#endregion
+			
+			#region Skala 4b
+			// Skala only. Not in syndromatic?
+			{
+				if(profile.hy.IsAny("-!", "-!!", "-!!!")
+				   && profile.C.IsAny("0,0", "-,-"))
+				{
+					detected = true;
+				}
+				
+				if(profile.h.IsAny("+!", "+!!") 
+				   && profile.hy.IsAny("-!", "-!!", "-!!!")
+				   && profile.C.EqualsTo("0,-"))
+				{
+					detected = true;
+				}
+			}
+			#endregion
+			
+			#region Skala 4c
+			// Skala only. Not in syndromatic?
+			{
+				if(profile.hy.IsAny("+!", "+!!", "+!!!")
+				   && profile.k.IsAny("-!", "-!!", "-!!!")
+				   && profile.C.IsAny("0,0", "-,-"))
+				{
+					detected = true;
+				}
+				
+				if(profile.hy.IsAny("+!", "+!!", "+!!!")
+				   && profile.k.IsAny("-!", "-!!", "-!!!")
+				   && profile.p.IsAny("-!", "-!!", "-!!!")
+				   && profile.C.EqualsTo("0,-"))
+				{
+					detected = true;
+				}
+			}
+			#endregion
+			
+			#region Skala 4d, Heb.Mitte
+			// can be symplyfied? Skala has few conditions
+			// Skala only 4d
+			if(profile.P.IsAny("0,-!", "0,-!!")
+			   && profile.Sch.IsAny("-!,-", "-!,-!"))
+			{
+				detected = true;
+			}
+	
+			// p.292 Leibhalluzinationen
+			if(profile.P.EqualsTo("0,-!") 
+			   && profile.Sch.IsAny("-!,-", "-!,-!"))//p.293
+			{
+				detected = true;
+			}
+			
+			//p.298 4.a)
+			if(profile.HasInterpretationNote(InterpretationNotes.HebephreneMitte)
+			   || profile.HasMitte("0,-!", "-,-") 
+			   || profile.HasMitte("0,-", "-!,-")
+			   //|| profile.HasMitte("0,-", "-,-")
+			   //|| profile.HasMitte("0,-", "-!!,0")//p.298 4.b)
+			   || profile.HasMitte("0,-!!", "0,-")//p.298 4.c)
+			   //|| profile.HasMitte("0,-", "-,±")//p.300 IV.1
+			   || profile.HasMitte("0,-!", "0,±")//p.300 IV.2.
+			   || profile.HasMitte("0,-", "0,±")//p.300 IV.2.
+			   || profile.HasMitte("0,±", "0,±")//p.300 IV.2.
+			   || profile.HasMitte("-,-!", "-,±")//p.301 IV.b)
+			   || profile.HasMitte("-,-", "-,-")//p.301 IV.b)
+			   || profile.HasMitte("-,-", "-,±")//p.301 IV.c)
+			   || profile.HasMitte("0,-!", "-!,-!")//p.306 VII
+			   || profile.HasMitte("0,-", "-!!,-!")//p.309
+			   || profile.HasMitte("0,-!", "-!!,-!")//p.309
+			)
+			{
+				if(profile.s.IsAny("+!","+!!","+!!!"))
+				{
+					detected = true;
+					var note = InterpretationNotes.HebephreneSyndrom;
+					profile.AddInterpretationNote(note);
+				}
+				else if(profile.C.IsAny("0,0", "0,-", "-,-"))
+					//p.295 VII. 3. Faktorenverband, p.306 VII hebephrene Syndrom
+				{
+					detected = true;
+				}
+			}
+			
+			//Faktorenverband verband p.296			
+			{
+				bool[] HebephreneSyndromFaktorenverband = new bool[]{
+					profile.s.IsAny("+!!", "+!!!")
+						|| (profile.s.IsEqualTo("+!")
+						    && profile.PartOf.HasFactorReaction("+!!", Factors.s, profile.dimension)),
+					profile.e.IsEqualTo("0"),
+				    profile.hy.IsAny("-!", "±", "-"),
+				    profile.k.IsEqualTo("-!")
+				    	|| (profile.k.IsEqualTo("-")
+				        	&& profile.PartOf.HasFactorReaction("-!", Factors.k, profile.dimension)),
+                	profile.p.IsEqualTo("-!"),
+                	profile.d.IsAny("-", "0"),
+                	profile.m.IsAny("-", "0"),
+				};
+				
+				if(Faktorenverband(HebephreneSyndromFaktorenverband))
+				{
+					detected = true;
+					var note = InterpretationNotes.HebephreneSyndrom;
+					profile.AddInterpretationNote(note);
+				}
+
+			}
+			#endregion
+			
+
+			if(detected)
+			{
+				var exForm = Existenzformen.Heboide;
+				profile.AddHasExistenzform(exForm);
+			}
 		}
 		
 		internal static void DetectKatatoniforme(TestProfile profile)
@@ -1787,12 +2174,14 @@ namespace SzondiTest
 			#endregion
 			
 			#region Existenzskala row 5b
-			if(profile.k.IsAny("-!", "-!!", "-!!!") 
+			//pure skala 5b (bold square conditions)
+			if(profile.k.IsAny("-!", "-!!", "-!!!")
 			   && profile.P.EqualsTo("-,0"))
 			{
 				detected = true;
 			}
 			
+			//pure skala 5b (remaining conditions)
 			if(profile.k.IsAny("-!", "-!!", "-!!!") 
 			   && profile.P.IsAny("-,0", "-,±","0,-","0,±") 
 			   && profile.s.IsAny("-!!", "-!!!", "+!!", "+!!!")
@@ -1800,11 +2189,11 @@ namespace SzondiTest
 			{
 				detected = true;
 			}
+			
 			#endregion
 			
 			#region Existenzskala row 5c
-			if(profile.k.IsAny("-!!", "-!!!") 
-			   && profile.p.IsEqualTo("-")
+			if(profile.Sch.IsAny("-!!,-", "-!!!,-")
 			   && profile.C.EqualsTo("-,-"))
 			{
 				detected = true;
@@ -1833,6 +2222,15 @@ namespace SzondiTest
 				detected = true;
 			}
 			
+			//pure Skala 5d
+			if(profile.S.IsAny("+!,+!!", "0,+!")
+			   && profile.P.IsAny("-!,0", "0,-", "-,-") 
+			   && profile.Sch.IsAny("-!,0", "-!,±") 
+			   && profile.C.IsAny("-,-", "0,0")
+			  )
+			{
+			
+			}
 			#endregion
 			
 			//Buch 3, p.275 II., p.276
@@ -1847,129 +2245,6 @@ namespace SzondiTest
 			if(detected)
 			{
 				profile.AddHasExistenzform(Existenzformen.Katatoniforme);		
-			}
-		}
-				
-		internal static void DetectManiformeParanoide(TestProfile profile)
-		{
-			bool detected = false;
-			
-			// Buch 3 p.267 I.
-			if(profile.HasInterpretationNote(InterpretationNotes.ProjektivParanoMitte) 
-				   || profile.HasInterpretationNote(InterpretationNotes.ParanoKammSynd) 
-				   || profile.HasInterpretationNote(InterpretationNotes.ParanoKammSyndU))
-			{	
-				if(profile.C.EqualsTo("0,-")
-				  // && profile.k.IsEqualTo("-")
-				  && profile.s.IsAny("+", "0", "-")//s- in less aggressive, lesser Hypomanic
-				  && (profile.PartOf.HasGefahrTriebklasse("C", "m", "-") 
-				      || profile.PartOf.HasGefahrTriebklasse("Sch", "p", "-")))	
-				{
-					// Symptome 3, 4 p.267
-					detected = true;
-				}
-				else if (profile.h.IsAny("+!!", "+!!!")
-				         && profile.m.IsAny("-!", "-!!", "-!!!"))
-				{
-					// Symptom 6 p.267
-					detected = true;
-				}
-			}
-			
-			if(detected)
-			{
-				var note = InterpretationNotes.ManiformeParanoide;
-				profile.AddInterpretationNote(note);
-			}
-		}
-		
-		internal static void DetectHeboide(TestProfile profile)
-		{
-			//1. Theatralische, Pathetische, Ekstatische Heboide
-			//		(unstillbaren Geltungs- und Exhibitionsdrang) (4c ?)
-			//2. Sprunghaftigkeit
-			//		(Paroxysmalität der Hebeohrenen zusammen, P e0 hy-) (4d?)
-			//3.irreale Phantasiewelt, Lügenhaftigkeit, Pseudologia phantastica (Mythomanie)
-			//		(hy-!) (4ab?)
-			//4.Leib- oder Organhalluzinationen
-			// eine Form des hypocondrischen Syndroms: projektive Form des 
-			// hypochondrischen Organs. (11 und 15 Skala)
-			
-			//p.309 main diff btw Parano and heboide is, 
-			//hebephrenen use also k-! (egosystole), while paranoiden k0
-			// so -!-(!) heboide, 0-! paranoide
-			
-			//p309 diff btw Hypocondriac (11u15) and Hebephrene (4):
-			// Hypocondriac: inhibits (Sch=-+) or removes (Sch=-0) the obsession
-			// Hebephrene: projects the obsession to a body organ (Sc-!-!)
-			
-			bool detected = false;
-			
-			// Skala 4a
-			if(profile.hy.IsAny("-!", "-!!", "-!!!")
-			   && profile.k.IsAny("-!", "-!!", "-!!!"))
-			{
-				detected = true;
-			}
-			
-			// Skala 4b
-			// Skala 4c
-			// TODO
-			
-			// Skala 4d, Heb.Mitte
-			// p.293
-			if(profile.e.IsEqualTo("0")
-			   && profile.hy.IsAny("-!", "-!!")
-			   && profile.k.IsEqualTo("-!")
-			   && profile.hy.IsAny("-", "-!")
-			  )
-			{
-				detected = true;
-			}
-			
-			// p.292 Leibhalluzinationen
-			if(profile.P.EqualsTo("0,-!") 
-			   && profile.Sch.IsAny("-!,-", "-!,-!"))//p.293
-			{
-				detected = true;
-			}
-			
-			//p.298 4.a)
-			if(profile.HasInterpretationNote(InterpretationNotes.HebephreneMitte)
-			   || profile.HasMitte("0,-!", "-,-") 
-			   || profile.HasMitte("0,-", "-!,-")
-			   //|| profile.HasMitte("0,-", "-,-")
-			   //|| profile.HasMitte("0,-", "-!!,0")//p.298 4.b)
-			   || profile.HasMitte("0,-!!", "0,-")//p.298 4.c)
-			   //|| profile.HasMitte("0,-", "-,±")//p.300 IV.1
-			   || profile.HasMitte("0,-!", "0,±")//p.300 IV.2.
-			   || profile.HasMitte("0,-", "0,±")//p.300 IV.2.
-			   || profile.HasMitte("0,±", "0,±")//p.300 IV.2.
-			   || profile.HasMitte("-,-!", "-,±")//p.301 IV.b)
-			   || profile.HasMitte("-,-", "-,-")//p.301 IV.b)
-			   || profile.HasMitte("-,-", "-,±")//p.301 IV.c)
-			   || profile.HasMitte("0,-!", "-!,-!")//p.306 VII
-			   || profile.HasMitte("0,-", "-!!,-!")//p.309
-			   || profile.HasMitte("0,-!", "-!!,-!")//p.309
-			)
-			{
-				if(profile.s.IsAny("+!","+!!","+!!!"))
-				{
-					detected = true;
-					var note = InterpretationNotes.HebephreneSyndrom;
-					profile.AddInterpretationNote(note);
-				}
-				else if(profile.C.IsAny("0,0", "0,-", "-,-"))
-					//p.295 VII. 3. Faktorenverband, p.306 VII hebephrene Syndrom
-				{
-					detected = true;
-				}
-			}
-			
-			if(detected)
-			{
-				var exForm = Existenzformen.Heboide;
-				profile.AddHasExistenzform(exForm);
 			}
 		}
 		
@@ -2233,7 +2508,7 @@ namespace SzondiTest
 			// p.274 II.7
 			if(profile.P.EqualsTo("0,0"))
 			{
-				var note = InterpretationNotes.TotalDesintegrAffekte;
+				var note = InterpretationNotes.TotalDesintegrAffekte_ApathieStupor;
 				profile.AddInterpretationNote(note);
 			}
 			
@@ -2619,7 +2894,7 @@ namespace SzondiTest
 			//p.398 III. paroxymale (epileptiforme) «Kain»-Syndrom
 			if(profile.HasInterpretationNote(InterpretationNotes.Kain) 
 			   || profile.P.EqualsTo("0,-")// sich verstecken
-			   || profile.HasInterpretationNote(InterpretationNotes.TotalDesintegrAffekte)
+			   || profile.HasInterpretationNote(InterpretationNotes.TotalDesintegrAffekte_ApathieStupor)
 			   || profile.HasInterpretationNote(InterpretationNotes.KainHideWechsel)
 			   || profile.HasInterpretationNote(InterpretationNotes.MörderE)
 			   || profile.HasInterpretationNote(InterpretationNotes.MörderE_mitVentil))
@@ -2647,7 +2922,7 @@ namespace SzondiTest
 					symptoms++;
 				}
 				
-				if(profile.HasInterpretationNote(InterpretationNotes.TotalDesintegrAffekte)
+				if(profile.HasInterpretationNote(InterpretationNotes.TotalDesintegrAffekte_ApathieStupor)
 				   || profile.HasInterpretationNote(InterpretationNotes.Kain)
 				   || profile.P.EqualsTo("0,-"))
 				{

@@ -276,7 +276,7 @@ namespace SzondiTestUnitTests
 			{	var profiles = Fälle.Fall19;
 				var haves = new List<int>() {5,6,};//Buch 3 p.274 II.7
 				var haveNots = new List<int>() {1,2,3,4,7,8,9,10};
-				var note = InterpretationNotes.TotalDesintegrAffekte;
+				var note = InterpretationNotes.TotalDesintegrAffekte_ApathieStupor;
 				TestNoteHelper(note, Syndromatic.FurtherNotes, profiles, haves, haveNots);	
 			}
 		}
@@ -439,6 +439,18 @@ namespace SzondiTestUnitTests
 		}
 		
 		[Test]
+		public void TestEpileptiforme()
+		{
+			{	// Test derivedspeculatively from Sonzdi intro 1972
+				var profiles = Fälle.Fall34;
+				var haves = new List<int>() {4,8};//unsure about profil 4, but should be two in total
+				var haveNots = new List<int>() {};
+				var exForm = Existenzformen.Tötende_Gesinnung_Epileptiforme;
+				TestExistenzformHelper(exForm,
+				                       Syndromatic.DetectEpileptiforme, profiles, haves, haveNots);
+			}
+		}
+		[Test]
 		public void TestEpileptiformeMörderE()
 		{
 			{	var allProbandensProfile = new List<List<TestProfile>>();
@@ -593,7 +605,7 @@ namespace SzondiTestUnitTests
 				var note = InterpretationNotes.MörderE;
 				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profilesHinter, haves, haveNots);	
 			}
-			
+
 			{	var profiles = Fälle.Fall36;
 				
 				//Buch 3 p.398 I.
@@ -612,6 +624,15 @@ namespace SzondiTestUnitTests
 				var haveNots = new List<int>() {1,2,3,4,6};
 				var note = InterpretationNotes.MörderE;
 				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profilesHinter, haves, haveNots);	
+			}
+			
+			{	var profiles = Fälle.Fall42;
+				
+				//Buch 3 p.503
+				var haves = new List<int>() {11};
+				var haveNots = new List<int>() {1,2,3,4,5,6,7,8,9};
+				var note = InterpretationNotes.MörderE;
+				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profiles, haves, haveNots);	
 			}
 		}
 		
@@ -1113,7 +1134,7 @@ namespace SzondiTestUnitTests
 			}
 		}
 		
-		[Test][Ignore]//FIXME no test examples
+		[Test]//TODO FIXME no test examples
 		public void TestInflativParanoideSyndrom()
 		{
 			{
@@ -1186,6 +1207,16 @@ namespace SzondiTestUnitTests
 				var profiles = Fälle.Fall30;
 				var haves = new List<int>() {7};////TODO revise: 1,
 				var haveNots = new List<int>() {2,3,4,5,9,};////TODO revise: 6,8,10
+				TestNoteHelper(note, Syndromatic.DetectParanoideSpaltungsSyndrom,
+				                     profiles, haves, haveNots);
+			}
+			
+			{	 // Buch 3 p.480
+				var profiles = new List<TestProfile>();
+				profiles.Add(null);
+				profiles.AddRange(Fälle.Fall40[1].PartOf.Hintergrundprofile);
+				var haves = new List<int>() {7,};//1,2,3,4,5,6,8,9,10
+				var haveNots = new List<int>() {};
 				TestNoteHelper(note, Syndromatic.DetectParanoideSpaltungsSyndrom,
 				                     profiles, haves, haveNots);
 			}
@@ -1276,7 +1307,7 @@ namespace SzondiTestUnitTests
 			}
 		}		
 	
-		[Test]
+		[Test]//[Ignore]//fix and restore
 		public void TestHeboide_ProjektiveHypochondrischeSynd()
 		{
 			{	/*Buch 3 p.298 4.a)*/
@@ -1300,7 +1331,7 @@ namespace SzondiTestUnitTests
 			// Buch 3 p.301 IV
 			{	var profiles = Fälle.Fall26;
 				var haves = new List<int>() {1,2,4,3,7,8,9,10};
-				var haveNots = new List<int>() {5,6,};
+				var haveNots = new List<int>() {};//5,6,
 				var note = InterpretationNotes.HebephreneSyndrom;
 				TestNoteHelper(note, Syndromatic.DetectHeboide, 
 				               profiles, haves, haveNots);
@@ -2108,21 +2139,12 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestCompulsiveNeurotic()
 		{
-			{
-				// from Buch3, p.479, Tabelle 52
-				var exampleProfiles = new System.Collections.Generic.List<TestProfile>()
-				{
-					new TestProfile("±,-", "±,0", "±,0", "0,+"),
-					new TestProfile("±,-", "±,+", "±,0", "0,±"),
-					new TestProfile("+,-", "±,0", "±,0", "0,±"),
-					new TestProfile("+,-", "±,+", "±,0", "0,±")
-				};
-				
-				SetSexForProfiles(exampleProfiles);
-				
-				VerifyExistenzformHelper(Existenzformen.CompulsiveZwang, 
-				                         exampleProfiles,
-				                         Syndromatic.DetectCompulsiveNeurotic);
+			{	var profiles = Fälle.Fall40;
+				var haves = new List<int>() {2,5,6/*=8,10*/,9};//Buch3 p.479 Tab. 52
+				var haveNots = new List<int>() {4,};//1,3,7
+				TestExistenzformHelper(Existenzformen.CompulsiveZwang, 
+			                       Syndromatic.DetectCompulsiveNeurotic,
+			                       profiles, haves, haveNots);
 			}
 			
 			{	var profiles = Fälle.B3Tab50I;
@@ -2150,7 +2172,7 @@ namespace SzondiTestUnitTests
 	[TestFixture]
 	public class TestExistenzBestimmung : BaseSzondiUnitTests
 	{				
-		[Test][Ignore]
+		[Test]//[Ignore]
 		public static void TestParseAndSyndromaticProfiles()
 		{
 			string inputFilename = "profiles.txt";

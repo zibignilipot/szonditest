@@ -147,7 +147,7 @@ namespace SzondiTest
 		KatatonifMitte,
 		IrrealenBlocksSyndrom,//e,hy,k,p,d,m -- -- --
 		//Hebefr
-		HebephreneSyndrom,//p.298 in der projektiven Hypochondrie
+		HebephreneSyndrom,//p.296, p.298 in der projektiven Hypochondrie
 		//Inflativ
 		InflativParanoMitte,
 		InflativParanoSyndrom,
@@ -161,7 +161,10 @@ namespace SzondiTest
 		AffektPolarität,//"±0, ±-
 		SensitiveBeziehungsangst,//Was würden die Menschen sagen? 0-, ±-
 		Phobie,//+0
-		TotalDesintegrAffekte,//p.274 II.7 TotalDesintegrAffektleben, P00 
+		
+		//p.274 II.7 TotalDesintegrAffektleben, P00
+		//p.485 B.2 Apathie, Stupor
+		TotalDesintegrAffekte_ApathieStupor,
 		Lamentation,//p.274 II.8 P0± 
 		Religionswahn,//p.390 P+±
 		KainHideWechsel,//0--0
@@ -234,8 +237,11 @@ namespace SzondiTest
 		EntwertungSelb,//p.442 II.4 Entwertung seiner eigenen Person
 		#endregion
 		
-		#region Schutz
+		#region Schutz or Ich
 		HebephreneMitte,
+		#endregion
+		
+		#region Schutz
 		Schuldangst,
 		HypochondrischeMitte,//"das Syndrom der Hypochondrie" p.317
 		PsychotischeHypochondrischeSynd,//p.325
@@ -245,6 +251,9 @@ namespace SzondiTest
 		KlassischeZwangsneurose,
 		Zwangsimpulse,
 		Zwangsperson,//p.388
+		
+		//Gegen Symptom
+		GegenZwangs,
 		#endregion
 		
 		#region Kontakt
@@ -292,9 +301,34 @@ namespace SzondiTest
 			InterpretationNotes.InzestuösesAnhangen,
 		};
 		
+		public static InterpretationNotes[] ZwangsNSymptoms 
+			= new InterpretationNotes[]
+		{
+			InterpretationNotes.ObsessiveCompulsiveMitte,
+			InterpretationNotes.KlassischeZwangsneurose,
+			InterpretationNotes.Zwangsimpulse,
+			InterpretationNotes.Zwangsperson,
+			
+			//doubt
+			InterpretationNotes.InhibitedMitte, //gehemmte
+		};
+		
 		public static bool HasAnyMelancholischeNote(TestProfile profile)
 		{
 			foreach(var note in MelancholischeSymptoms)
+			{
+				if(profile.HasInterpretationNote(note))
+				{	
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public static bool HasAnyZwangsNote(TestProfile profile)
+		{
+			foreach(var note in ZwangsNSymptoms)
 			{
 				if(profile.HasInterpretationNote(note))
 				{	
@@ -1018,6 +1052,22 @@ namespace SzondiTest
 				|| this.IsAny(compare2, compare3, compare4, compare5, compare6);
 		}
 		
+		public bool IsAny(string compare1, string compare2, string compare3,
+		                  string compare4, string compare5, string compare6,
+		                  string compare7)
+		{
+			return this.EqualsTo(compare1) 
+				|| this.IsAny(compare2, compare3, compare4, compare5, compare6, compare7);
+		}
+		
+		public bool IsAny(string compare1, string compare2, string compare3,
+		                  string compare4, string compare5, string compare6,
+		                  string compare7, string compare8)
+		{
+			return this.EqualsTo(compare1) 
+				|| this.IsAny(compare2, compare3, compare4, compare5, compare6, compare7, compare8);
+		}
+		
 		public bool EqualsTo (string compareMe)
 		{
 			return this.EqualsTo(compareMe,
@@ -1456,7 +1506,7 @@ namespace SzondiTest
 			
 			return false;
 		}
-				
+		
 		public bool HasFactorReaction(string reaction, Factors faktor, 
 		                             DimensionenUndFormenDerPsyche dimension)
 		{

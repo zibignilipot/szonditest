@@ -40,6 +40,8 @@ namespace SzondiTestUnitTests
 		private static List<TestProfile> fall37;		
 		private static List<TestProfile> fall38;
 		private static List<TestProfile> fall39;
+		private static List<TestProfile> fall40;
+		private static List<TestProfile> fall42;
 		
 		private static List<TestProfile> b3Tab49Mann;
 		private static List<TestProfile> b3Tab49Frau;
@@ -811,6 +813,65 @@ namespace SzondiTestUnitTests
 				}
 				
 				return fall39;
+			}
+		}
+		
+		public static List<TestProfile> Fall40
+		{
+			get
+			{
+				if(fall40==null)
+				{
+					fall40 = new List<TestProfile>()
+					{
+						null,
+						new TestProfile("±,0", "±,0", "-,-", "0,+"),
+						new TestProfile("±,-", "±,0", "±,0", "0,+"),//2
+						new TestProfile("+,-", "±,0", "-,0", "0,±"),
+						new TestProfile("+,-", "±,+", "-,0", "0,±"),
+						new TestProfile("±,-", "±,+", "±,0", "0,±"),//5
+						
+						new TestProfile("+,-", "±,0", "±,0", "0,±"),//6,8,10
+						new TestProfile("+,-", "±,0", "±,-", "0,+"),
+						new TestProfile("+,-", "±,0", "±,0", "0,±"),//6,8,10
+						new TestProfile("+,-", "±,+", "±,0", "0,±"),//9
+						new TestProfile("+,-", "±,0", "±,0", "0,±"),//6,8,10
+					};
+					BaseSzondiUnitTests.SetSexAndNameForProfiles(Sex.Male, "Fall 40", fall40);
+				}
+				
+				return fall40;
+			}
+		}
+		
+		
+		public static List<TestProfile> Fall42
+		{
+			get
+			{
+				if(fall42==null)
+				{
+					fall42 = new List<TestProfile>()
+					{
+						null,
+						new TestProfile("+,+", "0,-!", "0,±", "-,+"),
+						new TestProfile("+,+", "+,-!!", "±,+", "-,+"),
+						new TestProfile("+,0", "±,-", "±,±", "-,+"),
+						new TestProfile("+,+", "-,-", "-,±", "-,+"),
+						new TestProfile("+,+", "±,-", "±,±", "-,0"),//5
+						
+						new TestProfile("+,+!", "-,-", "0,0", "-!,+"),//6
+						new TestProfile("+,+", "+,-", "+,±", "-,-"),
+						new TestProfile("+,+", "0,-!", "±,+", "-,0"),
+						new TestProfile("+,+", "+,-!", "±,±", "-,0"),
+						new TestProfile("+,+!", "0,-!", "±,+", "-,-"),
+						
+						new TestProfile("+,+!", "-,0", "+,±", "-!,-"),//11 p.503
+					};
+					BaseSzondiUnitTests.SetSexAndNameForProfiles(Sex.Male, "Fall 42", fall42);
+				}
+				
+				return fall42;
 			}
 		}
 		
