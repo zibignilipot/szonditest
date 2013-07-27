@@ -29,7 +29,7 @@ namespace SzondiTestUnitTests
 			var factorReaction = new FactorReaction("±");
 			
 			result =SzondiCounts.SingleChoiceReactionToString(
-				factorReaction.positivTendenz, factorReaction.negativTendenz);
+				factorReaction.PositivTendenz, factorReaction.NegativTendenz);
 			Assert.IsTrue(result.Equals(expected));
 		}
 		

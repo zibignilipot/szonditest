@@ -48,6 +48,13 @@ namespace SzondiTestUnitTests
 		}
 		
 		[Test]
+		public void TestFaktorIsEqualTo()
+		{
+			var reaction1 = new FactorReaction("-!!");
+			Assert.IsTrue(reaction1.IsEqualTo("-!!!"));
+		}
+		
+		[Test]
 		public void TestVectorEqualsTo()
 		{
 			// Sch(k0, p-)
@@ -125,7 +132,7 @@ namespace SzondiTestUnitTests
 			TestFactorContainsHelper("+!!", "+", true);
 			TestFactorContainsHelper("+!!", "+!", true);
 			TestFactorContainsHelper("+!!", "+!!", true);
-			TestFactorContainsHelper("+!!", "+!!!", false);
+			//TestFactorContainsHelper("+!!", "+!!!", false); //consider !! equalto !!!
 			TestFactorContainsHelper("+!", "+", true);
 			TestFactorContainsHelper("+!", "+!", true);
 			TestFactorContainsHelper("+!", "+!!", false);
@@ -139,7 +146,7 @@ namespace SzondiTestUnitTests
 			TestFactorContainsHelper("-!!", "-", true);
 			TestFactorContainsHelper("-!!", "-!", true);
 			TestFactorContainsHelper("-!!", "-!!", true);
-			TestFactorContainsHelper("-!!", "-!!!", false);
+			//TestFactorContainsHelper("-!!", "-!!!", false);  //consider !! equalto !!!
 			TestFactorContainsHelper("-!", "-", true);
 			TestFactorContainsHelper("-!", "-!", true);
 			TestFactorContainsHelper("-!", "-!!", false);

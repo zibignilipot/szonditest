@@ -127,17 +127,28 @@ namespace SzondiTest
 		ParanoKammSynd, // -s -hy -p -m"
 		ParanoKammSyndU, //-s -hy -p -m
 		//Simple bilds
-		FuguesAusreißen,//Sch±-(!) p.390 (p-! p.?)
-		Dissimulation,//--!
-		DestruktiveVerneinung,//Sch-!,0
-		Alienation,//Sch 0,-(!!!) p.?
-		Entfremdung,// Sch -± p.330
-		ParanoTotalProjektion,//Sch 0,-(!) p.310
-		Ichsperrung,//k- p0
-		KatatonifIchsperrung,//k-! p0
-		HebeKonbProjUndSperrung,//-!-(!)
-		TotaleInflation,//0+!
-		Introinflation,//++!
+		//Sch1 +0 Egoismo, Narcisismo, Estroversione
+		TotaleInflation,//Sch2 0+(!)
+		DeliriodeInflation,//Sch2 0+!!
+		DestruktiveVerneinung,//Sch3 -!,0
+		RepresionIchsperrung,//Sch3 k- p0
+		KatatonifNegativism,//Sch3 k-!(!) p0
+		ParanoTotalProjektion,//Sch4 0,-(!) p.310
+		Alienation,//Sch4 0,-(!!!) p.? (Sch11?)
+		Introinflation,//Sch5 ++! ("indecision" Buch2 Sch5)
+		Adaptation,//Sch6 -(!!!)- (renuncia eterna, Yo triste sin alegria, adaptacion, disciplinado)
+		Dissimulation,//Sch6 --!
+		HebeKonbProjUndSperrung,//Sch6 -!-(!) p.?
+		//Sch7 ±0
+		//Sch8 0±
+		//Sch9 +-
+		//Sch10 -+
+		Entfremdung,// Sch11 -± p.330 Estrañamiento, alienación
+		FuguesAusreißen,//Sch12 ±-(!) p.390 (p-! p.?)
+		//Sch13 +±
+		//Sch14 ±+ Trabajador obsessivo
+		//Sch15 ±± Yo integrado
+		//Sch16 00
 		//Projektiv
 		ProjektivParanoMitte,//ProjektivMitte, same as ProjektivParanoideMitte
 		ParanoSpaltungsSynd,
@@ -155,18 +166,28 @@ namespace SzondiTest
 		#endregion
 		
 		#region Affekt
-		Kain,//-+ (-0)
-		Abel,//+-
-		Gewissensangst,//+-(!)
-		AffektPolarität,//"±0, ±-
-		SensitiveBeziehungsangst,//Was würden die Menschen sagen? 0-, ±-
-		Phobie,//+0
+		Phobie,//P1 +0
+		//P2 0+
+		//P3 -0 exigencias de Cain sin freno moral
+		//P4 0- Was würden die Menschen sagen?
+		Affektflut,//P5 ++ , Buch2 p.430
+		//P6 --
+		AffektPolarität,//P7 ±0, P12 ±-
+		Lamentation,//P8 0± p.274 II.8
+		Abel,//P9 +-
+		Gewissensangst,//P9 +-(!) p.?
+		Kain,//P10 -+ (P3 -0)
+		//P11 -±
+		Religionswahn,//P13 +± p.390
+		//P14 ±+
+		//P15 ±±
+		Affektebbe,//P16 P00 , Buch2 p.430
+		SensitiveBeziehungsangst,//miedo sensitivo de referencia. P4 0- P12 ±- 
+		
 		
 		//p.274 II.7 TotalDesintegrAffektleben, P00
 		//p.485 B.2 Apathie, Stupor
 		TotalDesintegrAffekte_ApathieStupor,
-		Lamentation,//p.274 II.8 P0± 
-		Religionswahn,//p.390 P+±
 		KainHideWechsel,//0--0
 		ParoxyKainSyndrom,
 		KonvHyst,
@@ -187,17 +208,18 @@ namespace SzondiTest
 		MörderE,// p.381 Affektmörder Raubmördersyndrom,// (psychop.?) p.398
 		MörderE_mitVentil,
 		KainAbelWechsel,//p.349 XI.
+		PossiblyHysteriforme,
 		#endregion
 		
 		#region Sexuelle
 		SzondiHomosexualität,
-		Bisexualität,//p.390 S±±
-		Sublimation,//p.394 S--
+		Sublimation,//S6 -- p.394 
+		Bisexualität,//S15 ±± p.390 
+		Asketismus,// S16 00
 		Sexualstörungen,
 		Triebzielinversion,
 		Exhibitionismus,//p.375
 		// Sexuelle perversions
-		Asketismus,// S00
 		Fetischismus,
 		Masochismus,
 		Sadomasochismus,
@@ -262,10 +284,22 @@ namespace SzondiTest
 		Kontaktstörungen, // -p +d -m
 		SuchenNachVerfolger,
 		DepressionHinweis,
-		Akzeptationsdrang,//C0+
-		Kontaktsperre,// C--
-		HypomanischeOrHaltlose, //C0- //HypomanischeBenehmen or Haltlose Kontaktbild
-		InzestuösesAnhangen,//C-+, p.374
+		//C1 +0
+		Akzeptationsdrang,//C2 0+
+		//C3 -0 Extrema perseverancia, Adherencia, Conservatismo, dificultad en cambiarse.
+		HypomanischeOrHaltlose, //C4 0- //HypomanischeBenehmen or Haltlose Kontaktbild
+		//C5 ++ Union doble, multiple
+		Kontaktsperre,// C6 -- Barrera de contacto, union irreal. Extrañamiento del mundo.
+		//C7 ±0 duda en...
+		//C8 0± duda en...
+		//C9 +- union infiel
+		InzestuösesAnhangen,//C10 -+, p.374 Union fiel. Union incestuosa.
+		//C11 -± ambivalencia en..., or barrera de contacto con ..; Union desgraciada
+		//C12 ±-
+		//C13 +±
+		//C14 ±+
+		//C15 ±±
+		//C16 00
 		
 		//Gegen Symptom
 		GegenZirkuläreDepression,
@@ -378,8 +412,8 @@ namespace SzondiTest
 	
 	public class FactorReaction
 	{
-		public ushort positivTendenz;
-		public ushort negativTendenz;
+		private ushort positivTendenz;
+		private ushort negativTendenz;
 		public bool isExperimentalComplementar;
 		
 		private FactorReaction thComplementar;
@@ -396,39 +430,39 @@ namespace SzondiTest
 			// standardize ±
 			description = description.Replace("+/-", "±");
 			
-			positivTendenz = 0;
-			negativTendenz = 0;
+			this.positivTendenz = 0;
+			this.negativTendenz = 0;
 			switch(description)
 			{
 				case "0":
 				case "Ø":
 				{
-					positivTendenz = 0;
-					negativTendenz = 0;
+					this.positivTendenz = 0;
+					this.negativTendenz = 0;
 				} break;
-				case "+": positivTendenz = 2; break;
-				case "-": negativTendenz = 2; break;
+				case "+": this.positivTendenz = 2; break;
+				case "-": this.negativTendenz = 2; break;
 				case "±":
 				{
-					positivTendenz = 2;
-					negativTendenz = 2;
+					this.positivTendenz = 2;
+					this.negativTendenz = 2;
 				} break;
-				case "+!": positivTendenz = 4; break;
-				case "+!!": positivTendenz = 5; break;
-				case "+!!!": positivTendenz = 6; break;
-				case "-!": negativTendenz = 4; break;
-				case "-!!": negativTendenz = 5; break;
-				case "-!!!": negativTendenz = 6; break;
+				case "+!": this.positivTendenz = 4; break;
+				case "+!!": this.positivTendenz = 5; break;
+				case "+!!!": this.positivTendenz = 6; break;
+				case "-!": this.negativTendenz = 4; break;
+				case "-!!": this.negativTendenz = 5; break;
+				case "-!!!": this.negativTendenz = 6; break;
 				case "!±" :
 				{
 					// convention: ! at the left refers to positivTendenz +
-					positivTendenz = 4;
-					negativTendenz = 2;
+					this.positivTendenz = 4;
+					this.negativTendenz = 2;
 				} break;
 				case "±!":
 				{
-					positivTendenz = 2;
-					negativTendenz = 4;
+					this.positivTendenz = 2;
+					this.negativTendenz = 4;
 				} break;
 				default:
 				{
@@ -481,8 +515,8 @@ namespace SzondiTest
 			else
 			{	// TODO verify is correct for ambivalence: !± contains - ?
 				hypertensionGreaterOrEqual
-					= (this.positivTendenz >= compareTo.positivTendenz)
-					&& (this.negativTendenz >= compareTo.negativTendenz);
+					= (this.PositivTendenz >= compareTo.PositivTendenz)
+					&& (this.NegativTendenz >= compareTo.NegativTendenz);
 			}
 			
 			return containsBareReaction && hypertensionGreaterOrEqual;
@@ -523,6 +557,14 @@ namespace SzondiTest
 		{
 			return IsEqualTo(compare1) 
 				|| IsAny(compare2, compare3, compare4, compare5, compare6);
+		}
+		
+		public bool IsAny(string compare1, string compare2, string compare3, 
+		                  string compare4, string compare5, string compare6, 
+		                  string compare7)
+		{
+			return IsEqualTo(compare1) 
+				|| IsAny(compare2, compare3, compare4, compare5, compare6, compare7);
 		}
 		
 		public bool IsEqualTo(string compareToDescription, 
@@ -576,30 +618,30 @@ namespace SzondiTest
 					{
 						hypertensionsMatch = true;
 					}
-					if(compareOptions == FactorsComparisonOptions.HypertensionOnOff)
+					else if(compareOptions == FactorsComparisonOptions.HypertensionOnOff)
 					{
 						hypertensionsMatch = this.HasHypertension == compareTo.HasHypertension;
 					}
-					if(((this.positivTendenz >= 5) && (compareTo.positivTendenz >= 5))
-					   || ((this.negativTendenz >= 5) && (compareTo.negativTendenz >= 5)))
+					else if(((this.PositivTendenz >= 5) && (compareTo.PositivTendenz >= 5))
+					   || ((this.NegativTendenz >= 5) && (compareTo.NegativTendenz >= 5)))
 					{
 						// considering equal !! and !!!
 						hypertensionsMatch = true;
 					}
-					if(compareOptions == FactorsComparisonOptions.HypertensionEqualORGreater)
+					else if(compareOptions == FactorsComparisonOptions.HypertensionEqualORGreater)
 					{
-						hypertensionsMatch = (this.positivTendenz >= compareTo.positivTendenz)
-							   && (this.negativTendenz >= compareTo.negativTendenz);
+						hypertensionsMatch = (this.PositivTendenz >= compareTo.PositivTendenz)
+							   && (this.NegativTendenz >= compareTo.NegativTendenz);
 					}
-					if(compareOptions == FactorsComparisonOptions.Hypertension_sensitive)
+					else if(compareOptions == FactorsComparisonOptions.Hypertension_sensitive)
 					{
-						if(this.positivTendenz >3)
+						if(this.PositivTendenz >3)
 						{
-							hypertensionsMatch = (this.positivTendenz == compareTo.positivTendenz);
+							hypertensionsMatch = (this.PositivTendenz == compareTo.PositivTendenz);
 						}
-						if(this.negativTendenz >3)
+						if(this.NegativTendenz >3)
 						{
-							hypertensionsMatch = (this.negativTendenz == compareTo.negativTendenz);
+							hypertensionsMatch = (this.NegativTendenz == compareTo.NegativTendenz);
 						}
 					}
 				}
@@ -609,12 +651,28 @@ namespace SzondiTest
 			return bareReactionsMatch && hypertensionsMatch;
 		}
 		
+		public ushort PositivTendenz
+		{
+			get
+			{
+				return this.positivTendenz;
+			}
+		}
+		
+		public ushort NegativTendenz
+		{
+			get
+			{
+				return this.negativTendenz;
+			}
+		}
+		
 		public bool IsPositiveUnitendenz
 		{
 			get
 			{
-				return (this.positivTendenz >= 2
-				        && this.negativTendenz <= 1);
+				return (this.PositivTendenz >= 2
+				        && this.NegativTendenz <= 1);
 			}
 		}
 		
@@ -622,8 +680,8 @@ namespace SzondiTest
 		{
 			get
 			{
-				return (this.negativTendenz >= 2
-				        && this.positivTendenz <= 1);
+				return (this.NegativTendenz >= 2
+				        && this.PositivTendenz <= 1);
 			}
 		}
 		
@@ -631,8 +689,8 @@ namespace SzondiTest
 		{
 			get
 			{
-				return (this.negativTendenz <= 1
-				        && this.positivTendenz <= 1);
+				return (this.NegativTendenz <= 1
+				        && this.PositivTendenz <= 1);
 			}
 		}
 		
@@ -641,8 +699,8 @@ namespace SzondiTest
 			get
 			{
 				if(this.isExperimentalComplementar 
-				   && (this.thComplementar.negativTendenz 
-				        + this.thComplementar.positivTendenz
+				   && (this.thComplementar.NegativTendenz 
+				        + this.thComplementar.PositivTendenz
 					   >= 5))
 				{
 					return true;
@@ -656,8 +714,8 @@ namespace SzondiTest
 		{
 			get
 			{
-				return (this.negativTendenz >= 2
-				        && this.positivTendenz >= 2);
+				return (this.NegativTendenz >= 2
+				        && this.PositivTendenz >= 2);
 			}
 		}
 		
@@ -665,8 +723,8 @@ namespace SzondiTest
 		{
 			get
 			{
-				return (this.negativTendenz >= 4
-				        || this.positivTendenz >= 4);
+				return (this.NegativTendenz >= 4
+				        || this.PositivTendenz >= 4);
 			}
 		}
 		
@@ -686,10 +744,10 @@ namespace SzondiTest
 			}
 			set
 			{
-				int totalChoices = this.positivTendenz 
-					+ this.negativTendenz 
-					+ value.positivTendenz 
-					+ value.negativTendenz;
+				int totalChoices = this.PositivTendenz 
+					+ this.NegativTendenz 
+					+ value.PositivTendenz 
+					+ value.NegativTendenz;
 				
 				if(totalChoices != 6)
 				{
@@ -727,11 +785,11 @@ namespace SzondiTest
 					}
 					if(this.IsPositiveUnitendenz)
 					{
-						this.thComplementar = new FactorReaction(0, this.positivTendenz);
+						this.thComplementar = new FactorReaction(0, this.PositivTendenz);
 					}
 					if(this.IsNegativeUnitendenz)
 					{
-						this.thComplementar = new FactorReaction(this.negativTendenz, 0);
+						this.thComplementar = new FactorReaction(this.NegativTendenz, 0);
 					}
 					
 					this.thComplementar.thComplementar = this;
@@ -747,7 +805,7 @@ namespace SzondiTest
 			// 0, +, -, +!(!!), -!(!!), !±, ±!
 			string choiceReaction = string.Empty;
 			
-			if(this.positivTendenz <= 1 && this.negativTendenz <= 1)
+			if(this.PositivTendenz <= 1 && this.NegativTendenz <= 1)
 			{
 				// empty / null reaction
 				if(this.IsForcedNullReaction)
@@ -760,10 +818,10 @@ namespace SzondiTest
 				}
 				
 			}
-			else if(this.positivTendenz >=2 && this.negativTendenz >= 2)
+			else if(this.PositivTendenz >=2 && this.NegativTendenz >= 2)
 			{
 				// ambivalent reaction
-				if(this.positivTendenz > 3)
+				if(this.PositivTendenz > 3)
 				{
 					// hipertension +
 					choiceReaction += "!";
@@ -771,7 +829,7 @@ namespace SzondiTest
 				
 				choiceReaction += "±";
 				
-				if(this.negativTendenz > 3)
+				if(this.NegativTendenz > 3)
 				{
 					// hipertension -
 					choiceReaction += "!";
@@ -779,13 +837,13 @@ namespace SzondiTest
 			}
 			else
 			{
-				if(this.positivTendenz >=2)
+				if(this.PositivTendenz >=2)
 				{
-					choiceReaction += "+" + HypertensionToString(this.positivTendenz);
+					choiceReaction += "+" + HypertensionToString(this.PositivTendenz);
 				}
-				else if (this.negativTendenz >=2)
+				else if (this.NegativTendenz >=2)
 				{
-					choiceReaction += "-" + HypertensionToString(this.negativTendenz);
+					choiceReaction += "-" + HypertensionToString(this.NegativTendenz);
 				}
 			}
 			

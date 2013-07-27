@@ -154,6 +154,12 @@ namespace SzondiTest
 			}
 			#endregion
 			
+			string[] paroximalSukzession = //rows ab
+			{"-,+", "-,0", "-,-", "-,-!", "0,-", "0,-!",
+				"-,+!", "-,±", "±,±", "±,+", "0,±",
+				"-,+", "-,+!", "-,0", "-,±", "0,0", "0,+", "±,+", "±,-"
+			};
+			
 			#region Existenzskala row 13a (reine Kain)
 			// p.495, Tabelle 55, III 4-5
 			if(profile.HasInterpretationNote(InterpretationNotes.ReineKainMitte))
@@ -196,6 +202,13 @@ namespace SzondiTest
 					 detected = true;
 				}
 			}
+			
+			if(profile.Sch.EqualsTo("+,-") 
+			   && profile.InSukzession(paroximalSukzession, Vectors.P)
+			   && profile.m.IsAny("-", "-!", "-!!", "0", "+", "+!", "+!!"))
+			{
+				detected = true;
+			}
 			#endregion
 			
 			#region Existenzskala row 13b
@@ -216,7 +229,7 @@ namespace SzondiTest
 			  && profile.m.IsAny("+", "0"))
 			{
 				detected = true;
-			}
+			}			
 			
 			//only from skala 13b, to detect Buch3 Fall34, profil 4
 			if(//profile.GroßeMobilität("0", "±", "-", "+", Factors.e) &&
@@ -235,7 +248,9 @@ namespace SzondiTest
 				   || profile.P.IsAny("-,-!", "+!,-", "-!,+"))
 				   &&
 				   profile.Sch.IsAny("0,0", "±,±", "±,-", "-,±", "-,+", "+,-", "0,+", "+,0")
-				   && profile.m.IsEqualTo("-"))
+				   // && profile.m.IsEqualTo("-") optional per Buch2 p.430
+				   && !profile.m.IsEqualTo("±") //only for 13e?
+				  )
 				{
 					detected = true;
 				}
@@ -319,15 +334,32 @@ namespace SzondiTest
 			bool detected = false;
 			
 			#region Existenzskala row 14c (Hysteriforme)
-			// Buch 3, p.483 intro, p.484 IV b)
-			// und Buch 2, Existenzskala Tabelle 25
 			{
-				if( profile.P.EqualsTo("+,0")
+				if( profile.P.EqualsTo("-,-")
 				   &&
-				   (profile.Sch.EqualsTo("±,+") || profile.Sch.EqualsTo("±,±"))
+				   (profile.Sch.IsAny("±,+", "±,±", "0,0"))
 				  )
 				{
+					detected = true;
+				}
+			}
+			
+			{
+				if( profile.P.EqualsTo("-,-")
+				   &&
+				   (profile.Sch.IsAny("+,±", "+,-", "±,-"))
+				  )
+				{
+					profile.AddInterpretationNote(InterpretationNotes.PossiblyHysteriforme);
+				}
+			}
+			
+			// Buch 3, p.483 intro, p.484 IV b)
+			// und Buch 2, Existenzskala Tabelle 25
+			{	if(profile.HasInterpretationNote(InterpretationNotes.Phobie))
+				{
 					// phobie
+					//Buch 2 p.430
 					detected = true;
 				}
 			}
@@ -365,7 +397,24 @@ namespace SzondiTest
 				}
 			}
 			
-			//TODO add more from Skala
+			{
+				if( profile.P.IsAny("+,+", "0,0", "-,-!", "+,±", "±,+", "0,+") 
+				   && (profile.Sch.IsAny("-,0", "-,+", "-,±", "-!,±", "±,-", "0,-", "0,0") 
+				       || profile.Sch.IsAny("±,±", "±,+", "0,0", "+,±", "+,-", "±,-"))
+				  )   
+				{
+				  	detected = true;
+				}
+			}
+			
+			{
+				if( profile.HasInterpretationNote(InterpretationNotes.Affektflut)
+				   || profile.HasInterpretationNote(InterpretationNotes.Affektebbe))
+				{
+				   	//Buch2 p.430
+				  	detected = true;
+				}
+			}
 			#endregion
 			
 			#region Existenzskala row 14a (Hysteriforme)
@@ -679,7 +728,7 @@ namespace SzondiTest
 				//Skala conditions in bold square
 				if( profile.k.IsAny("+", "+!", "+!!", "±")//k± p.350 VII
 				   && profile.d.IsAny("+", "+!", "+!!", "±")//± from skala only
-				   && profile.s.IsAny("-", "-!", "0"))
+				   && profile.s.IsAny("-", "-!", "-!!", "0"))//-!! from Buch 5 p.115, Buch3 Fall31, Hinter profil 4
 				// p.341 m±, h+ optional (omitted) in Skala
 				{
 					detected = true;
@@ -809,10 +858,11 @@ namespace SzondiTest
 			
 			#region Existenzskala rows 7c
 			{
-				if(profile.S.IsAny("+,+!!", "+,+!!!")
+				if(profile.h.IsAny("+", "+!", "+!!")//+! Buch5 p.115, Fall 31 Buch3, profil 2
+				   && profile.s.IsAny("+", "+!", "+!!")// + Buch5 p.115, Fall 31 Buch3, profil 2
 				  && profile.P.IsAny("0,0", "-,+", "+,-", "0,-")
-				  && profile.Sch.IsAny("-!,-", "-!,0")
-				  && profile.C.IsAny("0,-", "-,-"))
+				  && profile.Sch.IsAny("-!,-", "-!,0", "-,±", "-,-")//k-, p± Buch5 p.115, Fall 31 Buch3, profile 2,9
+				  && profile.C.IsAny("0,-", "-,-", "-,-!"))//m-! Buch5 p.115, Fall 31 Buch3, profil 9
 				{
 					detected = true;
 				}
@@ -2297,12 +2347,16 @@ namespace SzondiTest
 		{
 			DetectParanoideSpaltungsSyndrom(profile);
 			
-			if(profile.Sch.EqualsTo("0,+!"))
+			if(profile.Sch.IsAny("0,+", "0,+!"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.TotaleInflation);
 			}
-					
-			if(profile.Sch.EqualsTo("+,+!"))
+			else if(profile.Sch.IsAny("0,+!", "0,+!!", "0,+!!!"))
+			{
+				profile.AddInterpretationNote(InterpretationNotes.DeliriodeInflation);
+			}
+			
+			if(profile.Sch.IsAny("+,+", "+,+!"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.Introinflation);
 			}
@@ -2324,13 +2378,15 @@ namespace SzondiTest
 				profile.AddInterpretationNote(InterpretationNotes.Dissimulation);
 			}
 			
-			if(profile.Sch.EqualsTo("-!,0"))
+			if(profile.Sch.IsAny("-,-", "-!,-", "-!!,-", "-!!!,-"))
 			{
-				profile.AddInterpretationNote(InterpretationNotes.DestruktiveVerneinung);
+				//Buch2 Sch6 section
+				profile.AddInterpretationNote(InterpretationNotes.Adaptation);
 			}
 			
 			if(profile.Sch.IsAny("0,-", "0,-!", "0,-!!", "0,-!!!"))
 			{
+				// p.? TODO veryfy is actually alienation for 0-
 				profile.AddInterpretationNote(InterpretationNotes.Alienation);
 				profile.AddInterpretationNote(InterpretationNotes.ParanoTotalProjektion);
 			}
@@ -2354,12 +2410,18 @@ namespace SzondiTest
 			if(profile.Sch.IsAny("-,0", "-!,0", "-!!,0", "-!!!,0", "-!!,±"))
 			{	
 				// doubt: also -!!,± ? (Skala 5a)
-				profile.AddInterpretationNote(InterpretationNotes.Ichsperrung);
+				profile.AddInterpretationNote(InterpretationNotes.RepresionIchsperrung);
 				
 				if(profile.k.IsAny("-!", "-!!", "-!!!"))
-				{	// if ! (!!) -> katatoniforme Ichsperrung, p.310
-					var note = InterpretationNotes.KatatonifIchsperrung;
+				{	// if ! (!!) -> katatoniforme Ichsperrung, p.310 Buch3?, Buch2 Sch3 section 
+					var note = InterpretationNotes.KatatonifNegativism;
 					profile.AddInterpretationNote(note);
+				}
+				
+				if(profile.Sch.EqualsTo("-!,0"))
+				{
+					//p.?
+					profile.AddInterpretationNote(InterpretationNotes.DestruktiveVerneinung);
 				}
 			}
 			
@@ -2523,6 +2585,20 @@ namespace SzondiTest
 			if(profile.P.EqualsTo("+,±"))
 			{
 				var note = InterpretationNotes.Religionswahn;
+				profile.AddInterpretationNote(note);
+			}
+			
+			// Buch2 p.430
+			if(profile.P.EqualsTo("+,+"))
+			{
+				var note = InterpretationNotes.Affektflut;
+				profile.AddInterpretationNote(note);
+			}
+			
+			// Buch2 p.430
+			if(profile.P.EqualsTo("0,0"))
+			{
+				var note = InterpretationNotes.Affektebbe;
 				profile.AddInterpretationNote(note);
 			}
 			
@@ -2863,7 +2939,7 @@ namespace SzondiTest
 			DetectSucht(profile);
 			DetectKSexuellenHaltlosigkeit(profile);
 			
-			if((profile.HasInterpretationNote(InterpretationNotes.Ichsperrung) 
+			if((profile.HasInterpretationNote(InterpretationNotes.RepresionIchsperrung) 
 			   || profile.Sch.EqualsTo("-!!,±"))//doubt, from Skala 5a
 			   &&
 			   profile.HasInterpretationNote(InterpretationNotes.Kontaktsperre))

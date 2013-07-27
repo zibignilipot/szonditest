@@ -268,6 +268,16 @@ namespace SzondiTestUnitTests
 				var note = InterpretationNotes.Phobie;
 				TestNoteHelper(note, Syndromatic.DetectPhobieNote, profiles, haves, haveNots);	
 			}
+			
+			// from Buch2, p.430
+			{	var profiles = Fälle.B2BiExi1;
+				var haves = new List<int>{1};//
+				var haveNots = new List<int>{};//
+
+				TestNoteHelper(InterpretationNotes.Phobie, 
+				                       Syndromatic.DetectPhobieNote,
+				                       profiles, haves, haveNots);
+			}
 		}
 		
 		[Test]
@@ -400,42 +410,54 @@ namespace SzondiTestUnitTests
 		[Test]
 		public void TestPhobieExistenzform()
 		{
-			var profiles1 = new List<TestProfile>()
 			{
-				// p.491 Tabelle 54, nr. 1-14
-				new TestProfile("-,0", "+,0", "±,±", "0,+"),
-				new TestProfile("-,0", "+,±", "±,±", "0,+"),
-				new TestProfile("-,0", "±,±", "±,±", "0,+!"),
-				new TestProfile("-!,0", "+,+!", "±,±", "0,+!"),
+				var profiles1 = new List<TestProfile>()
+				{
+					// p.491 Tabelle 54, nr. 1-14
+					new TestProfile("-,0", "+,0", "±,±", "0,+"),
+					new TestProfile("-,0", "+,±", "±,±", "0,+"),
+					new TestProfile("-,0", "±,±", "±,±", "0,+!"),
+					new TestProfile("-!,0", "+,+!", "±,±", "0,+!"),
+					
+					// nr.5-9
+					new TestProfile("-,0", "+,±", "±,±", "0,0"),
+					new TestProfile("-,-", "+,+", "±,±", "+,+!"),
+					//new TestProfile("-!,0", "±,+", "±,+", "-,+"),
+					//new TestProfile("-!,0", "±,0", "0,+", "±,+"),
+					//new TestProfile("-,-!", "+,+", "±,±", "0,+!"),
+					
+					new TestProfile("+!,-", "0,-!", "0,0", "0,+"),
+					
+					//new TestProfile("+!,-", "+,-", "0,0", "±,+"),
+					//new TestProfile("+!,-", "0,-", "±,+", "±,+"),
+					//new TestProfile("+!,-", "+,-", "0,0", "+,-"), //Paranoide Phobie
+					//new TestProfile("+!,-", "0,-", "-,0", "±,0"),
+				};
 				
-				// nr.5-9
-				new TestProfile("-,0", "+,±", "±,±", "0,0"),
-				new TestProfile("-,-", "+,+", "±,±", "+,+!"),
-				//new TestProfile("-!,0", "±,+", "±,+", "-,+"),
-				//new TestProfile("-!,0", "±,0", "0,+", "±,+"),
-				//new TestProfile("-,-!", "+,+", "±,±", "0,+!"),
+				var profiles2 = new List<TestProfile>()
+				{
+					// p.508, from profiles p.507, II, V, VI, VII, VIII, IX, X
+					new TestProfile("-,0", "+,0", "±,±", "-,0"),// II, V
+					new TestProfile("-,0", "+,0", "±,±", "-,-"),// VI, VIII, IX, X
+					new TestProfile("-,0", "+,0", "±,±", "-,±"),// VII
+				};
 				
-				new TestProfile("+!,-", "0,-!", "0,0", "0,+"),
-				
-				//new TestProfile("+!,-", "+,-", "0,0", "±,+"),
-				//new TestProfile("+!,-", "0,-", "±,+", "±,+"),
-				//new TestProfile("+!,-", "+,-", "0,0", "+,-"), //Paranoide Phobie
-				//new TestProfile("+!,-", "0,-", "-,0", "±,0"),
-			};
+				SetSexForProfiles(profiles1);
+				SetSexForProfiles(profiles2);
+				var exForm = Existenzformen.Hysteriforme;
+				VerifyExistenzformHelper(exForm, profiles1, Syndromatic.DetectHysteriforme);
+				VerifyExistenzformHelper(exForm, profiles2, Syndromatic.DetectHysteriforme);
+			}
 			
-			var profiles2 = new List<TestProfile>()
-			{
-				// p.508, from profiles p.507, II, V, VI, VII, VIII, IX, X
-				new TestProfile("-,0", "+,0", "±,±", "-,0"),// II, V
-				new TestProfile("-,0", "+,0", "±,±", "-,-"),// VI, VIII, IX, X
-				new TestProfile("-,0", "+,0", "±,±", "-,±"),// VII
-			};
-			
-			SetSexForProfiles(profiles1);
-			SetSexForProfiles(profiles2);
-			var exForm = Existenzformen.Hysteriforme;
-			VerifyExistenzformHelper(exForm, profiles1, Syndromatic.DetectHysteriforme);
-			VerifyExistenzformHelper(exForm, profiles2, Syndromatic.DetectHysteriforme);
+			// from Buch2, p.430
+			{	var profiles = Fälle.B2BiExi1;
+				var haves = new List<int>{1};//
+				var haveNots = new List<int>{};//
+
+				TestExistenzformHelper(Existenzformen.Hysteriforme, 
+				                       Syndromatic.DetectHysteriforme,
+				                       profiles, haves, haveNots);
+			}
 		}
 		
 		[Test]
@@ -633,6 +655,22 @@ namespace SzondiTestUnitTests
 				var haveNots = new List<int>() {1,2,3,4,5,6,7,8,9};
 				var note = InterpretationNotes.MörderE;
 				TestNoteHelper(note, Syndromatic.DetectEpileptiforme, profiles, haves, haveNots);	
+			}
+		}
+		
+		[Test]
+		public void TestOtherHysterie()
+		{
+			//Skala row 14b
+			
+			// from Buch2, p.430
+			{	var profiles = Fälle.B2BiExi2;
+				var haves = new List<int>{1, 2};//
+				var haveNots = new List<int>{};//
+
+				TestExistenzformHelper(Existenzformen.Hysteriforme, 
+				                       Syndromatic.DetectHysteriforme,
+				                       profiles, haves, haveNots);
 			}
 		}
 		
@@ -1370,15 +1408,16 @@ namespace SzondiTestUnitTests
 				                       profiles, haves, haveNots);
 			}
 			
-			// from Buch3, p.353 VI.
+			// from Buch5, p.115
+			// 9 out of ten profile have it. 
 			{	var profiles = Fälle.Fall31;
-				var haves = new List<int>{6,8,1,5,7};
-				var haveNots = new List<int>{2,3,9,};//10,4,
+				var haves = new List<int>{6,8,1,5,7,10,4,2,9,};//
+				var haveNots = new List<int>{3,};//
 
 				TestExistenzformHelper(Existenzformen.Hypomanische_Manische, 
 				                       Syndromatic.DetectHypomanische_Manische,
 				                       profiles, haves, haveNots);
-			}
+			}		
 		}
 		
 		[Test]
@@ -1433,6 +1472,28 @@ namespace SzondiTestUnitTests
 			{	var profiles = Fälle.Fall30;
 				var haves = new List<int>{4,7,1,6,2,9,10};//
 				var haveNots = new List<int>{3,5,};//8,simply C0-
+
+				TestExistenzformHelper(Existenzformen.Depressive_Melancholische, 
+				                       Syndromatic.DetectDepressive_Melancholische,
+				                       profiles, haves, haveNots);
+			}
+			
+			{	var profilesHinter = new List<TestProfile>();
+				profilesHinter.Add(null);//To preserve numbering
+				profilesHinter.AddRange(Fälle.Fall31[1].PartOf.Hintergrundprofile);
+				
+				//Buch 5 p.115, 9 out of 10 have this exForm
+				var haves = new List<int>() {1,2,3,4,5,6,7,8,9,10,};//which one should not have it?
+				var haveNots = new List<int>() {};				
+				TestExistenzformHelper(Existenzformen.Depressive_Melancholische,
+				                       Syndromatic.DetectDepressive_Melancholische,
+				                       profilesHinter, haves, haveNots);
+			}
+			
+			// from Buch2, p.430
+			{	var profiles = Fälle.B2BiExi2;
+				var haves = new List<int>{1, 2};//
+				var haveNots = new List<int>{};//
 
 				TestExistenzformHelper(Existenzformen.Depressive_Melancholische, 
 				                       Syndromatic.DetectDepressive_Melancholische,
@@ -2057,6 +2118,16 @@ namespace SzondiTestUnitTests
 				                       profiles, haves, haveNots);
 			}
 			
+			// from Buch2, p.430
+			{	var profiles = Fälle.B2BiExi1;
+				var haves = new List<int>{1};//
+				var haveNots = new List<int>{};//
+
+				TestExistenzformHelper(Existenzformen.Inversion_SzondiHomo_Trans, 
+				                       Syndromatic.DetectInversion,
+				                       profiles, haves, haveNots);
+			}
+			
 			{	//TODO FIXME
 				var profiles = Fälle.Fall07;
 				TestSeries serie = profiles[1].PartOf;
@@ -2172,7 +2243,7 @@ namespace SzondiTestUnitTests
 	[TestFixture]
 	public class TestExistenzBestimmung : BaseSzondiUnitTests
 	{				
-		[Test]//[Ignore]
+		[Test][Ignore]
 		public static void TestParseAndSyndromaticProfiles()
 		{
 			string inputFilename = "profiles.txt";
@@ -2229,13 +2300,16 @@ namespace SzondiTestUnitTests
 	            			EKPprofile.dimension = DimensionenUndFormenDerPsyche.EKP;
 	            			EKPprofiles.Add(EKPprofile);
 	            			foregroundProfiles[i].ExperimentalComplementar = EKPprofile;
+	            			
+	            			line = sr.ReadLine();
 	            		}
 	            	}
 	            	#endregion
 	            }
-	            
+	            //assume it corresponds to fall 34
+	            string profilesSeriesName = "Fall 34";
 	            profilesSeries 
-	            	= new TestSeries(testTakerSex, foregroundProfiles, EKPprofiles, "Fall 34");
+	            	= new TestSeries(testTakerSex, foregroundProfiles, EKPprofiles, profilesSeriesName);
 	        }
 	        catch (Exception e)
 	        {
@@ -2290,7 +2364,7 @@ namespace SzondiTestUnitTests
 						
 						foreach(var profile in profilesSeries.empirischekomplementprofile)
 		            	{
-		            		sw.WriteLine(profile.TheoricComplementar.ToString(true));
+		            		sw.WriteLine(profile.ToString(true));
 		            	}
 					}
 					
