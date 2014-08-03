@@ -51,6 +51,7 @@ namespace SzondiTestUnitTests
 		private static List<TestProfile> b3Tab50IV;
 		private static List<TestProfile> b2BiExi1;
 		private static List<TestProfile> b2BiExi2;
+		private static List<TestProfile> b2Abb40;
 		
 		public static List<TestProfile> Fall01
 		{
@@ -1056,6 +1057,24 @@ namespace SzondiTestUnitTests
 				}
 				
 				return b2BiExi2;
+			}
+		}
+		
+		public static List<TestProfile> B2Abb40
+		{
+			get
+			{
+				if(b2Abb40==null)
+				{
+					b2Abb40 = new List<TestProfile>()
+					{
+						null,
+						new TestProfile("+,+", "0,-!", "-!,0", "+,+"),
+					};
+					BaseSzondiUnitTests.SetSexAndNameForProfiles(Sex.Female, "B2 Abb.40 p.421", b2Abb40);
+				}
+				
+				return b2Abb40;
 			}
 		}
 	}

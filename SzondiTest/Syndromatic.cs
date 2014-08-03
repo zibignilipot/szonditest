@@ -524,13 +524,18 @@ namespace SzondiTest
 		internal static void DetectKainUndAbel(TestProfile profile)
 		{
 			// Buch 3, p.279 I.1, p.280 I.
-			if(profile.P.IsAny("-,+", "-,+!", "-!,+", "-,0"))
+			if(profile.P.IsAny("-,+", "-,+!", "-!,+", "-,0", "-,±"))
 			//-0 pp.305 XI., 306 VII
 			// -!+ p.350 IV. 4.
 			//  doubt -±, -0 p.305 XI.
 			{
 				var note = InterpretationNotes.Kain;
 				profile.AddInterpretationNote(note);
+				
+				if(profile.P.EqualsTo("-,±"))//auch -0 ?
+				{
+					profile.AddInterpretationNote(InterpretationNotes.KainMitDilemma);
+				}
 			}
 			
 			// B3 p.345 5.
@@ -901,7 +906,7 @@ namespace SzondiTest
 			// p.292, p.460
 			if(profile.P.IsAny("0,-", "±,-", "+,-", "+!,-", "+!!,-")
 			   // NB.CompareTo k-! only when p0, distinguish from Heboide
-			   && profile.Sch.IsAny("-,+", "-,±", "-,0", "-!,0"))
+			   && profile.Sch.IsAny("-,+", "-,±", "-,0"))
 			{
 				detected = true;
 			}
@@ -2491,6 +2496,8 @@ namespace SzondiTest
 			
 			#region neurotische Mitte, Buch 3, p.460
 			
+			#region Hypochondrische Mitte
+			
 			// p.316, p.460, Skala 11a
 			if(profile.HasMitte("+,-", "-,+")
 			   || profile.HasMitte("0,-", "-,0") 
@@ -2498,7 +2505,7 @@ namespace SzondiTest
 			   || profile.HasMitte("+!,-", "-,0")//p.317, Skala 11a
 			   || profile.HasMitte("+!!,-", "-,0")//Skala 11a
 			   || profile.HasMitte("0,-", "-,+")
-			   || profile.HasMitte("±,-", "-,±")
+			   || profile.HasMitte("±,-", "-,±") //Also B2 p.216
 			   || profile.HasMitte("0,-", "-,±")
 			   || profile.HasMitte("±,-", "-,0")
 			   || profile.HasMitte("0,±", "-,0")//also psychotische hypochondrische Syndrom
@@ -2506,13 +2513,22 @@ namespace SzondiTest
 			   || profile.HasMitte("+,-", "+!,-")
 			   || profile.HasMitte("+,-", "±,+")
 			   || profile.HasMitte("+,-", "+,+")
+			   || profile.HasMitte("+,-", "-,+")//B2 p.216 
 			  )
 			{
 				var note = InterpretationNotes.HypochondrischeMitte;
 				profile.AddInterpretationNote(note);
 			}
 			
-			// p.325
+			//Schuld- und Strangfast Syndrom B2 pp.216, 421 (Abb.40)
+			if(profile.P.IsAny("0,-", "0,-!", "0,-!!", "0,-!!!") 
+			   && profile.Sch.IsAny("-,0", "-!,0", "-!!,0", "-!!!,0"))
+			{
+				var note = InterpretationNotes.HypochondrischeMitte;
+				profile.AddInterpretationNote(note);
+			}
+						   
+			// B3 p.325
 			if(profile.HasMitte("0,-!", "-,-")
 			   || profile.HasMitte("+,-!", "-,-")
 			   || profile.HasMitte("0,-!", "±,-")
@@ -2523,6 +2539,8 @@ namespace SzondiTest
 				var note = InterpretationNotes.PsychotischeHypochondrischeSynd;
 				profile.AddInterpretationNote(note);
 			}
+			
+			#endregion
 			
 			if(profile.HasMitte("-,+", "-,+")
 			   || profile.HasMitte("-,0", "-,+")
@@ -2602,6 +2620,13 @@ namespace SzondiTest
 				profile.AddInterpretationNote(note);
 			}
 			
+			// Buch2 p.112
+			if(profile.P.EqualsTo("±,±"))
+			{
+				var note = InterpretationNotes.EthMoralDilemma;
+				profile.AddInterpretationNote(note);
+			}
+			
 			if(profile.HasMitte("-,0", "+,-") 
 			   || profile.HasMitte("-,+", "+,-") )
 			{	// skala row 13a (reine Kain)
@@ -2658,6 +2683,14 @@ namespace SzondiTest
 			if(profile.HasMitte("0,+", "+,+"))
 			{
 				profile.AddInterpretationNote(InterpretationNotes.TeilsPositivKainsMitte);
+			}
+			
+			if(profile.P.EqualsTo("±,±") 
+			   && profile.S.EqualsTo("-,-")
+			   && profile.Sch.IsAny("+,+", "±,+", "±,±")
+			  )
+			{
+				profile.AddInterpretationNote(InterpretationNotes.BesonderEthMoralDilemma);
 			}
 			
 			#endregion

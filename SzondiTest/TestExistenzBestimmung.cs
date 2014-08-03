@@ -2199,8 +2199,7 @@ namespace SzondiTestUnitTests
 			
 			SetSexForProfiles(Sex.Male, polymorphPerversProfiles);
 			var note = InterpretationNotes.PolymorphPervers;
-			//TestExistenzBestimmung.VerifyInterpretationNote(note, polymorphPerversProfiles);						
-		
+			//TestExistenzBestimmung.VerifyInterpretationNote(note, polymorphPerversProfiles);		
 		}
 	}
 	
@@ -2237,13 +2236,21 @@ namespace SzondiTestUnitTests
 			                       Syndromatic.DetectHypochondrischeExistenzformen,
 			                       profiles, haves, haveNots);
 			}
+			
+			{	var profiles = Fälle.B2Abb40;
+				var haves = new List<int>() {1};
+				var haveNots = new List<int>() {};
+				TestExistenzformHelper(Existenzformen.Hypochondrische_Organneurose, 
+			                       Syndromatic.DetectHypochondrischeExistenzformen,
+			                       profiles, haves, haveNots);
+			}
 		}
 	}
 	
 	[TestFixture]
 	public class TestExistenzBestimmung : BaseSzondiUnitTests
 	{				
-		[Test][Ignore]
+		[Test]//[Ignore]
 		public static void TestParseAndSyndromaticProfiles()
 		{
 			string inputFilename = "profiles.txt";

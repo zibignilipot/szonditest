@@ -144,7 +144,7 @@ namespace SzondiTest
 		//Sch9 +-
 		//Sch10 -+
 		Entfremdung,// Sch11 -± p.330 Estrañamiento, alienación
-		FuguesAusreißen,//Sch12 ±-(!) p.390 (p-! p.?)
+		FuguesAusreißen,//Sch12 ±-(!) p.390 (p-! p.?) Fugue, Flucht B2 p.111
 		//Sch13 +±
 		//Sch14 ±+ Trabajador obsessivo
 		//Sch15 ±± Yo integrado
@@ -177,16 +177,16 @@ namespace SzondiTest
 		Abel,//P9 +-
 		Gewissensangst,//P9 +-(!) p.?
 		Kain,//P10 -+ (P3 -0)
-		//P11 -±
-		Religionswahn,//P13 +± p.390
+		KainMitDilemma,//P11 -± B2p.112
+		Religionswahn,//P13 +± p.390 (Abel mit Dilemma) B2p.112
 		//P14 ±+
-		//P15 ±±
+		EthMoralDilemma,//P15 ±±
 		Affektebbe,//P16 P00 , Buch2 p.430
-		SensitiveBeziehungsangst,//miedo sensitivo de referencia. P4 0- P12 ±- 
-		
+		SensitiveBeziehungsangst,//miedo sensitivo de referencia. P4 0- P12 ±- 		
 		
 		//p.274 II.7 TotalDesintegrAffektleben, P00
 		//p.485 B.2 Apathie, Stupor
+		BesonderEthMoralDilemma,// B2 p.112
 		TotalDesintegrAffekte_ApathieStupor,
 		KainHideWechsel,//0--0
 		ParoxyKainSyndrom,
